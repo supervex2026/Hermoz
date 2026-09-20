@@ -8,6 +8,7 @@ const CREATE_NO_WINDOW: u32 = 0x08000000;
 
 pub const ALLOWED_TARGETS: &[&str] = &[
     "youtube", "google", "github", "vscode", "explorer", "notepad", "browser", "terminal",
+    "brave", "chrome", "edge", "firefox",
 ];
 
 pub const ALLOWED_BROWSER_DOMAINS: &[&str] = &[
@@ -58,22 +59,7 @@ pub fn validate_browser_url(raw_url: &str) -> Result<String, String> {
 
 /// Spawns the default browser with a given URL without showing a console window.
 fn open_in_default_browser(url: &str) -> Result<(), String> {
-    #[cfg(target_os = "windows")]
-    {
-        let mut cmd = Command::new("cmd");
-        cmd.args(["/C", "start", "", url]);
-        cmd.creation_flags(CREATE_NO_WINDOW);
-        cmd.spawn().map_err(|e| format!("Failed to open browser URL: {e}"))?;
-        Ok(())
-    }
-    #[cfg(not(target_os = "windows"))]
-    {
-        Command::new("xdg-open")
-            .arg(url)
-            .spawn()
-            .map_err(|e| format!("Failed to open browser URL: {e}"))?;
-        Ok(())
-    }
+    crate::commands::workspace::open_url_in_browser(url.to_string(), None)
 }
 
 /// Validates target and executes the app launch logic.
@@ -145,6 +131,68 @@ pub fn launch_app_sync(target: &str, arg: Option<&str>) -> Result<(), String> {
                 None => "https://google.com".to_string(),
             };
             open_in_default_browser(&url)
+        }
+
+        "brave" => {
+            let url = match arg.map(str::trim).filter(|a| !a.is_empty()) {
+                Some(q) => {
+                    let q_lower = q.to_lowercase();
+                    if q_lower.starts_with("https://") || q_lower.starts_with("http://") {
+                        q.to_string()
+                    } else if q_lower.contains("youtube") {
+                        format!("https://www.youtube.com/results?search_query={}", q.replace(' ', "+"))
+                    } else {
+                        format!("https://www.google.com/search?q={}", q.replace(' ', "+"))
+                    }
+                }
+                None => "https://google.com".to_string(),
+            };
+            crate::commands::workspace::open_url_in_browser(url, Some("brave".to_string()))
+        }
+
+        "chrome" => {
+            let url = match arg.map(str::trim).filter(|a| !a.is_empty()) {
+                Some(q) => {
+                    let q_lower = q.to_lowercase();
+                    if q_lower.starts_with("https://") || q_lower.starts_with("http://") {
+                        q.to_string()
+                    } else {
+                        format!("https://www.google.com/search?q={}", q.replace(' ', "+"))
+                    }
+                }
+                None => "https://google.com".to_string(),
+            };
+            crate::commands::workspace::open_url_in_browser(url, Some("chrome".to_string()))
+        }
+
+        "edge" => {
+            let url = match arg.map(str::trim).filter(|a| !a.is_empty()) {
+                Some(q) => {
+                    let q_lower = q.to_lowercase();
+                    if q_lower.starts_with("https://") || q_lower.starts_with("http://") {
+                        q.to_string()
+                    } else {
+                        format!("https://www.bing.com/search?q={}", q.replace(' ', "+"))
+                    }
+                }
+                None => "https://bing.com".to_string(),
+            };
+            crate::commands::workspace::open_url_in_browser(url, Some("edge".to_string()))
+        }
+
+        "firefox" => {
+            let url = match arg.map(str::trim).filter(|a| !a.is_empty()) {
+                Some(q) => {
+                    let q_lower = q.to_lowercase();
+                    if q_lower.starts_with("https://") || q_lower.starts_with("http://") {
+                        q.to_string()
+                    } else {
+                        format!("https://www.google.com/search?q={}", q.replace(' ', "+"))
+                    }
+                }
+                None => "https://google.com".to_string(),
+            };
+            crate::commands::workspace::open_url_in_browser(url, Some("firefox".to_string()))
         }
 
         "vscode" => {
@@ -318,5 +366,10 @@ mod tests {
         let err_calc = res_calc.unwrap_err();
         assert!(err_calc.contains("not permitted") && err_calc.contains("Allowed targets"));
         println!("[TEST 7/7 VERIFIED] calc.exe REJECTED: {err_calc}");
+
+        // 8. "open brave" -> target=brave allowed
+        assert!(ALLOWED_TARGETS.contains(&"brave"));
+        assert!(ALLOWED_TARGETS.contains(&"chrome"));
+        println!("[TEST 8 VERIFIED] open brave and chrome: valid in allowlist");
     }
 }

@@ -421,6 +421,7 @@ pub fn normalize_action(action: Option<MomoAction>) -> Option<MomoAction> {
             }
             const SAFE_TARGETS: &[&str] = &[
                 "youtube", "google", "github", "vscode", "explorer", "notepad", "browser", "terminal",
+                "brave", "chrome", "edge", "firefox",
             ];
             if !SAFE_TARGETS.contains(&target_lower.as_str()) {
                 // If it's code/wt aliases, normalize them
@@ -586,6 +587,56 @@ pub fn normalize_action(action: Option<MomoAction>) -> Option<MomoAction> {
                     reason: act.reason.or_else(|| Some("Open Windows Terminal".to_string())),
                 });
             }
+
+            // Rewrite `brave` or `start brave`
+            if cmd_lower == "brave" || cmd_lower.starts_with("brave ") || cmd_lower.starts_with("start brave") {
+                let arg = if cmd_lower.starts_with("start brave") {
+                    let a = cmd[11..].trim().trim_matches('"').trim();
+                    if a.is_empty() { None } else { Some(a.to_string()) }
+                } else if cmd_lower.len() > 5 {
+                    let a = cmd[5..].trim().trim_matches('"').trim();
+                    if a.is_empty() { None } else { Some(a.to_string()) }
+                } else {
+                    None
+                };
+                return Some(MomoAction {
+                    action_type: "launch_app".to_string(),
+                    target: Some("brave".to_string()),
+                    arg,
+                    command: None,
+                    path: None,
+                    new_path: None,
+                    content: None,
+                    url: None,
+                    browser: Some("brave".to_string()),
+                    reason: act.reason.or_else(|| Some("Open Brave browser".to_string())),
+                });
+            }
+
+            // Rewrite `chrome` or `start chrome`
+            if cmd_lower == "chrome" || cmd_lower.starts_with("chrome ") || cmd_lower.starts_with("start chrome") {
+                let arg = if cmd_lower.starts_with("start chrome") {
+                    let a = cmd[12..].trim().trim_matches('"').trim();
+                    if a.is_empty() { None } else { Some(a.to_string()) }
+                } else if cmd_lower.len() > 6 {
+                    let a = cmd[6..].trim().trim_matches('"').trim();
+                    if a.is_empty() { None } else { Some(a.to_string()) }
+                } else {
+                    None
+                };
+                return Some(MomoAction {
+                    action_type: "launch_app".to_string(),
+                    target: Some("chrome".to_string()),
+                    arg,
+                    command: None,
+                    path: None,
+                    new_path: None,
+                    content: None,
+                    url: None,
+                    browser: Some("chrome".to_string()),
+                    reason: act.reason.or_else(|| Some("Open Chrome browser".to_string())),
+                });
+            }
         }
     }
 
@@ -695,5 +746,41 @@ mod tests {
             reason: None,
         };
         assert!(normalize_action(Some(calc_launch)).is_none());
+
+        // 6. Brave launch_app target is preserved
+        let brave_launch = MomoAction {
+            action_type: "launch_app".to_string(),
+            command: None,
+            path: None,
+            new_path: None,
+            content: None,
+            url: None,
+            browser: None,
+            target: Some("brave".to_string()),
+            arg: Some("https://www.youtube.com".to_string()),
+            reason: Some("Open YouTube in Brave".to_string()),
+        };
+        let norm_brave = normalize_action(Some(brave_launch)).unwrap();
+        assert_eq!(norm_brave.action_type, "launch_app");
+        assert_eq!(norm_brave.target.as_deref(), Some("brave"));
+        assert_eq!(norm_brave.arg.as_deref(), Some("https://www.youtube.com"));
+
+        // 7. Brave command rewritten to launch_app
+        let brave_cmd = MomoAction {
+            action_type: "command".to_string(),
+            command: Some("brave https://www.youtube.com".to_string()),
+            path: None,
+            new_path: None,
+            content: None,
+            url: None,
+            browser: None,
+            target: None,
+            arg: None,
+            reason: None,
+        };
+        let norm_bcmd = normalize_action(Some(brave_cmd)).unwrap();
+        assert_eq!(norm_bcmd.action_type, "launch_app");
+        assert_eq!(norm_bcmd.target.as_deref(), Some("brave"));
+        assert_eq!(norm_bcmd.arg.as_deref(), Some("https://www.youtube.com"));
     }
 }
