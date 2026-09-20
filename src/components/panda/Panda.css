@@ -1,0 +1,199 @@
+.momo-panda {
+  width: 132px;
+  height: 158px;
+  filter: drop-shadow(var(--shadow-panda));
+  cursor: grab;
+  animation: momo-idle-bob 3.6s ease-in-out infinite;
+  transform-origin: 50% 100%;
+}
+
+.momo-panda:active {
+  cursor: grabbing;
+}
+
+.momo-panda-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+@keyframes momo-idle-bob {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-4px) scale(1.008);
+  }
+}
+
+/* Activity-specific overrides of the base idle animation */
+.momo-activity-sleeping {
+  animation: momo-sleep-breathe 4.5s ease-in-out infinite;
+}
+@keyframes momo-sleep-breathe {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(0) scale(1.02);
+  }
+}
+
+.momo-activity-thinking {
+  animation: momo-think-sway 2.8s ease-in-out infinite;
+}
+@keyframes momo-think-sway {
+  0%,
+  100% {
+    transform: rotate(0deg) translateY(0);
+  }
+  50% {
+    transform: rotate(-2.5deg) translateY(-2px);
+  }
+}
+
+.momo-activity-listening {
+  animation: momo-listen-lean 1.6s ease-in-out infinite;
+}
+@keyframes momo-listen-lean {
+  0%,
+  100% {
+    transform: rotate(0deg) translateY(0);
+  }
+  50% {
+    transform: rotate(3deg) translateY(-3px);
+  }
+}
+
+.momo-activity-speaking {
+  animation: momo-talk-bounce 0.55s ease-in-out infinite;
+}
+@keyframes momo-talk-bounce {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-3px) scale(1.015, 0.99);
+  }
+}
+
+.momo-activity-arguing {
+  animation: momo-argue-pulse 0.8s ease-in-out infinite;
+}
+@keyframes momo-argue-pulse {
+  0%, 100% {
+    transform: rotate(0deg) translateY(0);
+  }
+  30% {
+    transform: rotate(-3deg) translateY(-2px);
+  }
+  70% {
+    transform: rotate(2deg) translateY(-1px);
+  }
+}
+
+.momo-activity-roasting {
+  animation: momo-roast-bounce 1.2s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+@keyframes momo-roast-bounce {
+  0%, 100% {
+    transform: rotate(0deg) translateY(0);
+  }
+  50% {
+    transform: rotate(4deg) translateY(-3px) scale(1.02);
+  }
+}
+
+.momo-activity-visionActive,
+.momo-activity-observing {
+  animation: momo-vision-focus 2.2s ease-in-out infinite;
+}
+@keyframes momo-vision-focus {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-2px) scale(1.025);
+  }
+}
+
+/* Decoration animations (question mark, zzz, sparkles, tears, sweat) */
+.momo-deco-bob {
+  animation: momo-deco-bob 1.4s ease-in-out infinite;
+}
+@keyframes momo-deco-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.momo-deco-float {
+  animation: momo-deco-float 2.4s ease-in-out infinite;
+  opacity: 0.9;
+}
+@keyframes momo-deco-float {
+  0% {
+    transform: translate(0, 0);
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(6px, -10px);
+    opacity: 0;
+  }
+}
+
+.momo-deco-drip {
+  animation: momo-deco-drip 1.6s ease-in infinite;
+}
+@keyframes momo-deco-drip {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(6px);
+    opacity: 0;
+  }
+}
+
+.momo-deco-twinkle {
+  animation: momo-deco-twinkle 1.1s ease-in-out infinite;
+}
+@keyframes momo-deco-twinkle {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .momo-panda,
+  .momo-activity-sleeping,
+  .momo-activity-thinking,
+  .momo-activity-speaking,
+  .momo-deco-bob,
+  .momo-deco-float,
+  .momo-deco-drip,
+  .momo-deco-twinkle {
+    animation: none;
+  }
+}

@@ -1,0 +1,187 @@
+.momo-memory-container {
+  flex: 1;
+  height: 100%;
+  overflow-y: auto;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-sizing: border-box;
+}
+
+.momo-memory-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.momo-memory-header-info h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--momo-text-main);
+}
+
+.momo-memory-header-info p {
+  margin: 2px 0 0;
+  font-size: 11.5px;
+  color: var(--momo-text-muted);
+}
+
+.momo-memory-clear-btn {
+  padding: 5px 10px;
+  font-size: 11.5px;
+  color: #ff9e9e;
+  border-color: rgba(226, 92, 92, 0.3);
+  background: rgba(226, 92, 92, 0.15);
+}
+
+.momo-memory-add-card {
+  padding: 10px 12px;
+  border-radius: 10px;
+}
+
+.momo-memory-add-row {
+  display: flex;
+  gap: 8px;
+}
+
+.momo-memory-category-select {
+  width: 120px;
+  flex-shrink: 0;
+  padding: 6px 10px;
+  font-size: 12px;
+}
+
+.momo-memory-input {
+  flex: 1;
+  padding: 6px 10px;
+  font-size: 12px;
+}
+
+.momo-memory-filter-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.momo-memory-search-input {
+  padding: 6px 10px;
+  font-size: 12px;
+}
+
+.momo-memory-pills {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.momo-memory-pill {
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: rgba(16, 38, 25, 0.5);
+  border: 1px solid rgba(142, 224, 72, 0.15);
+  color: var(--momo-text-muted);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: default;
+  transition: all 0.15s ease;
+}
+
+.momo-memory-pill:hover {
+  background: rgba(28, 68, 45, 0.65);
+  color: var(--momo-text-main);
+}
+
+.momo-memory-pill.active {
+  background: rgba(27, 73, 44, 0.85);
+  border-color: var(--momo-bamboo-lime);
+  color: var(--momo-bamboo-glow);
+}
+
+.momo-memory-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.momo-memory-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  gap: 12px;
+  border-radius: 9px;
+  background: rgba(8, 20, 13, 0.6);
+  border: 1px solid rgba(142, 224, 72, 0.14);
+  transition: border-color 0.15s ease;
+}
+
+.momo-memory-item:hover {
+  border-color: rgba(142, 224, 72, 0.3);
+}
+
+.momo-memory-item-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.momo-memory-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--momo-bamboo-glow);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.momo-memory-item-content p {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--momo-text-main);
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.momo-memory-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.momo-memory-edit-box {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.momo-memory-edit-actions {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+.momo-memory-empty {
+  text-align: center;
+  padding: 30px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--momo-text-dim);
+}
+
+.momo-memory-empty p {
+  margin: 0;
+  font-size: 12px;
+  color: var(--momo-text-muted);
+}

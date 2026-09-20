@@ -1,0 +1,349 @@
+/* ==========================================================================
+   MOMO MAIN LAYOUT — NATIVE TWO-PANE COMPANION DESKTOP ARCHITECTURE
+   ========================================================================== */
+
+.momo-main-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: radial-gradient(circle at 10% 15%, rgba(27, 73, 44, 0.4) 0%, transparent 45%),
+              radial-gradient(circle at 90% 85%, rgba(16, 44, 28, 0.45) 0%, transparent 55%),
+              var(--momo-forest-deep);
+  color: var(--momo-text-main);
+  font-family: var(--font-sans);
+  border: 1px solid rgba(142, 224, 72, 0.2);
+  border-radius: 10px;
+  box-sizing: border-box;
+}
+
+.momo-desktop-stage {
+  display: flex;
+  width: 100%;
+  flex: 1;
+  gap: 12px;
+  padding: 8px 12px 12px 12px;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* --------------------------------------------------------------------------
+   PRIMARY PANE (Conversation & Action Hub - 60% to 62%)
+   -------------------------------------------------------------------------- */
+.momo-primary-pane {
+  flex: 1.4;
+  height: 100%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* --------------------------------------------------------------------------
+   SECONDARY PANE (Alive Companion, Vision, Memory, Settings - 38% to 40%)
+   -------------------------------------------------------------------------- */
+.momo-secondary-pane {
+  flex: 1;
+  max-width: 420px;
+  min-width: 320px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 14px;
+}
+
+/* --------------------------------------------------------------------------
+   Alive Panda Companion Card
+   -------------------------------------------------------------------------- */
+.momo-companion-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: rgba(10, 24, 16, 0.55);
+  border-bottom: 1px solid rgba(142, 224, 72, 0.15);
+  flex-shrink: 0;
+}
+
+.momo-companion-panda-wrapper {
+  width: 78px;
+  height: 94px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  cursor: grab;
+  transition: transform 0.15s ease;
+}
+
+.momo-companion-panda-wrapper:hover {
+  transform: scale(1.05);
+}
+
+.momo-companion-panda-wrapper .momo-panda {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.momo-companion-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.momo-companion-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.momo-companion-name {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.3px;
+}
+
+.momo-companion-mood {
+  margin: 0;
+  font-size: 12px;
+  color: var(--momo-text-muted);
+}
+
+.momo-companion-mood strong {
+  color: var(--momo-bamboo-glow);
+  text-transform: capitalize;
+}
+
+.momo-companion-bubble-glance {
+  padding: 5px 9px;
+  background: rgba(114, 190, 56, 0.12);
+  border: 1px solid rgba(114, 190, 56, 0.25);
+  border-radius: 8px;
+  font-size: 11.5px;
+  color: #eaf5ea;
+  font-style: italic;
+  line-height: 1.35;
+  word-break: break-word;
+}
+
+.momo-companion-hint {
+  font-size: 11px;
+  color: var(--momo-text-dim);
+}
+
+/* --------------------------------------------------------------------------
+   Segmented Context Tabs
+   -------------------------------------------------------------------------- */
+.momo-segmented-tabs {
+  display: flex;
+  padding: 6px 10px;
+  background: rgba(8, 20, 13, 0.4);
+  border-bottom: 1px solid rgba(142, 224, 72, 0.12);
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.momo-tab-btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 6px 4px;
+  border-radius: 7px;
+  background: transparent;
+  border: none;
+  color: var(--momo-text-muted);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: default;
+  transition: all 0.15s ease;
+}
+
+.momo-tab-btn:hover {
+  background: rgba(142, 224, 72, 0.1);
+  color: var(--momo-text-main);
+}
+
+.momo-tab-btn.active {
+  background: rgba(27, 73, 44, 0.65);
+  border: 1px solid rgba(142, 224, 72, 0.3);
+  color: var(--momo-bamboo-glow);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* --------------------------------------------------------------------------
+   Secondary Content Container
+   -------------------------------------------------------------------------- */
+.momo-secondary-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.momo-embedded-panel {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --------------------------------------------------------------------------
+   Overview Flow & Glance Cards
+   -------------------------------------------------------------------------- */
+.momo-overview-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.momo-glance-card {
+  padding: 12px;
+  background: rgba(8, 20, 13, 0.55);
+  border: 1px solid rgba(142, 224, 72, 0.16);
+  border-radius: 11px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: border-color 0.15s ease;
+}
+
+.momo-glance-card:hover {
+  border-color: rgba(142, 224, 72, 0.3);
+}
+
+.momo-glance-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.momo-glance-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--momo-text-main);
+  letter-spacing: 0.2px;
+}
+
+.momo-glance-action-link {
+  background: transparent;
+  border: none;
+  color: var(--momo-bamboo-lime);
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: default;
+  padding: 2px 4px;
+}
+
+.momo-glance-action-link:hover {
+  color: var(--momo-bamboo-glow);
+  text-decoration: underline;
+}
+
+.momo-glance-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.momo-glance-text {
+  margin: 0;
+  font-size: 12px;
+  color: var(--momo-text-muted);
+  line-height: 1.45;
+}
+
+.momo-glance-text strong {
+  color: var(--momo-bamboo-glow);
+}
+
+.momo-glance-btn {
+  align-self: flex-start;
+  padding: 5px 11px;
+  font-size: 12px;
+}
+
+.momo-glance-tags {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.momo-glance-tag {
+  padding: 4px 8px;
+  background: rgba(16, 38, 25, 0.6);
+  border: 1px solid rgba(142, 224, 72, 0.12);
+  border-radius: 6px;
+  font-size: 11px;
+  color: var(--momo-text-main);
+}
+
+/* Routing Chain in Glance */
+.momo-routing-chain {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.momo-routing-step {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.momo-routing-index {
+  font-size: 10px;
+  color: var(--momo-text-dim);
+  font-weight: 600;
+}
+
+.momo-routing-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--momo-text-muted);
+}
+
+.momo-routing-pill.live {
+  background: rgba(114, 190, 56, 0.18);
+  border-color: rgba(114, 190, 56, 0.35);
+  color: var(--momo-bamboo-glow);
+}
+
+.momo-routing-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.momo-routing-arrow {
+  font-size: 10px;
+  color: var(--momo-text-dim);
+}
+
+.momo-detach-btn {
+  margin-top: 8px;
+  width: 100%;
+  padding: 10px;
+  font-size: 13px;
+}

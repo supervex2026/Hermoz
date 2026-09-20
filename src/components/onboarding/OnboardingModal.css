@@ -1,0 +1,122 @@
+.momo-onboarding-backdrop {
+  position: fixed;
+  top: 38px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(6, 16, 10, 0.85);
+  backdrop-filter: blur(20px);
+  padding: 20px;
+}
+
+.momo-onboarding-card {
+  width: 100%;
+  max-width: 480px;
+  overflow: hidden;
+  border-radius: 20px;
+  animation: momo-onboard-slide 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes momo-onboard-slide {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.momo-onboarding-banner {
+  padding: 24px 24px 16px;
+  text-align: center;
+  background: linear-gradient(180deg, rgba(35, 78, 52, 0.5) 0%, transparent 100%);
+  border-bottom: var(--glass-border);
+}
+
+.momo-onboarding-logo {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  box-shadow: 0 8px 24px rgba(123, 197, 66, 0.35);
+  margin-bottom: 10px;
+}
+
+.momo-onboarding-banner h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--momo-text-main);
+}
+
+.momo-onboarding-banner p {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--momo-text-muted);
+}
+
+.momo-onboarding-body {
+  padding: 20px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.momo-onboarding-desc {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--momo-text-muted);
+}
+
+.momo-onboarding-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.momo-onboarding-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.momo-key-link {
+  color: var(--momo-bamboo-bright);
+  text-decoration: none;
+  font-size: 11.5px;
+  transition: opacity 0.15s ease;
+}
+.momo-key-link:hover {
+  text-decoration: underline;
+  opacity: 0.85;
+}
+
+.momo-onboarding-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.momo-onboarding-actions button {
+  width: 100%;
+}
+
+.momo-onboarding-error {
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: rgba(220, 50, 50, 0.15);
+  border: 1px solid rgba(220, 50, 50, 0.35);
+  color: #ff6b6b;
+  font-size: 12.5px;
+  text-align: center;
+}
+

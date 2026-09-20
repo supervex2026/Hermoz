@@ -1,0 +1,95 @@
+.momo-app-container {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  position: relative;
+  user-select: none;
+}
+
+.momo-root {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  padding: 10px;
+}
+
+.momo-root-expanded {
+  align-items: stretch;
+  justify-content: flex-start;
+}
+
+.momo-stage {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+}
+
+.momo-settings-affordance {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: none;
+  background: var(--momo-paper);
+  color: var(--momo-ink-soft);
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.35;
+  box-shadow: var(--shadow-bubble);
+  transition: opacity 0.15s var(--ease-soft), transform 0.15s var(--ease-soft);
+  z-index: 20;
+}
+
+.momo-settings-affordance:hover {
+  opacity: 1;
+  transform: scale(1.08);
+}
+
+.momo-recording-indicator {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 9px;
+  border-radius: var(--radius-sm);
+  background: rgba(32, 28, 43, 0.9);
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
+  box-shadow: var(--shadow-bubble);
+  z-index: 30;
+  pointer-events: none;
+}
+
+.momo-rec-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--momo-bad);
+  animation: momo-dot-pulse 0.9s ease-in-out infinite;
+}
+
+@keyframes momo-dot-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.85);
+  }
+}
+

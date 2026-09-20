@@ -1,0 +1,80 @@
+/* ==========================================================================
+   CUSTOM TITLE BAR — Liquid Glass Forest Theme
+   ========================================================================== */
+
+.momo-titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 38px;
+  min-height: 38px;
+  padding: 0 6px 0 14px;
+  background: rgba(8, 18, 12, 0.85);
+  border-bottom: 1px solid rgba(123, 197, 66, 0.12);
+  user-select: none;
+  -webkit-app-region: drag;
+  app-region: drag;
+  z-index: 10000;
+  flex-shrink: 0;
+}
+
+.momo-titlebar-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(220, 240, 225, 0.85);
+  letter-spacing: 0.3px;
+  pointer-events: none;
+}
+
+.momo-titlebar-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  object-fit: contain;
+}
+
+/* --------------------------------------------------------------------------
+   Window Control Buttons
+   -------------------------------------------------------------------------- */
+.momo-titlebar-controls {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  -webkit-app-region: no-drag;
+  app-region: no-drag;
+}
+
+.momo-titlebar-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  color: rgba(220, 240, 225, 0.7);
+  cursor: default;
+  transition: background 0.12s ease, color 0.12s ease;
+  border-radius: 0;
+}
+
+.momo-titlebar-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+.momo-titlebar-btn-close:hover {
+  background: #e81123;
+  color: #ffffff;
+}
+
+.momo-titlebar-btn:active {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.momo-titlebar-btn-close:active {
+  background: #c50f1f;
+}

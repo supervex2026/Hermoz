@@ -1,0 +1,217 @@
+﻿.momo-workspace-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif);
+}
+
+.momo-workspace-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(16, 185, 129, 0.15);
+}
+
+.momo-workspace-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #f3f4f6;
+  font-family: var(--font-mono, monospace);
+}
+
+.momo-workspace-badge {
+  font-size: 9.5px;
+  padding: 2px 6px;
+  border-radius: 9999px;
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  color: #34d399;
+  font-family: var(--font-mono, monospace);
+}
+
+.momo-workspace-subnav {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+  padding: 3px;
+  background: #080d0b;
+  border-radius: 10px;
+  border: 1px solid rgba(16, 185, 129, 0.15);
+}
+
+.momo-workspace-nav-btn {
+  padding: 5px 8px;
+  font-size: 10.5px;
+  font-family: var(--font-mono, monospace);
+  font-weight: 600;
+  border-radius: 7px;
+  background: transparent;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: center;
+}
+
+.momo-workspace-nav-btn:hover {
+  color: #e5e7eb;
+  background: rgba(16, 185, 129, 0.08);
+}
+
+.momo-workspace-nav-btn.active {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+}
+
+/* Terminal & Console */
+.momo-terminal-box {
+  background: #050807;
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  border-radius: 12px;
+  padding: 10px;
+  font-family: var(--font-mono, Cascadia Code, Fira Code, monospace);
+  font-size: 11px;
+  color: #d1fae5;
+  min-height: 140px;
+  max-height: 220px;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.momo-terminal-box::-webkit-scrollbar {
+  display: none;
+}
+
+.momo-terminal-line {
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.momo-terminal-prompt {
+  color: #10b981;
+  font-weight: bold;
+}
+
+.momo-terminal-error {
+  color: #f87171;
+}
+
+/* Approval Gate Dialog Box */
+.momo-approval-card {
+  background: rgba(14, 26, 20, 0.95);
+  border: 1px solid rgba(245, 158, 11, 0.5);
+  border-radius: 14px;
+  padding: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  animation: momo-gate-in 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.momo-approval-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #fbbf24;
+  margin-bottom: 8px;
+}
+
+.momo-approval-cmd {
+  background: #060a08;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  color: #fef3c7;
+  margin-bottom: 10px;
+  word-break: break-all;
+}
+
+.momo-approval-diff {
+  background: #060a08;
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  border-radius: 8px;
+  padding: 8px;
+  font-family: var(--font-mono, monospace);
+  font-size: 10.5px;
+  max-height: 130px;
+  overflow-y: auto;
+  margin-bottom: 10px;
+}
+
+.momo-diff-add {
+  color: #34d399;
+}
+
+.momo-diff-del {
+  color: #f87171;
+}
+
+.momo-approval-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.momo-approve-btn {
+  background: #10b981;
+  color: #042f22;
+  font-weight: 700;
+  font-size: 11px;
+  border: none;
+  border-radius: 7px;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.momo-approve-btn:hover {
+  background: #34d399;
+  transform: translateY(-1px);
+}
+
+.momo-reject-btn {
+  background: #1e2923;
+  color: #9ca3af;
+  font-weight: 600;
+  font-size: 11px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 7px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.momo-reject-btn:hover {
+  background: #2b3931;
+  color: #e5e7eb;
+}
+
+/* Allowlist Pills */
+.momo-allowlist-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.momo-allowlist-pill {
+  font-size: 9.5px;
+  font-family: var(--font-mono, monospace);
+  padding: 2px 6px;
+  border-radius: 5px;
+  background: #08110d;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  color: #6ee7b7;
+}
+
+@keyframes momo-gate-in {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
