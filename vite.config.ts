@@ -1,17 +1,20 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "node:path";
+import fs from "node:fs";
 
 // Tauri expects a fixed dev server port and specific watch/ignore rules.
 // See: https://v2.tauri.app/start/frontend/vite/
 const host = process.env.TAURI_DEV_HOST;
+const projectRoot = fs.realpathSync(process.cwd());
 
 export default defineConfig(async () => ({
+  root: projectRoot,
   plugins: [react()],
 
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
+      "@": path.resolve(projectRoot, "./src"),
     },
   },
 

@@ -90,9 +90,9 @@ export function MainLayout({ onSwitchToOverlay }: MainLayoutProps) {
       : "Chill";
 
   return (
-    <div className="w-full h-full bg-obsidian-950 text-gray-200 font-sans antialiased select-none flex flex-col overflow-hidden">
+    <div className="w-full h-full bg-[var(--neutral-1)] text-gray-200 font-sans antialiased select-none flex flex-col overflow-hidden">
       {/* Main Container Window Frame */}
-      <div className="relative w-full h-full bg-obsidian-900 flex flex-col overflow-hidden">
+      <div className="relative w-full h-full bg-[var(--neutral-2)] flex flex-col overflow-hidden">
         {/* Obsidian Titlebar */}
         <TitleBar />
 
@@ -105,15 +105,15 @@ export function MainLayout({ onSwitchToOverlay }: MainLayoutProps) {
 
           {/* Right Companion HUD Column */}
           <aside
-            className="hidden lg:flex w-[35%] flex-col bg-obsidian-950/70 p-4 space-y-4 overflow-y-auto border-l border-obsidian-800"
+            className="hidden lg:flex w-[35%] flex-col bg-[var(--neutral-1)] p-4 space-y-4 overflow-y-auto border-l border-[var(--color-border)]"
             data-purpose="companion-diagnostics-hud"
           >
             {/* TOP WIDGET: Momo Avatar & Mood Hub */}
             <div
-              className="bg-obsidian-900 border border-obsidian-750 rounded-2xl p-4 relative shadow-card-ambient overflow-hidden"
+              className="bg-[var(--neutral-2)] border border-[var(--color-border)] rounded-2xl p-4 relative shadow-card-ambient overflow-hidden"
               data-purpose="avatar-mood-widget"
             >
-              <div className="absolute -right-12 -top-12 w-32 h-32 bg-emerald-500/5 rounded-full blur-2xl pointer-events-none"></div>
+              <div className="absolute -right-12 -top-12 w-32 h-32 bg-[var(--color-accent-subtle)] rounded-full blur-2xl pointer-events-none"></div>
               <div className="flex items-start space-x-3.5">
                 {/* Momo Panda Stylized Visual Avatar */}
                 <div
@@ -121,7 +121,7 @@ export function MainLayout({ onSwitchToOverlay }: MainLayoutProps) {
                   onClick={handlePandaPoke}
                   title="Click to poke or chat with Momo"
                 >
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-b from-obsidian-800 to-obsidian-900 border-2 border-emerald-500/40 flex items-center justify-center shadow-glow-sm group-hover:border-emerald-400 transition-all">
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-b from-obsidian-800 to-obsidian-900 border-2 border-[var(--color-accent)] flex items-center justify-center shadow-xs group-hover:border-[var(--color-accent)] transition-all">
                     {/* Digital Panda Character */}
                     <svg
                       className="w-11 h-11 text-gray-100 group-hover:scale-105 transition-transform"
@@ -133,7 +133,7 @@ export function MainLayout({ onSwitchToOverlay }: MainLayoutProps) {
                         cy="26"
                         fill="#182721"
                         r="16"
-                        stroke="#34D399"
+                        stroke="var(--color-accent)"
                         strokeWidth="2.5"
                       ></circle>
                       <circle
@@ -141,11 +141,11 @@ export function MainLayout({ onSwitchToOverlay }: MainLayoutProps) {
                         cy="26"
                         fill="#182721"
                         r="16"
-                        stroke="#34D399"
+                        stroke="var(--color-accent)"
                         strokeWidth="2.5"
                       ></circle>
-                      <circle cx="26" cy="26" fill="#10B981" r="8"></circle>
-                      <circle cx="74" cy="26" fill="#10B981" r="8"></circle>
+                      <circle cx="26" cy="26" fill="var(--color-accent)" r="8"></circle>
+                      <circle cx="74" cy="26" fill="var(--color-accent)" r="8"></circle>
                       {/* Face base */}
                       <circle
                         cx="50"
@@ -176,7 +176,7 @@ export function MainLayout({ onSwitchToOverlay }: MainLayoutProps) {
                       <circle
                         cx="37"
                         cy="49"
-                        fill="#10B981"
+                        fill="var(--color-accent)"
                         r="4.5"
                         className={activity === "thinking" ? "animate-ping" : ""}
                       ></circle>
@@ -184,7 +184,7 @@ export function MainLayout({ onSwitchToOverlay }: MainLayoutProps) {
                       <circle
                         cx="63"
                         cy="49"
-                        fill="#10B981"
+                        fill="var(--color-accent)"
                         r="4.5"
                         className={activity === "thinking" ? "animate-ping" : ""}
                       ></circle>
@@ -194,14 +194,14 @@ export function MainLayout({ onSwitchToOverlay }: MainLayoutProps) {
                       <circle
                         cx="25"
                         cy="62"
-                        fill="#34D399"
+                        fill="var(--color-accent)"
                         opacity="0.3"
                         r="4"
                       ></circle>
                       <circle
                         cx="75"
                         cy="62"
-                        fill="#34D399"
+                        fill="var(--color-accent)"
                         opacity="0.3"
                         r="4"
                       ></circle>
@@ -216,8 +216,8 @@ export function MainLayout({ onSwitchToOverlay }: MainLayoutProps) {
                     </svg>
                   </div>
                   <span className="absolute -bottom-1 -right-1 flex h-3.5 w-3.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-500 ring-2 ring-obsidian-900"></span>
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--color-accent)] opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-[var(--color-accent)] ring-2 ring-obsidian-900"></span>
                   </span>
                 </div>
 
@@ -227,19 +227,19 @@ export function MainLayout({ onSwitchToOverlay }: MainLayoutProps) {
                     <h2 className="text-base font-bold text-white tracking-wide">
                       Momo
                     </h2>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-500/40">
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[var(--color-accent-subtle)] text-[var(--color-accent)] border border-[var(--color-accent)]">
                       {activity.toUpperCase()}
                     </span>
                   </div>
                   <div className="flex items-center space-x-1.5 mt-0.5">
                     <span className="text-xs text-gray-400">Mood:</span>
-                    <span className="text-xs font-semibold text-emerald-400">
+                    <span className="text-xs font-semibold text-[var(--color-accent)]">
                       {moodLabel}
                     </span>
                     <span className="text-xs text-gray-500">• Cheeky</span>
                   </div>
                   {/* Thought Bubble Preview */}
-                  <div className="mt-2 text-[11px] italic text-emerald-300/80 bg-obsidian-950/80 border border-obsidian-750 rounded-lg p-2 leading-tight">
+                  <div className="mt-2 text-[11px] italic text-[var(--color-accent)]/80 bg-[var(--neutral-1)] border border-[var(--color-border)] rounded-lg p-2 leading-tight">
                     {bubbleText
                       ? `"${bubbleText.slice(0, 95)}${bubbleText.length > 95 ? "…" : ""}"`
                       : '"Hey, welcome back! I am right here on your desktop, ready to help."'}
@@ -250,19 +250,19 @@ export function MainLayout({ onSwitchToOverlay }: MainLayoutProps) {
 
             {/* Mode Navigation Tabs */}
             <nav
-              className="grid grid-cols-5 gap-1 p-1 bg-obsidian-900 rounded-xl border border-obsidian-800 text-xs shrink-0"
+              className="grid grid-cols-5 gap-1 p-1 bg-[var(--neutral-2)] rounded-xl border border-[var(--color-border)] text-xs shrink-0"
               data-purpose="hud-sub-tabs"
             >
               <button
                 className={`py-1.5 px-1.5 text-center rounded-lg font-medium flex items-center justify-center space-x-1 transition-all ${
                   activeTab === "overview"
-                    ? "bg-emerald-950/80 text-emerald-300 border border-emerald-500/30 shadow-sm"
-                    : "text-gray-400 hover:text-gray-200 hover:bg-obsidian-800"
+                    ? "bg-[var(--color-accent-subtle)] text-[var(--color-accent)] border border-[var(--color-accent)] shadow-sm"
+                    : "text-gray-400 hover:text-gray-200 hover:bg-[var(--neutral-4)]"
                 }`}
                 onClick={() => setActiveTab("overview")}
               >
                 <svg
-                  className="w-3 h-3 text-emerald-400"
+                  className="w-3 h-3 text-[var(--color-accent)]"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -280,13 +280,13 @@ export function MainLayout({ onSwitchToOverlay }: MainLayoutProps) {
               <button
                 className={`py-1.5 px-1.5 text-center rounded-lg font-medium flex items-center justify-center space-x-1 transition-all ${
                   activeTab === "vision"
-                    ? "bg-emerald-950/80 text-emerald-300 border border-emerald-500/30 shadow-sm"
-                    : "text-gray-400 hover:text-gray-200 hover:bg-obsidian-800"
+                    ? "bg-[var(--color-accent-subtle)] text-[var(--color-accent)] border border-[var(--color-accent)] shadow-sm"
+                    : "text-gray-400 hover:text-gray-200 hover:bg-[var(--neutral-4)]"
                 }`}
                 onClick={() => setActiveTab("vision")}
               >
                 <svg
-                  className="w-3 h-3 text-emerald-400"
+                  className="w-3 h-3 text-[var(--color-accent)]"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -304,13 +304,13 @@ export function MainLayout({ onSwitchToOverlay }: MainLayoutProps) {
               <button
                 className={`py-1.5 px-1.5 text-center rounded-lg font-medium flex items-center justify-center space-x-1 transition-all ${
                   activeTab === "workspace"
-                    ? "bg-emerald-950/80 text-emerald-300 border border-emerald-500/30 shadow-sm"
-                    : "text-gray-400 hover:text-gray-200 hover:bg-obsidian-800"
+                    ? "bg-[var(--color-accent-subtle)] text-[var(--color-accent)] border border-[var(--color-accent)] shadow-sm"
+                    : "text-gray-400 hover:text-gray-200 hover:bg-[var(--neutral-4)]"
                 }`}
                 onClick={() => setActiveTab("workspace")}
               >
                 <svg
-                  className="w-3 h-3 text-emerald-400"
+                  className="w-3 h-3 text-[var(--color-accent)]"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -328,13 +328,13 @@ export function MainLayout({ onSwitchToOverlay }: MainLayoutProps) {
               <button
                 className={`py-1.5 px-1.5 text-center rounded-lg font-medium flex items-center justify-center space-x-1 transition-all ${
                   activeTab === "memory"
-                    ? "bg-emerald-950/80 text-emerald-300 border border-emerald-500/30 shadow-sm"
-                    : "text-gray-400 hover:text-gray-200 hover:bg-obsidian-800"
+                    ? "bg-[var(--color-accent-subtle)] text-[var(--color-accent)] border border-[var(--color-accent)] shadow-sm"
+                    : "text-gray-400 hover:text-gray-200 hover:bg-[var(--neutral-4)]"
                 }`}
                 onClick={() => setActiveTab("memory")}
               >
                 <svg
-                  className="w-3 h-3 text-emerald-400"
+                  className="w-3 h-3 text-[var(--color-accent)]"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -352,13 +352,13 @@ export function MainLayout({ onSwitchToOverlay }: MainLayoutProps) {
               <button
                 className={`py-1.5 px-1.5 text-center rounded-lg font-medium flex items-center justify-center space-x-1 transition-all ${
                   activeTab === "settings" || settingsOpen
-                    ? "bg-emerald-950/80 text-emerald-300 border border-emerald-500/30 shadow-sm"
-                    : "text-gray-400 hover:text-gray-200 hover:bg-obsidian-800"
+                    ? "bg-[var(--color-accent-subtle)] text-[var(--color-accent)] border border-[var(--color-accent)] shadow-sm"
+                    : "text-gray-400 hover:text-gray-200 hover:bg-[var(--neutral-4)]"
                 }`}
                 onClick={() => openSettings()}
               >
                 <svg
-                  className="w-3 h-3 text-emerald-400"
+                  className="w-3 h-3 text-[var(--color-accent)]"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -379,18 +379,18 @@ export function MainLayout({ onSwitchToOverlay }: MainLayoutProps) {
               <>
                 {/* SECTION 1: Screen Awareness Card */}
                 <div
-                  className="bg-obsidian-900 border border-obsidian-750 rounded-2xl p-3.5 space-y-3 shadow-sm"
+                  className="bg-[var(--neutral-2)] border border-[var(--color-border)] rounded-2xl p-3.5 space-y-3 shadow-sm"
                   data-purpose="screen-awareness-module"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2">
-                      <div className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399]"></div>
+                      <div className="w-2 h-2 rounded-full bg-[var(--color-accent)] shadow-[0_0_8px_var(--color-accent)]"></div>
                       <span className="text-xs font-semibold text-white tracking-wide">
                         Screen Awareness
                       </span>
                     </div>
                     <button
-                      className="text-[11px] text-emerald-400 hover:text-emerald-300 transition-colors bg-transparent border-0 p-0"
+                      className="text-[11px] text-[var(--color-accent)] hover:text-[var(--color-accent)] transition-colors bg-transparent border-0 p-0"
                       onClick={() => setActiveTab("vision")}
                     >
                       Studio →
@@ -411,12 +411,12 @@ export function MainLayout({ onSwitchToOverlay }: MainLayoutProps) {
                   </p>
                   {/* Inspect Action Button */}
                   <button
-                    className="w-full py-2.5 px-3 rounded-xl bg-obsidian-850 hover:bg-obsidian-800 border border-emerald-500/30 hover:border-emerald-500/60 text-emerald-300 text-xs font-semibold flex items-center justify-center space-x-2 transition-all group"
+                    className="w-full py-2.5 px-3 rounded-xl bg-[var(--neutral-3)] hover:bg-[var(--neutral-4)] border border-[var(--color-accent)] hover:border-[var(--color-accent-hover)] text-[var(--color-accent)] text-xs font-semibold flex items-center justify-center space-x-2 transition-all group"
                     onClick={handleInspectScreen}
                     disabled={isInspecting}
                   >
                     <svg
-                      className={`w-4 h-4 text-emerald-400 group-hover:scale-110 transition-transform ${
+                      className={`w-4 h-4 text-[var(--color-accent)] group-hover:scale-110 transition-transform ${
                         isInspecting ? "animate-spin" : ""
                       }`}
                       fill="none"
@@ -437,7 +437,7 @@ export function MainLayout({ onSwitchToOverlay }: MainLayoutProps) {
                       ></path>
                     </svg>
                     <span>{isInspecting ? "Inspecting..." : "Inspect Screen Now"}</span>
-                    <span className="text-[10px] font-mono text-gray-400 group-hover:text-emerald-400">
+                    <span className="text-[10px] font-mono text-gray-400 group-hover:text-[var(--color-accent)]">
                       (Alt + S)
                     </span>
                   </button>
@@ -445,13 +445,13 @@ export function MainLayout({ onSwitchToOverlay }: MainLayoutProps) {
 
                 {/* SECTION 2: Memory Vault Card */}
                 <div
-                  className="bg-obsidian-900 border border-obsidian-750 rounded-2xl p-3.5 space-y-2.5 shadow-sm"
+                  className="bg-[var(--neutral-2)] border border-[var(--color-border)] rounded-2xl p-3.5 space-y-2.5 shadow-sm"
                   data-purpose="memory-vault-module"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2">
                       <svg
-                        className="w-4 h-4 text-emerald-400"
+                        className="w-4 h-4 text-[var(--color-accent)]"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -468,7 +468,7 @@ export function MainLayout({ onSwitchToOverlay }: MainLayoutProps) {
                       </span>
                     </div>
                     <button
-                      className="text-[11px] text-emerald-400 hover:text-emerald-300 bg-transparent border-0 p-0"
+                      className="text-[11px] text-[var(--color-accent)] hover:text-[var(--color-accent)] bg-transparent border-0 p-0"
                       onClick={() => setActiveTab("memory")}
                     >
                       Vault ({memories.length}) →
@@ -477,17 +477,17 @@ export function MainLayout({ onSwitchToOverlay }: MainLayoutProps) {
                   {/* Memory Chips Stack */}
                   <div className="space-y-1.5">
                     {memories.length === 0 ? (
-                      <div className="p-2 rounded-lg bg-obsidian-850 border border-obsidian-800 text-[11px] text-gray-400">
+                      <div className="p-2 rounded-lg bg-[var(--neutral-3)] border border-[var(--color-border)] text-[11px] text-gray-400">
                         No memories saved yet. Momo learns as you chat.
                       </div>
                     ) : (
                       memories.slice(0, 3).map((m) => (
                         <div
                           key={m.id}
-                          className="p-2 rounded-lg bg-obsidian-850 border border-obsidian-800 text-[11px] text-gray-300 truncate flex items-center justify-between group hover:border-emerald-500/30 transition-colors"
+                          className="p-2 rounded-lg bg-[var(--neutral-3)] border border-[var(--color-border)] text-[11px] text-gray-300 truncate flex items-center justify-between group hover:border-[var(--color-accent)] transition-colors"
                         >
                           <span className="truncate">{m.content}</span>
-                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0 ml-2"></span>
+                          <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-accent)] shrink-0 ml-2"></span>
                         </div>
                       ))
                     )}
@@ -496,13 +496,13 @@ export function MainLayout({ onSwitchToOverlay }: MainLayoutProps) {
 
                 {/* SECTION 3: AI Routing Pipeline */}
                 <div
-                  className="bg-obsidian-900 border border-obsidian-750 rounded-2xl p-3.5 space-y-2.5 shadow-sm"
+                  className="bg-[var(--neutral-2)] border border-[var(--color-border)] rounded-2xl p-3.5 space-y-2.5 shadow-sm"
                   data-purpose="ai-routing-module"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2">
                       <svg
-                        className="w-4 h-4 text-emerald-400"
+                        className="w-4 h-4 text-[var(--color-accent)]"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -519,7 +519,7 @@ export function MainLayout({ onSwitchToOverlay }: MainLayoutProps) {
                       </span>
                     </div>
                     <button
-                      className="text-[11px] text-emerald-400 hover:text-emerald-300 bg-transparent border-0 p-0"
+                      className="text-[11px] text-[var(--color-accent)] hover:text-[var(--color-accent)] bg-transparent border-0 p-0"
                       onClick={() => openSettings()}
                     >
                       Configure →
@@ -534,11 +534,11 @@ export function MainLayout({ onSwitchToOverlay }: MainLayoutProps) {
                           <div
                             className={`px-2 py-1 rounded border flex items-center space-x-1 ${
                               isLive
-                                ? "bg-emerald-950 border-emerald-500/40 text-emerald-300 font-semibold shadow-glow-sm"
-                                : "bg-obsidian-800 border-obsidian-700 text-gray-300"
+                                ? "bg-[var(--color-accent-subtle)] border-[var(--color-accent)] text-[var(--color-accent)] font-semibold shadow-xs"
+                                : "bg-[var(--neutral-4)] border-obsidian-700 text-gray-300"
                             }`}
                           >
-                            <span className={isLive ? "text-emerald-400" : "text-gray-500"}>
+                            <span className={isLive ? "text-[var(--color-accent)]" : "text-gray-500"}>
                               #{idx + 1}
                             </span>
                             <span>{p.toUpperCase()}</span>
@@ -589,7 +589,7 @@ export function MainLayout({ onSwitchToOverlay }: MainLayoutProps) {
             {/* Float Momo on Desktop Action Button */}
             <div className="pt-2 shrink-0" data-purpose="floating-mode-action">
               <button
-                className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-obsidian-950 font-bold text-xs tracking-wide shadow-glow-sm hover:shadow-glow-md transition-all flex items-center justify-center space-x-2 active:scale-95"
+                className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-[var(--color-accent)] to-[var(--color-accent-hover)] hover:from-[var(--color-accent-hover)] hover:to-[var(--color-accent)] text-white font-bold text-xs tracking-wide shadow-xs hover:shadow-sm transition-all flex items-center justify-center space-x-2 active:scale-95"
                 onClick={onSwitchToOverlay}
                 title="Float Momo on Desktop"
               >

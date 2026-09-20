@@ -1,0 +1,165 @@
+/* ============================================================
+   Momo Design Tokens — derived from desktop-ui-mastery
+   hue=250 temperature=cool density=compact register=instrument
+   
+   Dark-first desktop companion. Obsidian neutrals, slate-sapphire
+   accent, compact spacing, instrument-grade responsiveness.
+   ============================================================ */
+
+/* Dark theme is the default for Momo */
+:root {
+  /* --- Neutral Ramp (Dark) --- */
+  --neutral-1: oklch(0.165 0.006 240);
+  --neutral-2: oklch(0.190 0.006 240);
+  --neutral-3: oklch(0.215 0.006 240);
+  --neutral-4: oklch(0.245 0.006 240);
+  --neutral-5: oklch(0.280 0.006 240);
+  --neutral-6: oklch(0.330 0.006 240);
+  --neutral-7: oklch(0.420 0.006 240);
+  --neutral-8: oklch(0.520 0.006 240);
+  --neutral-9: oklch(0.620 0.006 240);
+  --neutral-10: oklch(0.720 0.006 240);
+  --neutral-11: oklch(0.840 0.006 240);
+  --neutral-12: oklch(0.955 0.006 240);
+
+  /* --- Semantic Surfaces --- */
+  --color-bg: var(--neutral-1);
+  --color-surface: var(--neutral-2);
+  --color-surface-hover: var(--neutral-3);
+  --color-surface-active: var(--neutral-4);
+  --color-raised: var(--neutral-3);
+
+  /* --- Text --- */
+  --color-text: var(--neutral-12);
+  --color-text-secondary: var(--neutral-10);
+  --color-text-muted: var(--neutral-8);
+
+  /* --- Borders --- */
+  --color-border: var(--neutral-4);
+  --color-border-strong: var(--neutral-6);
+
+  /* --- Accent: Slate-Sapphire (hue 250) --- */
+  --color-accent: oklch(0.680 0.150 250);
+  --color-accent-hover: oklch(0.740 0.150 250);
+  --color-accent-subtle: oklch(0.260 0.050 250);
+  --color-accent-text: oklch(0.140 0.020 250);
+
+  /* --- Status --- */
+  --color-success: oklch(0.700 0.140 150);
+  --color-warning: oklch(0.820 0.140 85);
+  --color-danger: oklch(0.700 0.170 25);
+
+  /* --- Type Scale (Compact Desktop) --- */
+  --text-2xs: 10.5px;
+  --text-xs: 11px;
+  --text-sm: 12px;
+  --text-base: 13px;
+  --text-md: 15px;
+  --text-lg: 18px;
+  --text-xl: 22px;
+  --text-2xl: 26px;
+  --text-3xl: 30px;
+
+  /* --- Typography --- */
+  --font-sans: 'Segoe UI Variable', 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Cascadia Code', 'JetBrains Mono', 'Consolas', ui-monospace, monospace;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --leading-ui: 1.25;
+  --leading-prose: 1.5;
+
+  /* --- Spacing (Compact Desktop) --- */
+  --space-1: 2px;
+  --space-2: 4px;
+  --space-3: 6px;
+  --space-4: 8px;
+  --space-5: 12px;
+  --space-6: 16px;
+  --space-7: 20px;
+  --space-8: 24px;
+  --space-9: 28px;
+  --space-10: 32px;
+  --space-11: 40px;
+  --space-12: 48px;
+
+  /* --- Metrics --- */
+  --row-height: 30px;
+  --control-height: 26px;
+
+  /* --- Radius --- */
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-full: 9999px;
+
+  /* --- Shadow --- */
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.3);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.2);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.5), 0 2px 4px -2px rgba(0,0,0,0.3);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.6), 0 4px 6px -4px rgba(0,0,0,0.4);
+
+  /* --- Panda Character Tokens --- */
+  --panda-white: #fbfbf9;
+  --panda-black: #1e2329;
+  --panda-blush: rgba(100, 140, 255, 0.2);
+  --shadow-panda: 0 8px 16px rgba(0, 0, 0, 0.35);
+
+  /* --- Motion --- */
+  --duration-fast: 120ms;
+  --duration-base: 160ms;
+  --duration-slow: 220ms;
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.1);
+
+  /* Instrument-grade motion (from derive_tokens.py) */
+  --motion-utility: 140ms;
+  --motion-exit: 100ms;
+  --motion-ease: cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* Light theme override (available but not default) */
+[data-theme="light"] {
+  --neutral-1: oklch(0.985 0.006 240);
+  --neutral-2: oklch(0.972 0.006 240);
+  --neutral-3: oklch(0.955 0.006 240);
+  --neutral-4: oklch(0.932 0.006 240);
+  --neutral-5: oklch(0.900 0.006 240);
+  --neutral-6: oklch(0.860 0.006 240);
+  --neutral-7: oklch(0.760 0.006 240);
+  --neutral-8: oklch(0.640 0.006 240);
+  --neutral-9: oklch(0.520 0.006 240);
+  --neutral-10: oklch(0.420 0.006 240);
+  --neutral-11: oklch(0.300 0.006 240);
+  --neutral-12: oklch(0.160 0.006 240);
+
+  --color-accent: oklch(0.550 0.170 250);
+  --color-accent-hover: oklch(0.500 0.180 250);
+  --color-accent-subtle: oklch(0.950 0.030 250);
+  --color-accent-text: oklch(0.990 0.005 250);
+
+  --color-success: oklch(0.550 0.150 150);
+  --color-warning: oklch(0.670 0.150 85);
+  --color-danger: oklch(0.550 0.180 25);
+
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.12), 0 4px 6px -4px rgba(0,0,0,0.06);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0ms;
+    --duration-base: 0ms;
+    --duration-slow: 0ms;
+    --motion-utility: 0ms;
+    --motion-exit: 0ms;
+  }
+}
+
+/* Tabular figures for numeric columns */
+.tnum { font-variant-numeric: tabular-nums; }

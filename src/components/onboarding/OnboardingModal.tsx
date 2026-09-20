@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useMomoStore } from "@/store/useMomoStore";
+import { ExternalLink, Key, Sparkles } from "lucide-react";
 
 interface OnboardingModalProps {
   onComplete: () => void;
@@ -48,39 +49,70 @@ export function OnboardingModal({ onComplete, onSkip }: OnboardingModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 select-none font-sans text-slate-200">
-      <div className="relative w-full max-w-lg bg-obsidian-900 border border-emerald-500/40 rounded-2xl shadow-2xl p-6 shadow-black/90 flex flex-col gap-4">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 select-none"
+      style={{
+        background: "rgba(0, 0, 0, 0.75)",
+        fontFamily: "var(--font-sans)",
+        color: "var(--color-text)",
+      }}
+    >
+      <div
+        className="relative w-full max-w-lg rounded-xl p-5 flex flex-col gap-4"
+        style={{
+          background: "var(--neutral-2)",
+          border: "1px solid var(--color-border-strong)",
+          boxShadow: "var(--shadow-lg)",
+        }}
+      >
         {/* Banner */}
-        <div className="flex items-center space-x-3.5 pb-3 border-b border-emerald-950">
-          <div className="w-12 h-12 rounded-xl bg-obsidian-800 border border-emerald-500/40 flex items-center justify-center shadow-glow-sm">
-            <svg
-              className="w-8 h-8 text-emerald-400"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <circle cx="12" cy="13" r="7"></circle>
-              <circle cx="7" cy="7" r="3"></circle>
-              <circle cx="17" cy="7" r="3"></circle>
-              <circle cx="10" cy="12" fill="#0B100E" r="1.5"></circle>
-              <circle cx="14" cy="12" fill="#0B100E" r="1.5"></circle>
-              <ellipse cx="12" cy="15" fill="#0B100E" rx="1.5" ry="1"></ellipse>
+        <div
+          className="flex items-center space-x-3 pb-3"
+          style={{ borderBottom: "1px solid var(--color-border)" }}
+        >
+          <div
+            className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
+            style={{
+              background: "var(--neutral-3)",
+              border: "1px solid var(--color-border)",
+            }}
+          >
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="var(--color-accent)">
+              <circle cx="12" cy="13" r="7" />
+              <circle cx="7" cy="7" r="3" />
+              <circle cx="17" cy="7" r="3" />
+              <circle cx="10" cy="12" fill="var(--neutral-1)" r="1.5" />
+              <circle cx="14" cy="12" fill="var(--neutral-1)" r="1.5" />
+              <ellipse cx="12" cy="15" fill="var(--neutral-1)" rx="1.5" ry="1" />
             </svg>
           </div>
           <div>
             <div className="flex items-center space-x-2">
-              <h2 className="text-base font-bold text-white font-mono">Welcome to Momo</h2>
-              <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-emerald-950 text-emerald-400 border border-emerald-500/30">
-                v2.4 PRO
+              <h2
+                className="text-sm font-semibold"
+                style={{ color: "var(--color-text)" }}
+              >
+                Welcome to Momo
+              </h2>
+              <span
+                className="text-[10px] font-mono px-1.5 py-0.2 rounded"
+                style={{
+                  background: "var(--color-accent-subtle)",
+                  color: "var(--color-accent)",
+                  border: "1px solid var(--color-accent)",
+                }}
+              >
+                v2.4
               </span>
             </div>
-            <p className="text-xs text-slate-400 mt-0.5">
-              Your witty desktop AI companion with zero-loss routing.
+            <p className="text-xs mt-0.5" style={{ color: "var(--color-text-muted)" }}>
+              Your desktop AI companion with zero-loss routing.
             </p>
           </div>
         </div>
 
         {/* Description */}
-        <p className="text-xs text-slate-400 leading-relaxed">
+        <p className="text-xs leading-relaxed" style={{ color: "var(--color-text-secondary)" }}>
           Provide at least one AI provider key to power Momo. Keys are encrypted via Windows
           Credential Manager.
         </p>
@@ -89,19 +121,28 @@ export function OnboardingModal({ onComplete, onSkip }: OnboardingModalProps) {
         <div className="space-y-3 font-mono text-xs">
           <div className="space-y-1">
             <div className="flex items-center justify-between">
-              <label className="text-slate-300">Groq API Key (Free &amp; Ultra-Fast)</label>
+              <label style={{ color: "var(--color-text-secondary)" }}>
+                Groq API Key (Free &amp; Fast)
+              </label>
               <a
                 href="https://console.groq.com/keys"
                 target="_blank"
                 rel="noreferrer"
-                className="text-[11px] text-emerald-400 hover:underline"
+                className="text-[11px] hover:underline inline-flex items-center gap-1"
+                style={{ color: "var(--color-accent)" }}
               >
-                Get free key ↗
+                <span>Get free key</span>
+                <ExternalLink size={10} />
               </a>
             </div>
             <input
               type="password"
-              className="w-full bg-[#080d0b] text-slate-100 placeholder-slate-600 rounded-lg px-3 py-2 border border-emerald-950 focus:border-emerald-500/60 focus:ring-1 focus:ring-emerald-500/40 outline-none"
+              className="w-full rounded-md px-3 py-1.5 outline-none font-mono text-xs"
+              style={{
+                background: "var(--neutral-1)",
+                border: "1px solid var(--color-border)",
+                color: "var(--color-text)",
+              }}
               placeholder="gsk_..."
               value={groqKey}
               onChange={(e) => setGroqKey(e.target.value)}
@@ -111,19 +152,28 @@ export function OnboardingModal({ onComplete, onSkip }: OnboardingModalProps) {
 
           <div className="space-y-1">
             <div className="flex items-center justify-between">
-              <label className="text-slate-300">OpenRouter API Key (Multi-Model)</label>
+              <label style={{ color: "var(--color-text-secondary)" }}>
+                OpenRouter API Key (Multi-Model)
+              </label>
               <a
                 href="https://openrouter.ai/keys"
                 target="_blank"
                 rel="noreferrer"
-                className="text-[11px] text-emerald-400 hover:underline"
+                className="text-[11px] hover:underline inline-flex items-center gap-1"
+                style={{ color: "var(--color-accent)" }}
               >
-                Get key ↗
+                <span>Get key</span>
+                <ExternalLink size={10} />
               </a>
             </div>
             <input
               type="password"
-              className="w-full bg-[#080d0b] text-slate-100 placeholder-slate-600 rounded-lg px-3 py-2 border border-emerald-950 focus:border-emerald-500/60 focus:ring-1 focus:ring-emerald-500/40 outline-none"
+              className="w-full rounded-md px-3 py-1.5 outline-none font-mono text-xs"
+              style={{
+                background: "var(--neutral-1)",
+                border: "1px solid var(--color-border)",
+                color: "var(--color-text)",
+              }}
               placeholder="sk-or-..."
               value={openRouterKey}
               onChange={(e) => setOpenRouterKey(e.target.value)}
@@ -133,19 +183,28 @@ export function OnboardingModal({ onComplete, onSkip }: OnboardingModalProps) {
 
           <div className="space-y-1">
             <div className="flex items-center justify-between">
-              <label className="text-slate-300">Google Gemini API Key (AI Studio)</label>
+              <label style={{ color: "var(--color-text-secondary)" }}>
+                Google Gemini API Key (AI Studio)
+              </label>
               <a
                 href="https://aistudio.google.com/app/apikey"
                 target="_blank"
                 rel="noreferrer"
-                className="text-[11px] text-emerald-400 hover:underline"
+                className="text-[11px] hover:underline inline-flex items-center gap-1"
+                style={{ color: "var(--color-accent)" }}
               >
-                Get free key ↗
+                <span>Get free key</span>
+                <ExternalLink size={10} />
               </a>
             </div>
             <input
               type="password"
-              className="w-full bg-[#080d0b] text-slate-100 placeholder-slate-600 rounded-lg px-3 py-2 border border-emerald-950 focus:border-emerald-500/60 focus:ring-1 focus:ring-emerald-500/40 outline-none"
+              className="w-full rounded-md px-3 py-1.5 outline-none font-mono text-xs"
+              style={{
+                background: "var(--neutral-1)",
+                border: "1px solid var(--color-border)",
+                color: "var(--color-text)",
+              }}
               placeholder="AIzaSy..."
               value={geminiKey}
               onChange={(e) => setGeminiKey(e.target.value)}
@@ -155,21 +214,42 @@ export function OnboardingModal({ onComplete, onSkip }: OnboardingModalProps) {
         </div>
 
         {error && (
-          <div className="p-2.5 rounded-lg bg-danger-soft border border-danger-border text-danger-text text-xs font-mono">
+          <div
+            className="p-2 rounded text-xs font-mono"
+            style={{
+              background: "rgba(239, 68, 68, 0.12)",
+              border: "1px solid rgba(239, 68, 68, 0.3)",
+              color: "var(--color-danger)",
+            }}
+          >
             {error}
           </div>
         )}
 
         {/* Actions */}
-        <div className="flex items-center justify-end space-x-3 pt-2 border-t border-emerald-950">
+        <div
+          className="flex items-center justify-end space-x-2 pt-3"
+          style={{ borderTop: "1px solid var(--color-border)" }}
+        >
           <button
-            className="px-4 py-2 rounded-xl text-xs font-mono text-slate-400 hover:text-slate-200 hover:bg-obsidian-800 transition"
+            className="px-3 py-1.5 rounded-md text-xs font-mono transition"
+            style={{
+              background: "var(--neutral-3)",
+              border: "1px solid var(--color-border)",
+              color: "var(--color-text-secondary)",
+            }}
             onClick={onSkip || onComplete}
           >
             Skip for now
           </button>
           <button
-            className="px-5 py-2 rounded-xl text-xs font-mono font-bold bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 text-obsidian-950 shadow-glow-sm hover:shadow-glow-md transition disabled:opacity-50"
+            className="px-4 py-1.5 rounded-md text-xs font-mono font-semibold transition disabled:opacity-50"
+            style={{
+              background: "var(--color-accent)",
+              border: "1px solid var(--color-accent-hover)",
+              color: "#ffffff",
+              boxShadow: "var(--shadow-xs)",
+            }}
             onClick={handleSave}
             disabled={saving}
           >

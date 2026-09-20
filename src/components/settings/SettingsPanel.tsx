@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useMomoStore } from "@/store/useMomoStore";
 import { memoryStore } from "@/core/memory/memoryStore";
+import { ChevronUp, ChevronDown } from "lucide-react";
 import type { CompanionStyle, Proactivity, ProviderId, RoastLevel, Seriousness } from "@/types";
 
 type SettingsTab =
@@ -75,45 +76,45 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
 
   return (
     <div
-      className="relative w-full max-w-5xl h-[800px] max-h-[92vh] bg-obsidian-900 border border-emerald-900/40 rounded-2xl shadow-2xl flex flex-col overflow-hidden shadow-black/80 backdrop-blur-xl font-sans text-slate-200"
+      className="relative w-full max-w-5xl h-[800px] max-h-[92vh] bg-[var(--neutral-2)] border border-[var(--color-border)] rounded-2xl shadow-2xl flex flex-col overflow-hidden shadow-black/80 backdrop-blur-xl font-sans text-slate-200"
       data-purpose="desktop-settings-window"
     >
       {/* TitleBar */}
       <header
-        className="h-12 bg-obsidian-850 border-b border-emerald-950/80 px-4 flex items-center justify-between select-none shrink-0"
+        className="h-12 bg-[var(--neutral-3)] border-b border-[var(--color-border)] px-4 flex items-center justify-between select-none shrink-0"
         data-purpose="window-titlebar"
       >
         {/* Left: Momo Symbol & Title */}
         <div className="flex items-center space-x-3">
-          <div className="relative w-7 h-7 rounded-lg bg-obsidian-800 border border-emerald-500/40 flex items-center justify-center shadow-inner group">
+          <div className="relative w-7 h-7 rounded-lg bg-[var(--neutral-4)] border border-[var(--color-accent)] flex items-center justify-center shadow-inner group">
             <svg
-              className="w-4 h-4 text-emerald-400 group-hover:scale-110 transition-transform"
+              className="w-4 h-4 text-[var(--color-accent)] group-hover:scale-110 transition-transform"
               fill="currentColor"
               viewBox="0 0 24 24"
             >
-              <circle cx="6.5" cy="6.5" fill="#10b981" r="3"></circle>
-              <circle cx="17.5" cy="6.5" fill="#10b981" r="3"></circle>
-              <ellipse cx="12" cy="14" fill="#0f1512" rx="8" ry="7" stroke="#10b981" strokeWidth="1.8"></ellipse>
-              <ellipse cx="9" cy="13.5" fill="#10b981" rx="1.8" ry="2.2"></ellipse>
-              <ellipse cx="15" cy="13.5" fill="#10b981" rx="1.8" ry="2.2"></ellipse>
-              <ellipse cx="12" cy="16.5" fill="#34d399" rx="1.5" ry="1.1"></ellipse>
+              <circle cx="6.5" cy="6.5" fill="var(--color-accent)" r="3"></circle>
+              <circle cx="17.5" cy="6.5" fill="var(--color-accent)" r="3"></circle>
+              <ellipse cx="12" cy="14" fill="#0f1512" rx="8" ry="7" stroke="var(--color-accent)" strokeWidth="1.8"></ellipse>
+              <ellipse cx="9" cy="13.5" fill="var(--color-accent)" rx="1.8" ry="2.2"></ellipse>
+              <ellipse cx="15" cy="13.5" fill="var(--color-accent)" rx="1.8" ry="2.2"></ellipse>
+              <ellipse cx="12" cy="16.5" fill="var(--color-accent)" rx="1.5" ry="1.1"></ellipse>
             </svg>
-            <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-obsidian-900 animate-pulse"></span>
+            <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-[var(--color-accent)] ring-2 ring-obsidian-900 animate-pulse"></span>
           </div>
           <div className="flex items-center space-x-2">
             <span className="text-sm font-semibold tracking-wide text-slate-100 font-mono">
               Momo Desktop
             </span>
             <span className="text-xs text-slate-400 font-normal">Settings</span>
-            <span className="text-[10px] uppercase font-mono font-bold bg-emerald-950/80 border border-emerald-600/30 text-emerald-300 px-1.5 py-0.5 rounded tracking-wider">
+            <span className="text-[10px] uppercase font-mono font-bold bg-[var(--color-accent-subtle)] border border-[var(--color-accent)] text-[var(--color-accent)] px-1.5 py-0.5 rounded tracking-wider">
               v2.4 PRO
             </span>
           </div>
         </div>
 
         {/* Center: Status Pill */}
-        <div className="hidden md:flex items-center space-x-2 text-xs font-mono bg-obsidian-900/90 border border-emerald-900/50 px-3 py-1 rounded-full text-emerald-400 shadow-sm">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+        <div className="hidden md:flex items-center space-x-2 text-xs font-mono bg-[var(--neutral-2)]/90 border border-[var(--color-border)] px-3 py-1 rounded-full text-[var(--color-accent)] shadow-sm">
+          <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-accent)] animate-ping"></span>
           <span className="tracking-tight text-slate-300">
             Local Engine Active • Failover Ready
           </span>
@@ -140,7 +141,7 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
       </header>
 
       {/* Search & Quick Bar */}
-      <div className="bg-obsidian-900/70 border-b border-emerald-950/60 px-6 py-2.5 flex items-center justify-between gap-4 shrink-0">
+      <div className="bg-[var(--neutral-2)]/70 border-b border-[var(--color-border)] px-6 py-2.5 flex items-center justify-between gap-4 shrink-0">
         <div className="relative flex-1 max-w-md">
           <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -148,15 +149,15 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
             </svg>
           </span>
           <input
-            className="w-full pl-9 pr-14 py-1.5 bg-obsidian-850/90 border border-emerald-950/80 rounded-lg text-xs font-mono text-slate-200 placeholder-slate-500 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/30 transition shadow-inner"
+            className="w-full pl-9 pr-14 py-1.5 bg-[var(--neutral-3)]/90 border border-[var(--color-border)] rounded-lg text-xs font-mono text-slate-200 placeholder-slate-500 focus:outline-none focus:border-[var(--color-accent)]/50 focus:ring-1 focus:ring-[var(--color-accent)]/30 transition shadow-inner"
             placeholder="Search settings, hotkeys, models... (Ctrl + /)"
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
           <span className="absolute inset-y-0 right-0 pr-2.5 flex items-center pointer-events-none">
-            <kbd className="text-[10px] font-mono bg-obsidian-800 border border-emerald-900/60 text-slate-400 px-1.5 py-0.5 rounded">
-              ⌘K
+            <kbd className="text-[10px] font-mono bg-[var(--neutral-4)] border border-[var(--color-border)] text-slate-400 px-1.5 py-0.5 rounded">
+              Ctrl+K
             </kbd>
           </span>
         </div>
@@ -165,19 +166,19 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
         <div className="hidden lg:flex items-center space-x-4 text-xs font-mono text-slate-400">
           <div className="flex items-center space-x-1.5">
             <span className="text-slate-500">Overlay:</span>
-            <span className="text-emerald-400 font-medium">Floating Panda</span>
+            <span className="text-[var(--color-accent)] font-medium">Floating Panda</span>
           </div>
-          <div className="h-3 w-px bg-emerald-950"></div>
+          <div className="h-3 w-px bg-[var(--neutral-3)]"></div>
           <div className="flex items-center space-x-1.5">
             <span className="text-slate-500">PTT Hotkey:</span>
-            <span className="px-1.5 py-0.5 rounded bg-obsidian-800 border border-emerald-900/50 text-emerald-300 text-[11px]">
+            <span className="px-1.5 py-0.5 rounded bg-[var(--neutral-4)] border border-[var(--color-border)] text-[var(--color-accent)] text-[11px]">
               F1 [Hold]
             </span>
           </div>
-          <div className="h-3 w-px bg-emerald-950"></div>
+          <div className="h-3 w-px bg-[var(--neutral-3)]"></div>
           <div className="flex items-center space-x-1.5">
             <span className="text-slate-500">Latency:</span>
-            <span className="text-emerald-400">42ms</span>
+            <span className="text-[var(--color-accent)]">42ms</span>
           </div>
         </div>
       </div>
@@ -186,7 +187,7 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
       <div className="flex-1 flex overflow-hidden">
         {/* Navigation Sidebar */}
         <aside
-          className="w-60 bg-obsidian-900/95 border-r border-emerald-950/70 p-3 flex flex-col justify-between select-none shrink-0"
+          className="w-60 bg-[var(--neutral-2)]/95 border-r border-[var(--color-border)]/70 p-3 flex flex-col justify-between select-none shrink-0"
           data-purpose="settings-sidebar"
         >
           <div className="space-y-1">
@@ -198,18 +199,18 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
             <button
               className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium transition text-left ${
                 activeTab === "providers"
-                  ? "bg-emerald-950/40 text-emerald-300 border border-emerald-500/30 shadow-sm"
-                  : "text-slate-400 hover:text-slate-200 hover:bg-obsidian-850"
+                  ? "bg-[var(--neutral-3)] text-[var(--color-accent)] border border-[var(--color-accent)] shadow-sm"
+                  : "text-slate-400 hover:text-slate-200 hover:bg-[var(--neutral-3)]"
               }`}
               onClick={() => setActiveTab("providers")}
             >
               <div className="flex items-center space-x-2.5">
-                <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 text-[var(--color-accent)]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" strokeLinecap="round" strokeLinejoin="round"></path>
                 </svg>
                 <span>AI Providers</span>
               </div>
-              <span className="text-[10px] font-mono bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-1.5 py-0.2 rounded-full font-semibold">
+              <span className="text-[10px] font-mono bg-[var(--color-accent-subtle)] text-[var(--color-accent)] border border-[var(--color-accent)] px-1.5 py-0.2 rounded-full font-semibold">
                 3
               </span>
             </button>
@@ -218,8 +219,8 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
             <button
               className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium transition text-left ${
                 activeTab === "personality"
-                  ? "bg-emerald-950/40 text-emerald-300 border border-emerald-500/30 shadow-sm"
-                  : "text-slate-400 hover:text-slate-200 hover:bg-obsidian-850"
+                  ? "bg-[var(--neutral-3)] text-[var(--color-accent)] border border-[var(--color-accent)] shadow-sm"
+                  : "text-slate-400 hover:text-slate-200 hover:bg-[var(--neutral-3)]"
               }`}
               onClick={() => setActiveTab("personality")}
             >
@@ -229,15 +230,15 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                 </svg>
                 <span>Personality</span>
               </div>
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500/50"></span>
+              <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-accent)]/50"></span>
             </button>
 
             {/* Voice & Push-to-Talk */}
             <button
               className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium transition text-left ${
                 activeTab === "voice"
-                  ? "bg-emerald-950/40 text-emerald-300 border border-emerald-500/30 shadow-sm"
-                  : "text-slate-400 hover:text-slate-200 hover:bg-obsidian-850"
+                  ? "bg-[var(--neutral-3)] text-[var(--color-accent)] border border-[var(--color-accent)] shadow-sm"
+                  : "text-slate-400 hover:text-slate-200 hover:bg-[var(--neutral-3)]"
               }`}
               onClick={() => setActiveTab("voice")}
             >
@@ -253,8 +254,8 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
             <button
               className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium transition text-left ${
                 activeTab === "window"
-                  ? "bg-emerald-950/40 text-emerald-300 border border-emerald-500/30 shadow-sm"
-                  : "text-slate-400 hover:text-slate-200 hover:bg-obsidian-850"
+                  ? "bg-[var(--neutral-3)] text-[var(--color-accent)] border border-[var(--color-accent)] shadow-sm"
+                  : "text-slate-400 hover:text-slate-200 hover:bg-[var(--neutral-3)]"
               }`}
               onClick={() => setActiveTab("window")}
             >
@@ -272,8 +273,8 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
             <button
               className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium transition text-left ${
                 activeTab === "memory"
-                  ? "bg-emerald-950/40 text-emerald-300 border border-emerald-500/30 shadow-sm"
-                  : "text-slate-400 hover:text-slate-200 hover:bg-obsidian-850"
+                  ? "bg-[var(--neutral-3)] text-[var(--color-accent)] border border-[var(--color-accent)] shadow-sm"
+                  : "text-slate-400 hover:text-slate-200 hover:bg-[var(--neutral-3)]"
               }`}
               onClick={() => setActiveTab("memory")}
             >
@@ -283,7 +284,7 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                 </svg>
                 <span>Memory Vault</span>
               </div>
-              <span className="text-[9px] font-mono uppercase bg-emerald-950 text-emerald-400 px-1 py-0.2 rounded border border-emerald-900/80">
+              <span className="text-[9px] font-mono uppercase bg-[var(--neutral-3)] text-[var(--color-accent)] px-1 py-0.2 rounded border border-[var(--color-border)]">
                 {memories.length}
               </span>
             </button>
@@ -292,8 +293,8 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
             <button
               className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium transition text-left ${
                 activeTab === "hotkeys"
-                  ? "bg-emerald-950/40 text-emerald-300 border border-emerald-500/30 shadow-sm"
-                  : "text-slate-400 hover:text-slate-200 hover:bg-obsidian-850"
+                  ? "bg-[var(--neutral-3)] text-[var(--color-accent)] border border-[var(--color-accent)] shadow-sm"
+                  : "text-slate-400 hover:text-slate-200 hover:bg-[var(--neutral-3)]"
               }`}
               onClick={() => setActiveTab("hotkeys")}
             >
@@ -308,18 +309,18 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
           </div>
 
           {/* Sidebar Bottom: System Information Card */}
-          <div className="mt-4 p-3 rounded-xl bg-obsidian-850 border border-emerald-950/80 text-xs shrink-0">
+          <div className="mt-4 p-3 rounded-xl bg-[var(--neutral-3)] border border-[var(--color-border)] text-xs shrink-0">
             <div className="flex items-center justify-between mb-1">
               <span className="text-slate-400 font-mono text-[11px]">Failover Pipeline</span>
-              <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-glow-mint-sm"></span>
+              <span className="w-2 h-2 rounded-full bg-[var(--color-accent)] shadow-sm"></span>
             </div>
             <div className="text-[11px] text-slate-400 font-mono">
               Active:{" "}
-              <span className="text-emerald-300 font-semibold uppercase">
+              <span className="text-[var(--color-accent)] font-semibold uppercase">
                 {activeProvider?.id || "Local"}
               </span>
             </div>
-            <div className="mt-2 pt-2 border-t border-emerald-950/60 flex items-center justify-between text-[10px] text-slate-500 font-mono">
+            <div className="mt-2 pt-2 border-t border-[var(--color-border)] flex items-center justify-between text-[10px] text-slate-500 font-mono">
               <span>RAM: 142 MB</span>
               <span>Uptime: Active</span>
             </div>
@@ -332,7 +333,7 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
           data-purpose="settings-panel-content"
         >
           {keyFeedback && (
-            <div className="p-3 rounded-xl bg-emerald-950/90 border border-emerald-500/40 text-emerald-300 text-xs font-mono">
+            <div className="p-3 rounded-xl bg-[var(--neutral-3)]/90 border border-[var(--color-accent)] text-[var(--color-accent)] text-xs font-mono">
               {keyFeedback}
             </div>
           )}
@@ -347,7 +348,7 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                   <h2 className="text-base font-bold text-slate-100 font-mono tracking-tight">
                     AI Providers &amp; Failover Priority
                   </h2>
-                  <span className="px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-emerald-950 text-emerald-400 border border-emerald-500/40">
+                  <span className="px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-[var(--neutral-3)] text-[var(--color-accent)] border border-[var(--color-accent)]">
                     Zero-Loss Failover
                   </span>
                 </div>
@@ -396,39 +397,39 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                       key={pid}
                       className={`rounded-xl p-4 transition-all duration-200 ${
                         isLive
-                          ? "bg-obsidian-850 border-2 border-emerald-500/50 shadow-glow-emerald relative overflow-hidden"
+                          ? "bg-[var(--neutral-3)] border-2 border-[var(--color-accent)]/50 shadow-sm relative overflow-hidden"
                           : isError
-                          ? "bg-obsidian-850/80 border border-danger-border/70"
-                          : "bg-obsidian-850/80 border border-emerald-950/80"
+                          ? "bg-[var(--neutral-3)]/80 border border-danger-border/70"
+                          : "bg-[var(--neutral-3)]/80 border border-[var(--color-border)]"
                       }`}
                     >
                       <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
                         <div className="flex items-start md:items-center space-x-3">
                           {/* Order Badge & Reorder Buttons */}
-                          <div className="flex items-center space-x-1 bg-obsidian-900 border border-obsidian-700 px-2 py-1 rounded-lg shrink-0">
+                          <div className="flex items-center space-x-1 bg-[var(--neutral-2)] border border-[var(--color-border)] px-2 py-1 rounded-lg shrink-0">
                             <span
                               className={`font-mono font-bold text-xs ${
-                                isLive ? "text-emerald-400" : "text-slate-300"
+                                isLive ? "text-[var(--color-accent)]" : "text-slate-300"
                               }`}
                             >
                               #{idx + 1}
                             </span>
                             <div className="flex flex-col ml-1 space-y-0.5">
                               <button
-                                className="text-slate-400 hover:text-emerald-300 p-0.5 leading-none text-[9px] disabled:opacity-30"
+                                className="text-slate-400 hover:text-[var(--color-accent)] p-0.5 leading-none text-[9px] disabled:opacity-30"
                                 onClick={() => movePriority(idx, -1)}
                                 disabled={idx === 0}
                                 title="Move up priority"
                               >
-                                ▲
+                                <ChevronUp size={10} />
                               </button>
                               <button
-                                className="text-slate-400 hover:text-emerald-300 p-0.5 leading-none text-[9px] disabled:opacity-30"
+                                className="text-slate-400 hover:text-[var(--color-accent)] p-0.5 leading-none text-[9px] disabled:opacity-30"
                                 onClick={() => movePriority(idx, 1)}
                                 disabled={idx === providerChain.length - 1}
                                 title="Move down priority"
                               >
-                                ▼
+                                <ChevronDown size={10} />
                               </button>
                             </div>
                           </div>
@@ -440,8 +441,8 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                               </h3>
 
                               {isLive && (
-                                <span className="inline-flex items-center space-x-1.5 text-[10px] font-mono text-emerald-300 bg-emerald-950/90 px-2 py-0.5 rounded-full border border-emerald-500/60 font-semibold">
-                                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                                <span className="inline-flex items-center space-x-1.5 text-[10px] font-mono text-[var(--color-accent)] bg-[var(--neutral-3)]/90 px-2 py-0.5 rounded-full border border-[var(--color-accent)]/60 font-semibold">
+                                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-accent)] animate-pulse"></span>
                                   <span>ACTIVE PRIMARY BRAIN</span>
                                 </span>
                               )}
@@ -454,14 +455,14 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                               )}
 
                               {!isLive && !isError && hasKey && (
-                                <span className="inline-flex items-center space-x-1 text-[10px] font-mono text-emerald-400 bg-emerald-950/40 px-2 py-0.5 rounded-full border border-emerald-900/60">
-                                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                                <span className="inline-flex items-center space-x-1 text-[10px] font-mono text-[var(--color-accent)] bg-[var(--neutral-3)] px-2 py-0.5 rounded-full border border-[var(--color-border)]">
+                                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-accent)]"></span>
                                   <span>Connected • Standby</span>
                                 </span>
                               )}
 
                               {!hasKey && (
-                                <span className="inline-flex items-center text-[10px] font-mono text-slate-500 bg-obsidian-900 px-2 py-0.5 rounded border border-obsidian-750">
+                                <span className="inline-flex items-center text-[10px] font-mono text-slate-500 bg-[var(--neutral-2)] px-2 py-0.5 rounded border border-[var(--color-border)]">
                                   Key Not Set
                                 </span>
                               )}
@@ -477,7 +478,7 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                           {editingProvider === pid ? (
                             <div className="flex items-center space-x-1.5">
                               <input
-                                className="bg-obsidian-900 border border-emerald-500 text-emerald-200 text-xs font-mono rounded-lg px-2.5 py-1.5 w-44 focus:outline-none"
+                                className="bg-[var(--neutral-2)] border border-[var(--color-accent)] text-[var(--color-text)] text-xs font-mono rounded-lg px-2.5 py-1.5 w-44 focus:outline-none"
                                 type="password"
                                 placeholder={`Paste ${title} Key`}
                                 value={keyInput}
@@ -485,7 +486,7 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                                 autoFocus
                               />
                               <button
-                                className="px-2.5 py-1.5 text-xs font-mono bg-emerald-600 hover:bg-emerald-500 text-obsidian-950 font-bold rounded-lg transition"
+                                className="px-2.5 py-1.5 text-xs font-mono bg-[var(--color-accent)] hover:bg-[var(--color-accent)] text-obsidian-950 font-bold rounded-lg transition"
                                 onClick={() => handleSaveKey(pid)}
                               >
                                 Save
@@ -504,15 +505,15 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                             <>
                               <div className="relative">
                                 <input
-                                  className="bg-obsidian-900 border border-emerald-950 text-slate-400 text-xs font-mono rounded-lg px-2.5 py-1.5 w-36 focus:outline-none"
+                                  className="bg-[var(--neutral-2)] border border-[var(--color-border)] text-slate-400 text-xs font-mono rounded-lg px-2.5 py-1.5 w-36 focus:outline-none"
                                   readOnly
                                   type="password"
                                   value={hasKey ? "••••••••••••••••" : ""}
                                   placeholder={hasKey ? "Key configured" : "No key"}
                                 />
                                 {hasKey && (
-                                  <span className="absolute right-2 top-2 text-[10px] font-mono text-emerald-400 flex items-center space-x-1">
-                                    <svg className="w-3 h-3 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <span className="absolute right-2 top-2 text-[10px] font-mono text-[var(--color-accent)] flex items-center space-x-1">
+                                    <svg className="w-3 h-3 text-[var(--color-accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                       <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></path>
                                     </svg>
                                     <span>Saved</span>
@@ -520,7 +521,7 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                                 )}
                               </div>
                               <button
-                                className="px-3 py-1.5 text-xs font-mono bg-obsidian-750 hover:bg-obsidian-700 text-slate-200 border border-emerald-950 rounded-lg transition"
+                                className="px-3 py-1.5 text-xs font-mono bg-obsidian-750 hover:bg-obsidian-700 text-slate-200 border border-[var(--color-border)] rounded-lg transition"
                                 onClick={() => {
                                   setEditingProvider(pid);
                                   setKeyInput("");
@@ -562,14 +563,14 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                 </p>
               </div>
 
-              <div className="bg-obsidian-850/80 border border-emerald-950/80 rounded-xl p-5 space-y-5">
+              <div className="bg-[var(--neutral-3)]/80 border border-[var(--color-border)] rounded-xl p-5 space-y-5">
                 {/* Roast Level Selector */}
                 <div>
                   <div className="flex items-center justify-between mb-2">
                     <label className="text-xs font-mono font-medium text-slate-200 flex items-center space-x-2">
                       <span>Roast Level</span>
-                      <span className="text-[10px] text-emerald-400 bg-emerald-950 px-2 py-0.5 rounded border border-emerald-900/60">
-                        Level {p.roastLevel}: {p.roastLevel === 0 ? "Polite" : p.roastLevel === 1 ? "Witty" : p.roastLevel === 2 ? "Cheeky Bro" : "Savage 🔥"}
+                      <span className="text-[10px] text-[var(--color-accent)] bg-[var(--neutral-3)] px-2 py-0.5 rounded border border-[var(--color-border)]">
+                        Level {p.roastLevel}: {p.roastLevel === 0 ? "Polite" : p.roastLevel === 1 ? "Witty" : p.roastLevel === 2 ? "Cheeky Bro" : "Savage"}
                       </span>
                     </label>
                     <span className="text-xs text-slate-400 italic">
@@ -580,12 +581,12 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-4 gap-2 bg-obsidian-900 p-1.5 rounded-xl border border-emerald-950/80">
+                  <div className="grid grid-cols-4 gap-2 bg-[var(--neutral-2)] p-1.5 rounded-xl border border-[var(--color-border)]">
                     {[
                       { level: 0, title: "0", sub: "Gentle & Polite" },
                       { level: 1, title: "1", sub: "Witty Friend" },
                       { level: 2, title: "2", sub: "Cheeky Bro" },
-                      { level: 3, title: "3 🔥", sub: "Savage Roast" },
+                      { level: 3, title: "3 (Savage)", sub: "Savage Roast" },
                     ].map((item) => {
                       const isSel = p.roastLevel === item.level;
                       return (
@@ -593,8 +594,8 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                           key={item.level}
                           className={`py-2 text-center rounded-lg text-xs font-mono transition ${
                             isSel
-                              ? "bg-emerald-600/90 text-white font-bold shadow-sm ring-1 ring-emerald-400/40"
-                              : "text-slate-400 hover:text-slate-200 hover:bg-obsidian-800"
+                              ? "bg-[var(--color-accent)]/90 text-white font-bold shadow-sm ring-1 ring-[var(--color-accent)]/40"
+                              : "text-slate-400 hover:text-slate-200 hover:bg-[var(--neutral-4)]"
                           }`}
                           onClick={() =>
                             updateSettings({
@@ -616,7 +617,7 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                   <div className="space-y-1.5">
                     <label className="text-xs font-mono text-slate-300">Proactivity</label>
                     <select
-                      className="w-full bg-obsidian-900 border border-emerald-950/80 rounded-lg px-3 py-2 text-xs font-mono text-slate-200 focus:border-emerald-500/50 focus:outline-none"
+                      className="w-full bg-[var(--neutral-2)] border border-[var(--color-border)] rounded-lg px-3 py-2 text-xs font-mono text-slate-200 focus:border-[var(--color-accent)]/50 focus:outline-none"
                       value={p.proactivity}
                       onChange={(e) =>
                         updateSettings({
@@ -636,7 +637,7 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                       Companion Tone / Seriousness
                     </label>
                     <select
-                      className="w-full bg-obsidian-900 border border-emerald-950/80 rounded-lg px-3 py-2 text-xs font-mono text-slate-200 focus:border-emerald-500/50 focus:outline-none"
+                      className="w-full bg-[var(--neutral-2)] border border-[var(--color-border)] rounded-lg px-3 py-2 text-xs font-mono text-slate-200 focus:border-[var(--color-accent)]/50 focus:outline-none"
                       value={p.seriousness}
                       onChange={(e) =>
                         updateSettings({
@@ -668,13 +669,13 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                 </p>
               </div>
 
-              <div className="bg-obsidian-850/80 border border-emerald-950/80 rounded-xl p-5 space-y-5">
+              <div className="bg-[var(--neutral-3)]/80 border border-[var(--color-border)] rounded-xl p-5 space-y-5">
                 {/* Voice Selector and Test Voice Button */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
                   <div className="md:col-span-2 space-y-1.5">
                     <label className="text-xs font-mono text-slate-300">Synthesizer Voice</label>
                     <select
-                      className="w-full bg-obsidian-900 border border-emerald-950/80 rounded-lg px-3 py-2 text-xs font-mono text-slate-200 focus:border-emerald-500/50 focus:outline-none"
+                      className="w-full bg-[var(--neutral-2)] border border-[var(--color-border)] rounded-lg px-3 py-2 text-xs font-mono text-slate-200 focus:border-[var(--color-accent)]/50 focus:outline-none"
                       value={settings.selectedVoice || ""}
                       onChange={(e) => updateSettings({ selectedVoice: e.target.value })}
                     >
@@ -690,11 +691,11 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                     </select>
                   </div>
                   <button
-                    className="flex items-center justify-center space-x-2 w-full py-2 bg-obsidian-800 hover:bg-obsidian-750 text-emerald-400 border border-emerald-700/40 hover:border-emerald-500 rounded-lg text-xs font-mono transition shadow-sm"
+                    className="flex items-center justify-center space-x-2 w-full py-2 bg-[var(--neutral-4)] hover:bg-obsidian-750 text-[var(--color-accent)] border border-[var(--color-border)]/40 hover:border-[var(--color-accent)] rounded-lg text-xs font-mono transition shadow-sm"
                     onClick={testVoice}
                     disabled={isSpeaking}
                   >
-                    <svg className="w-4 h-4 text-emerald-400 fill-current" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 text-[var(--color-accent)] fill-current" viewBox="0 0 24 24">
                       <path d="M8 5v14l11-7z"></path>
                     </svg>
                     <span>{isSpeaking ? "Speaking..." : "Test Voice Sample"}</span>
@@ -706,7 +707,7 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                   <div className="space-y-2">
                     <div className="flex justify-between text-xs font-mono">
                       <span className="text-slate-300">Speech Rate / Speed</span>
-                      <span className="text-emerald-400 font-semibold">
+                      <span className="text-[var(--color-accent)] font-semibold">
                         {settings.ttsSpeed.toFixed(2)}x
                       </span>
                     </div>
@@ -729,7 +730,7 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                   <div className="space-y-2">
                     <div className="flex justify-between text-xs font-mono">
                       <span className="text-slate-300">Vocal Pitch</span>
-                      <span className="text-emerald-400 font-semibold">
+                      <span className="text-[var(--color-accent)] font-semibold">
                         {settings.ttsPitch.toFixed(2)}x
                       </span>
                     </div>
@@ -752,31 +753,31 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
 
                 {/* Voice Toggles */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
-                  <label className="flex items-center space-x-2.5 bg-obsidian-900/60 p-2.5 rounded-lg border border-emerald-950/60 cursor-pointer hover:border-emerald-800/60 transition">
+                  <label className="flex items-center space-x-2.5 bg-[var(--neutral-2)]/60 p-2.5 rounded-lg border border-[var(--color-border)] cursor-pointer hover:border-[var(--color-border)]/60 transition">
                     <input
                       checked={settings.speakChatResponses}
                       onChange={(e) => updateSettings({ speakChatResponses: e.target.checked })}
-                      className="w-4 h-4 rounded text-emerald-500 bg-obsidian-800 border-emerald-800/80 focus:ring-0"
+                      className="w-4 h-4 rounded text-[var(--color-accent)] bg-[var(--neutral-4)] border-[var(--color-border)]/80 focus:ring-0"
                       type="checkbox"
                     />
                     <span className="text-xs font-mono text-slate-300">Speak chat replies</span>
                   </label>
 
-                  <label className="flex items-center space-x-2.5 bg-obsidian-900/60 p-2.5 rounded-lg border border-emerald-950/60 cursor-pointer hover:border-emerald-800/60 transition">
+                  <label className="flex items-center space-x-2.5 bg-[var(--neutral-2)]/60 p-2.5 rounded-lg border border-[var(--color-border)] cursor-pointer hover:border-[var(--color-border)]/60 transition">
                     <input
                       checked={settings.ttsEnabled}
                       onChange={(e) => updateSettings({ ttsEnabled: e.target.checked })}
-                      className="w-4 h-4 rounded text-emerald-500 bg-obsidian-800 border-emerald-800/80 focus:ring-0"
+                      className="w-4 h-4 rounded text-[var(--color-accent)] bg-[var(--neutral-4)] border-[var(--color-border)]/80 focus:ring-0"
                       type="checkbox"
                     />
                     <span className="text-xs font-mono text-slate-300">Proactive comments</span>
                   </label>
 
-                  <label className="flex items-center space-x-2.5 bg-obsidian-900/60 p-2.5 rounded-lg border border-emerald-950/60 cursor-pointer hover:border-emerald-800/60 transition">
+                  <label className="flex items-center space-x-2.5 bg-[var(--neutral-2)]/60 p-2.5 rounded-lg border border-[var(--color-border)] cursor-pointer hover:border-[var(--color-border)]/60 transition">
                     <input
                       checked={settings.muteMomo}
                       onChange={(e) => updateSettings({ muteMomo: e.target.checked })}
-                      className="w-4 h-4 rounded text-emerald-500 bg-obsidian-800 border-emerald-800/80 focus:ring-0"
+                      className="w-4 h-4 rounded text-[var(--color-accent)] bg-[var(--neutral-4)] border-[var(--color-border)]/80 focus:ring-0"
                       type="checkbox"
                     />
                     <span className="text-xs font-mono text-slate-300">Mute Momo completely</span>
@@ -784,10 +785,10 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                 </div>
 
                 {/* Push-to-Talk Mic Visualizer Card */}
-                <div className="bg-obsidian-900 border border-emerald-900/50 rounded-xl p-4 space-y-3">
+                <div className="bg-[var(--neutral-2)] border border-[var(--color-border)] rounded-xl p-4 space-y-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2">
-                      <span className="px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-500/30 text-xs font-mono font-bold">
+                      <span className="px-2 py-0.5 rounded bg-[var(--neutral-3)] text-[var(--color-accent)] border border-[var(--color-accent)] text-xs font-mono font-bold">
                         F1 Hotkey
                       </span>
                       <span className="text-xs text-slate-200 font-medium">
@@ -797,16 +798,16 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                     <span className="text-[11px] font-mono text-slate-400">Release F1 to send</span>
                   </div>
 
-                  <div className="flex items-center justify-between bg-obsidian-850 px-3.5 py-2.5 rounded-lg border border-emerald-950">
+                  <div className="flex items-center justify-between bg-[var(--neutral-3)] px-3.5 py-2.5 rounded-lg border border-[var(--color-border)]">
                     <div className="flex items-center space-x-3">
                       <span className="relative flex h-2.5 w-2.5">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400"></span>
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--color-accent)] opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[var(--color-accent)]"></span>
                       </span>
                       <div>
                         <div className="text-xs font-mono text-slate-200">
                           Active Mic:{" "}
-                          <span className="text-emerald-300 font-semibold">
+                          <span className="text-[var(--color-accent)] font-semibold">
                             {activeMicName || "Default Audio Device"}
                           </span>
                         </div>
@@ -817,12 +818,12 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                     </div>
                     {/* Visualizer bars */}
                     <div className="flex items-center space-x-1.5 px-3">
-                      <div className="w-1 bg-emerald-500/40 rounded-full h-2"></div>
-                      <div className="w-1 bg-emerald-400 rounded-full audio-bar-1"></div>
-                      <div className="w-1 bg-emerald-300 rounded-full audio-bar-2"></div>
-                      <div className="w-1 bg-emerald-400 rounded-full audio-bar-3"></div>
-                      <div className="w-1 bg-emerald-500/50 rounded-full audio-bar-4"></div>
-                      <div className="w-1 bg-emerald-400 rounded-full audio-bar-5"></div>
+                      <div className="w-1 bg-[var(--color-accent)]/40 rounded-full h-2"></div>
+                      <div className="w-1 bg-[var(--color-accent)] rounded-full audio-bar-1"></div>
+                      <div className="w-1 bg-[var(--color-accent)] rounded-full audio-bar-2"></div>
+                      <div className="w-1 bg-[var(--color-accent)] rounded-full audio-bar-3"></div>
+                      <div className="w-1 bg-[var(--color-accent)]/50 rounded-full audio-bar-4"></div>
+                      <div className="w-1 bg-[var(--color-accent)] rounded-full audio-bar-5"></div>
                     </div>
                   </div>
                 </div>
@@ -844,7 +845,7 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                 </p>
               </div>
 
-              <div className="bg-obsidian-850/80 border border-emerald-950/80 rounded-xl p-5 divide-y divide-emerald-950/60">
+              <div className="bg-[var(--neutral-3)]/80 border border-[var(--color-border)] rounded-xl p-5 divide-y divide-neutral-800/60">
                 <div className="flex items-center justify-between py-3 first:pt-0">
                   <div className="space-y-0.5">
                     <div className="text-xs font-mono font-medium text-slate-200">
@@ -861,7 +862,7 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                       className="sr-only peer"
                       type="checkbox"
                     />
-                    <div className="w-10 h-5 bg-obsidian-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500 shadow-inner"></div>
+                    <div className="w-10 h-5 bg-obsidian-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[var(--color-accent)] shadow-inner"></div>
                   </label>
                 </div>
 
@@ -881,7 +882,7 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                       className="sr-only peer"
                       type="checkbox"
                     />
-                    <div className="w-10 h-5 bg-obsidian-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500 shadow-inner"></div>
+                    <div className="w-10 h-5 bg-obsidian-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[var(--color-accent)] shadow-inner"></div>
                   </label>
                 </div>
 
@@ -901,7 +902,7 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                       className="sr-only peer"
                       type="checkbox"
                     />
-                    <div className="w-10 h-5 bg-obsidian-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500 shadow-inner"></div>
+                    <div className="w-10 h-5 bg-obsidian-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[var(--color-accent)] shadow-inner"></div>
                   </label>
                 </div>
 
@@ -921,7 +922,7 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                       className="sr-only peer"
                       type="checkbox"
                     />
-                    <div className="w-10 h-5 bg-obsidian-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500 shadow-inner"></div>
+                    <div className="w-10 h-5 bg-obsidian-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[var(--color-accent)] shadow-inner"></div>
                   </label>
                 </div>
               </div>
@@ -936,7 +937,7 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
               <div>
                 <h2 className="text-base font-bold text-slate-100 font-mono tracking-tight flex items-center space-x-2">
                   <span>Long-Term Memory Vault</span>
-                  <span className="text-[10px] font-mono bg-emerald-950 text-emerald-400 px-2 py-0.5 rounded border border-emerald-800/60">
+                  <span className="text-[10px] font-mono bg-[var(--neutral-3)] text-[var(--color-accent)] px-2 py-0.5 rounded border border-[var(--color-border)]/60">
                     Persistent Canonical Storage
                   </span>
                 </h2>
@@ -945,10 +946,10 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                 </p>
               </div>
 
-              <div className="bg-obsidian-850/80 border border-emerald-950/80 rounded-xl p-5 space-y-4">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-obsidian-900/90 p-3.5 rounded-lg border border-emerald-900/40">
+              <div className="bg-[var(--neutral-3)]/80 border border-[var(--color-border)] rounded-xl p-5 space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[var(--neutral-2)]/90 p-3.5 rounded-lg border border-[var(--color-border)]">
                   <div>
-                    <div className="text-xs font-mono font-semibold text-emerald-300">
+                    <div className="text-xs font-mono font-semibold text-[var(--color-accent)]">
                       Memory Status: Active ({memories.length} items stored)
                     </div>
                     <div className="text-[11px] text-slate-400 font-mono">
@@ -957,7 +958,7 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                   </div>
                   <div className="flex items-center space-x-2">
                     <button
-                      className="px-2.5 py-1 text-xs font-mono bg-obsidian-800 hover:bg-obsidian-750 text-slate-200 border border-emerald-950 rounded transition"
+                      className="px-2.5 py-1 text-xs font-mono bg-[var(--neutral-4)] hover:bg-obsidian-750 text-slate-200 border border-[var(--color-border)] rounded transition"
                       onClick={() => {
                         const json = JSON.stringify(memories, null, 2);
                         navigator.clipboard.writeText(json);
@@ -992,9 +993,9 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                       memories.map((m) => (
                         <div
                           key={m.id}
-                          className="p-2.5 rounded bg-obsidian-900/60 border border-emerald-950 text-slate-300 flex items-start space-x-2"
+                          className="p-2.5 rounded bg-[var(--neutral-2)]/60 border border-[var(--color-border)] text-slate-300 flex items-start space-x-2"
                         >
-                          <span className="text-emerald-400 font-bold">•</span>
+                          <span className="text-[var(--color-accent)] font-bold">•</span>
                           <span className="break-words">{m.content}</span>
                         </div>
                       ))
@@ -1019,38 +1020,38 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                 </p>
               </div>
 
-              <div className="bg-obsidian-850/80 border border-emerald-950/80 rounded-xl p-5 space-y-3 font-mono text-xs">
-                <div className="flex items-center justify-between py-2 border-b border-emerald-950">
+              <div className="bg-[var(--neutral-3)]/80 border border-[var(--color-border)] rounded-xl p-5 space-y-3 font-mono text-xs">
+                <div className="flex items-center justify-between py-2 border-b border-[var(--color-border)]">
                   <span className="text-slate-300">Push-to-Talk (Hold to speak)</span>
-                  <kbd className="px-2 py-1 bg-obsidian-900 border border-emerald-800/40 rounded text-emerald-400 font-bold">
+                  <kbd className="px-2 py-1 bg-[var(--neutral-2)] border border-[var(--color-border)]/40 rounded text-[var(--color-accent)] font-bold">
                     F1
                   </kbd>
                 </div>
 
-                <div className="flex items-center justify-between py-2 border-b border-emerald-950">
+                <div className="flex items-center justify-between py-2 border-b border-[var(--color-border)]">
                   <span className="text-slate-300">Inspect Screen Instantly</span>
-                  <kbd className="px-2 py-1 bg-obsidian-900 border border-emerald-800/40 rounded text-emerald-400 font-bold">
+                  <kbd className="px-2 py-1 bg-[var(--neutral-2)] border border-[var(--color-border)]/40 rounded text-[var(--color-accent)] font-bold">
                     Alt + S
                   </kbd>
                 </div>
 
-                <div className="flex items-center justify-between py-2 border-b border-emerald-950">
+                <div className="flex items-center justify-between py-2 border-b border-[var(--color-border)]">
                   <span className="text-slate-300">Interrupt / Stop Momo Speaking</span>
-                  <kbd className="px-2 py-1 bg-obsidian-900 border border-emerald-800/40 rounded text-emerald-400 font-bold">
+                  <kbd className="px-2 py-1 bg-[var(--neutral-2)] border border-[var(--color-border)]/40 rounded text-[var(--color-accent)] font-bold">
                     Esc
                   </kbd>
                 </div>
 
-                <div className="flex items-center justify-between py-2 border-b border-emerald-950">
+                <div className="flex items-center justify-between py-2 border-b border-[var(--color-border)]">
                   <span className="text-slate-300">Send Chat Message</span>
-                  <kbd className="px-2 py-1 bg-obsidian-900 border border-emerald-800/40 rounded text-emerald-400 font-bold">
+                  <kbd className="px-2 py-1 bg-[var(--neutral-2)] border border-[var(--color-border)]/40 rounded text-[var(--color-accent)] font-bold">
                     Enter
                   </kbd>
                 </div>
 
                 <div className="flex items-center justify-between py-2">
                   <span className="text-slate-300">Insert Newline in Chat</span>
-                  <kbd className="px-2 py-1 bg-obsidian-900 border border-emerald-800/40 rounded text-emerald-400 font-bold">
+                  <kbd className="px-2 py-1 bg-[var(--neutral-2)] border border-[var(--color-border)]/40 rounded text-[var(--color-accent)] font-bold">
                     Shift + Enter
                   </kbd>
                 </div>
@@ -1062,11 +1063,11 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
 
       {/* Footer */}
       <footer
-        className="h-16 bg-obsidian-850/95 border-t border-emerald-950/80 px-6 flex items-center justify-between select-none shrink-0"
+        className="h-16 bg-[var(--neutral-3)]/95 border-t border-[var(--color-border)] px-6 flex items-center justify-between select-none shrink-0"
         data-purpose="settings-footer"
       >
         <div className="flex items-center space-x-2 text-xs font-mono text-slate-400">
-          <svg className="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
+          <svg className="w-4 h-4 text-[var(--color-accent)]" fill="currentColor" viewBox="0 0 20 20">
             <path
               clipRule="evenodd"
               d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -1084,7 +1085,7 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
             Cancel
           </button>
           <button
-            className="px-5 py-2 rounded-xl text-xs font-mono font-semibold bg-emerald-500 hover:bg-emerald-400 text-obsidian-950 shadow-glow-emerald transition duration-150 transform hover:-translate-y-0.5 active:translate-y-0"
+            className="px-5 py-2 rounded-xl text-xs font-mono font-semibold bg-[var(--color-accent)] hover:bg-[var(--color-accent)] text-obsidian-950 shadow-sm transition duration-150 transform hover:-translate-y-0.5 active:translate-y-0"
             onClick={onClose}
           >
             Close &amp; Apply

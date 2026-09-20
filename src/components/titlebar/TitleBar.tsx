@@ -2,6 +2,7 @@ import { useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { useMomoStore } from "@/store/useMomoStore";
+import { Terminal, Minus, Square, X } from "lucide-react";
 
 export function TitleBar() {
   const [isMaximized, setIsMaximized] = useState(false);
@@ -74,95 +75,150 @@ export function TitleBar() {
 
   return (
     <header
-      className="h-10 bg-obsidian-950/90 border-b border-obsidian-800 flex items-center justify-between px-3.5 z-30 select-none shrink-0"
+      className="titlebar-root"
       data-purpose="window-titlebar"
       data-tauri-drag-region
       onMouseDown={handleDrag}
       onDoubleClick={handleDoubleClick}
+      style={{
+        height: 'var(--row-height)',
+        background: 'var(--neutral-1)',
+        borderBottom: '1px solid var(--color-border)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: '0 var(--space-5)',
+        zIndex: 30,
+        userSelect: 'none',
+        flexShrink: 0,
+      }}
     >
       {/* Left: Logo & Window Identity */}
-      <div className="flex items-center space-x-3" data-tauri-drag-region>
-        {/* Momo Avatar Mini Icon */}
-        <div className="w-6 h-6 rounded-full bg-obsidian-800 border border-emerald-500/40 flex items-center justify-center relative shadow-glow-sm">
-          <svg className="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 24 24">
-            <circle cx="12" cy="13" r="7"></circle>
-            <circle cx="7" cy="7" r="3"></circle>
-            <circle cx="17" cy="7" r="3"></circle>
-            <circle cx="10" cy="12" fill="#0B100E" r="1.5"></circle>
-            <circle cx="14" cy="12" fill="#0B100E" r="1.5"></circle>
-            <ellipse cx="12" cy="15" fill="#0B100E" rx="1.5" ry="1"></ellipse>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }} data-tauri-drag-region>
+        {/* Momo Avatar Mini */}
+        <div style={{
+          width: 22, height: 22, borderRadius: '50%',
+          background: 'var(--neutral-3)', border: '1px solid var(--color-border-strong)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          position: 'relative',
+        }}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--color-text-secondary)">
+            <circle cx="12" cy="13" r="7" />
+            <circle cx="7" cy="7" r="3" />
+            <circle cx="17" cy="7" r="3" />
+            <circle cx="10" cy="12" fill="var(--neutral-1)" r="1.5" />
+            <circle cx="14" cy="12" fill="var(--neutral-1)" r="1.5" />
+            <ellipse cx="12" cy="15" fill="var(--neutral-1)" rx="1.5" ry="1" />
           </svg>
-          <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-obsidian-950 animate-pulse"></span>
+          <span style={{
+            position: 'absolute', top: -2, right: -2,
+            width: 6, height: 6, borderRadius: '50%',
+            background: 'var(--color-success)',
+            border: '2px solid var(--neutral-1)',
+          }} />
         </div>
-        <div className="flex items-center space-x-2" data-tauri-drag-region>
-          <span className="text-xs font-semibold tracking-wide text-gray-200">Momo</span>
-          <span className="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-emerald-950/80 text-emerald-400 border border-emerald-500/30 font-medium">
-            v2.4 Pro
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }} data-tauri-drag-region>
+          <span style={{ fontSize: 'var(--text-sm)', fontWeight: 'var(--weight-semibold)', color: 'var(--color-text)' }}>
+            Momo
           </span>
-          <span className="text-xs text-gray-500 hidden sm:inline">• Desktop Companion (Active)</span>
+          <span style={{
+            fontSize: 'var(--text-2xs)', fontFamily: 'var(--font-mono)',
+            padding: '1px 6px', borderRadius: 'var(--radius-sm)',
+            background: 'var(--color-accent-subtle)', color: 'var(--color-accent)',
+            border: '1px solid var(--color-accent)',
+            fontWeight: 'var(--weight-medium)', textTransform: 'uppercase',
+          }}>
+            v2.4
+          </span>
         </div>
       </div>
 
       {/* Center: Workspace Entry Button & Status */}
-      <div className="flex items-center space-x-2.5">
+      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
         <button
-          className={`px-2.5 py-1 rounded-md text-xs font-medium flex items-center space-x-1.5 transition-colors border ${
-            activeTab === "workspace"
-              ? "bg-emerald-950 text-emerald-300 border-emerald-500/40 shadow-sm"
-              : "bg-obsidian-850 hover:bg-obsidian-800 text-gray-300 hover:text-white border-obsidian-750"
-          }`}
+          style={{
+            padding: '2px 10px', borderRadius: 'var(--radius-sm)',
+            fontSize: 'var(--text-xs)', fontWeight: 'var(--weight-medium)',
+            display: 'flex', alignItems: 'center', gap: 'var(--space-2)',
+            transition: 'all 140ms',
+            border: '1px solid',
+            background: activeTab === "workspace" ? 'var(--color-accent-subtle)' : 'var(--neutral-3)',
+            color: activeTab === "workspace" ? 'var(--color-accent)' : 'var(--color-text-secondary)',
+            borderColor: activeTab === "workspace" ? 'var(--color-accent)' : 'var(--color-border)',
+          }}
           onClick={() => setActiveTab("workspace")}
           title="Open Agent Workspace"
         >
-          <svg className="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-          </svg>
-          <span className="font-semibold">Workspace</span>
+          <Terminal size={13} />
+          <span style={{ fontWeight: 'var(--weight-semibold)' }}>Workspace</span>
         </button>
 
         <div
-          className="hidden md:flex items-center space-x-2 px-3 py-0.5 rounded-full bg-obsidian-900 border border-obsidian-750 text-[11px] text-gray-400 pointer-events-none"
+          style={{
+            display: 'flex', alignItems: 'center', gap: 'var(--space-3)',
+            padding: '2px 10px', borderRadius: 'var(--radius-full)',
+            background: 'var(--neutral-2)', border: '1px solid var(--color-border)',
+            fontSize: 'var(--text-2xs)', color: 'var(--color-text-muted)',
+            pointerEvents: 'none',
+          }}
           data-tauri-drag-region
         >
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
-          <span className="font-mono text-emerald-400/90 text-[10px]">
-            {activeProvider ? `ONLINE • ${activeProvider.id.toUpperCase()}` : "LOCAL ENGINE ACTIVE"}
+          <span style={{
+            width: 5, height: 5, borderRadius: '50%',
+            background: activeProvider ? 'var(--color-success)' : 'var(--color-text-muted)',
+          }} />
+          <span style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-2xs)' }}>
+            {activeProvider ? `ONLINE \u2022 ${activeProvider.id.toUpperCase()}` : "LOCAL ENGINE"}
           </span>
         </div>
       </div>
 
-      {/* Right: Window Controls (Minimize, Maximize, Close) */}
-      <div className="flex items-center space-x-1.5">
+      {/* Right: Window Controls */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-1)' }}>
         <button
-          className="w-7 h-7 rounded-md flex items-center justify-center text-gray-400 hover:text-gray-200 hover:bg-obsidian-800 transition-colors"
+          style={{
+            width: 28, height: 28, borderRadius: 'var(--radius-sm)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            color: 'var(--color-text-muted)', background: 'transparent', border: 'none',
+            transition: 'all 120ms',
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--neutral-4)'; e.currentTarget.style.color = 'var(--color-text)'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--color-text-muted)'; }}
           onClick={handleMinimize}
           title="Minimize"
           aria-label="Minimize"
         >
-          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 12 12">
-            <line x1="2" x2="10" y1="6" y2="6"></line>
-          </svg>
+          <Minus size={14} />
         </button>
         <button
-          className="w-7 h-7 rounded-md flex items-center justify-center text-gray-400 hover:text-gray-200 hover:bg-obsidian-800 transition-colors"
+          style={{
+            width: 28, height: 28, borderRadius: 'var(--radius-sm)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            color: 'var(--color-text-muted)', background: 'transparent', border: 'none',
+            transition: 'all 120ms',
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--neutral-4)'; e.currentTarget.style.color = 'var(--color-text)'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--color-text-muted)'; }}
           onClick={handleMaximize}
           title={isMaximized ? "Restore" : "Maximize"}
           aria-label={isMaximized ? "Restore" : "Maximize"}
         >
-          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 12 12">
-            <rect height="8" rx="1" width="8" x="2" y="2"></rect>
-          </svg>
+          <Square size={12} />
         </button>
         <button
-          className="w-7 h-7 rounded-md flex items-center justify-center text-gray-400 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+          style={{
+            width: 28, height: 28, borderRadius: 'var(--radius-sm)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            color: 'var(--color-text-muted)', background: 'transparent', border: 'none',
+            transition: 'all 120ms',
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(239,68,68,0.15)'; e.currentTarget.style.color = 'var(--color-danger)'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--color-text-muted)'; }}
           onClick={handleClose}
           title="Close"
           aria-label="Close"
         >
-          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 12 12">
-            <line x1="2.5" x2="9.5" y1="2.5" y2="9.5"></line>
-            <line x1="9.5" x2="2.5" y1="2.5" y2="9.5"></line>
-          </svg>
+          <X size={14} />
         </button>
       </div>
     </header>

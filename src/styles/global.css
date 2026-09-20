@@ -1,9 +1,9 @@
-@import "./variables.css";
+@import "./tokens.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* --- Stitch Obsidian Cyber-Terminal Global Styles --- */
+/* --- Momo Desktop Application Reset --- */
 
 * {
   box-sizing: border-box;
@@ -16,10 +16,12 @@ body,
   padding: 0;
   width: 100%;
   height: 100%;
-  background: transparent;
+  background: var(--color-bg);
   overflow: hidden;
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  color: #dfe4e0;
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: var(--leading-ui);
+  color: var(--color-text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -30,7 +32,7 @@ body,
   -webkit-user-select: none;
 }
 
-/* Allow text selection only on message bodies and editable inputs */
+/* Allow text selection on message bodies and inputs */
 input, textarea, .selectable-text {
   user-select: text;
   -webkit-user-select: text;
@@ -41,7 +43,7 @@ button {
   cursor: default;
 }
 
-/* --- Sleek Dark Obsidian Scrollbar --- */
+/* --- Compact Desktop Scrollbar --- */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -52,95 +54,43 @@ button {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1F332C;
-  border-radius: 9999px;
+  background: var(--neutral-5);
+  border-radius: var(--radius-full);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #2A463D;
+  background: var(--neutral-6);
 }
 
-/* --- Stitch Glass & Glow Effects --- */
-.glass-panel {
-  background: rgba(15, 23, 20, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(31, 56, 46, 0.7);
-}
-
-.glass-input {
-  background: rgba(11, 16, 14, 0.9);
-  border: 1px solid rgba(31, 56, 46, 0.8);
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
-}
-
-.glass-bubble-user {
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.22) 0%, rgba(5, 150, 105, 0.12) 100%);
-  border: 1px solid rgba(52, 211, 153, 0.35);
-  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.08);
-}
-
-.neon-border-glow {
-  box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.3), 0 0 16px rgba(16, 185, 129, 0.12);
-}
-
-.bg-grid-cyber {
-  background-size: 32px 32px;
-  background-image: 
-    linear-gradient(to right, rgba(16, 185, 129, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(16, 185, 129, 0.03) 1px, transparent 1px);
-}
-
-.hud-glass {
-  background: rgba(12, 19, 16, 0.88);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(16, 185, 129, 0.18);
-}
-
-.hud-glass-elevated {
-  background: rgba(17, 25, 22, 0.94);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(52, 211, 153, 0.25);
-}
-
-.pill-active {
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.22) 0%, rgba(5, 150, 105, 0.12) 100%);
-  border: 1px solid rgba(52, 211, 153, 0.35);
-}
-
-/* Range slider styling */
+/* --- Range slider --- */
 input[type=range] {
   -webkit-appearance: none;
   background: transparent;
 }
 
 input[type=range]::-webkit-slider-runnable-track {
-  height: 6px;
-  border-radius: 9999px;
-  background-color: #1e2b24;
+  height: 4px;
+  border-radius: var(--radius-full);
+  background-color: var(--neutral-4);
 }
 
 input[type=range]::-webkit-slider-thumb {
   -webkit-appearance: none;
-  height: 16px;
-  width: 16px;
+  height: 14px;
+  width: 14px;
   border-radius: 50%;
-  background: #10b981;
+  background: var(--color-accent);
   cursor: pointer;
   margin-top: -5px;
-  box-shadow: 0 0 10px rgba(16, 185, 129, 0.8);
-  border: 2px solid #0a0f0d;
-  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  border: 2px solid var(--color-bg);
+  transition: transform var(--duration-fast) var(--ease-out);
 }
 
 input[type=range]::-webkit-slider-thumb:hover {
   transform: scale(1.15);
-  box-shadow: 0 0 14px rgba(0, 255, 170, 1);
 }
 
-/* Audio visualizer bar animations */
+/* Audio visualizer bars */
 @keyframes pulseBars {
   0%, 100% { height: 4px; }
   50% { height: 18px; }

@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useMomoStore } from "@/store/useMomoStore";
+import {
+  Terminal, FileSearch, FileEdit, Tag, AlertTriangle,
+  Globe, Rocket, Lightbulb, File, Sparkles, Trash2,
+  Link, Square, FolderOpen, Camera
+} from "lucide-react";
 import "./ActionApprovalModal.css";
 
 interface ActionApprovalModalProps {
@@ -55,7 +60,7 @@ export function ActionApprovalModal({ isOverlayMode }: ActionApprovalModalProps)
         <div className="action-modal-card">
           <div className="action-modal-header">
             <div className="badge-row">
-              <span className="action-badge badge-file">📸 SCREEN INSPECT</span>
+              <span className="action-badge badge-file"><Camera size={12} /> SCREEN INSPECT</span>
             </div>
             <button
               type="button"
@@ -63,7 +68,7 @@ export function ActionApprovalModal({ isOverlayMode }: ActionApprovalModalProps)
               onClick={() => resolveCaptureConfirmation(null)}
               title="Cancel inspection"
             >
-              ✕ Cancel
+              Cancel
             </button>
           </div>
           <div className="action-modal-body">
@@ -115,21 +120,21 @@ export function ActionApprovalModal({ isOverlayMode }: ActionApprovalModalProps)
   const renderBadge = () => {
     switch (actionType) {
       case "command":
-        return <span className="action-badge badge-cmd">⚡ TERMINAL COMMAND</span>;
+        return <span className="action-badge badge-cmd"><Terminal size={12} /> TERMINAL COMMAND</span>;
       case "analyze_file":
-        return <span className="action-badge badge-file">🔍 FILE ANALYSIS</span>;
+        return <span className="action-badge badge-file"><FileSearch size={12} /> FILE ANALYSIS</span>;
       case "write_file":
-        return <span className="action-badge badge-write">📝 FILE WRITE</span>;
+        return <span className="action-badge badge-write"><FileEdit size={12} /> FILE WRITE</span>;
       case "rename_file":
-        return <span className="action-badge badge-rename">🏷️ RENAME FILE</span>;
+        return <span className="action-badge badge-rename"><Tag size={12} /> RENAME FILE</span>;
       case "delete_file":
-        return <span className="action-badge badge-delete">⚠️ PERMANENT DELETION</span>;
+        return <span className="action-badge badge-delete"><AlertTriangle size={12} /> PERMANENT DELETION</span>;
       case "web_fetch":
-        return <span className="action-badge badge-web">🌐 WEB RESEARCH</span>;
+        return <span className="action-badge badge-web"><Globe size={12} /> WEB RESEARCH</span>;
       case "open_url":
-        return <span className="action-badge badge-web">🌐 OPEN IN BROWSER</span>;
+        return <span className="action-badge badge-web"><Globe size={12} /> OPEN IN BROWSER</span>;
       case "launch_app":
-        return <span className="action-badge badge-cmd">🚀 LAUNCH APP</span>;
+        return <span className="action-badge badge-cmd"><Rocket size={12} /> LAUNCH APP</span>;
       default:
         return <span className="action-badge badge-cmd">ACTION REQUEST</span>;
     }
@@ -155,7 +160,7 @@ export function ActionApprovalModal({ isOverlayMode }: ActionApprovalModalProps)
             <div className="code-block-preview">
               <code>$ {action.command}</code>
             </div>
-            {action.reason && <p className="action-reason">💡 {action.reason}</p>}
+            {action.reason && <p className="action-reason"><Lightbulb size={12} /> {action.reason}</p>}
           </div>
         );
 
@@ -164,9 +169,9 @@ export function ActionApprovalModal({ isOverlayMode }: ActionApprovalModalProps)
           <div className="action-details">
             <p className="action-question">Allow Momo to inspect this file?</p>
             <div className="code-block-preview file-preview">
-              <code>📄 {action.path}</code>
+              <code><File size={12} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 4 }} />{action.path}</code>
             </div>
-            {action.reason && <p className="action-reason">💡 {action.reason}</p>}
+            {action.reason && <p className="action-reason"><Lightbulb size={12} /> {action.reason}</p>}
           </div>
         );
 
@@ -175,7 +180,7 @@ export function ActionApprovalModal({ isOverlayMode }: ActionApprovalModalProps)
           <div className="action-details">
             <p className="action-question">Allow Momo to write changes to this file?</p>
             <div className="code-block-preview file-preview">
-              <code>📝 {action.path}</code>
+              <code><FileEdit size={12} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 4 }} />{action.path}</code>
             </div>
             {action.content && (
               <pre className="content-snippet-box">
@@ -184,7 +189,7 @@ export function ActionApprovalModal({ isOverlayMode }: ActionApprovalModalProps)
                   : action.content}
               </pre>
             )}
-            {action.reason && <p className="action-reason">💡 {action.reason}</p>}
+            {action.reason && <p className="action-reason"><Lightbulb size={12} /> {action.reason}</p>}
           </div>
         );
 
@@ -193,25 +198,25 @@ export function ActionApprovalModal({ isOverlayMode }: ActionApprovalModalProps)
           <div className="action-details">
             <p className="action-question">Allow Momo to rename this file/folder?</p>
             <div className="rename-flow-preview">
-              <span className="rename-old">📄 {action.path}</span>
-              <span className="rename-arrow">➔</span>
-              <span className="rename-new">✨ {action.newPath}</span>
+              <span className="rename-old"><File size={12} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 4 }} />{action.path}</span>
+              <span className="rename-arrow">→</span>
+              <span className="rename-new"><Sparkles size={12} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 4 }} />{action.newPath}</span>
             </div>
-            {action.reason && <p className="action-reason">💡 {action.reason}</p>}
+            {action.reason && <p className="action-reason"><Lightbulb size={12} /> {action.reason}</p>}
           </div>
         );
 
       case "delete_file":
         return (
           <div className="action-details deletion-box">
-            <p className="deletion-warning-title">⚠️ PERMANENT DELETION WARNING</p>
+            <p className="deletion-warning-title"><AlertTriangle size={14} /> PERMANENT DELETION WARNING</p>
             <p className="action-question deletion-text">
               Are you sure you want to permanently delete this file or directory? This cannot be undone!
             </p>
             <div className="code-block-preview delete-preview">
-              <code>🗑️ {action.path}</code>
+              <code><Trash2 size={12} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 4 }} />{action.path}</code>
             </div>
-            {action.reason && <p className="action-reason">💡 {action.reason}</p>}
+            {action.reason && <p className="action-reason"><Lightbulb size={12} /> {action.reason}</p>}
           </div>
         );
 
@@ -220,9 +225,9 @@ export function ActionApprovalModal({ isOverlayMode }: ActionApprovalModalProps)
           <div className="action-details">
             <p className="action-question">Allow Momo to fetch web documentation?</p>
             <div className="code-block-preview web-preview">
-              <code>🔗 {action.url}</code>
+              <code><Link size={12} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 4 }} />{action.url}</code>
             </div>
-            {action.reason && <p className="action-reason">💡 {action.reason}</p>}
+            {action.reason && <p className="action-reason"><Lightbulb size={12} /> {action.reason}</p>}
           </div>
         );
 
@@ -233,9 +238,9 @@ export function ActionApprovalModal({ isOverlayMode }: ActionApprovalModalProps)
               Allow Momo to open this web address in {action.browser ? action.browser.toUpperCase() : "your browser"}?
             </p>
             <div className="code-block-preview web-preview">
-              <code>🔗 {action.url}</code>
+              <code><Link size={12} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 4 }} />{action.url}</code>
             </div>
-            {action.reason && <p className="action-reason">💡 {action.reason}</p>}
+            {action.reason && <p className="action-reason"><Lightbulb size={12} /> {action.reason}</p>}
           </div>
         );
 
@@ -247,9 +252,9 @@ export function ActionApprovalModal({ isOverlayMode }: ActionApprovalModalProps)
               {action.arg ? ` with argument "${action.arg}"` : ""}?
             </p>
             <div className="code-block-preview">
-              <code>🚀 {action.target} {action.arg || ""}</code>
+              <code><Rocket size={12} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 4 }} />{action.target} {action.arg || ""}</code>
             </div>
-            {action.reason && <p className="action-reason">💡 {action.reason}</p>}
+            {action.reason && <p className="action-reason"><Lightbulb size={12} /> {action.reason}</p>}
           </div>
         );
     }
@@ -280,7 +285,7 @@ export function ActionApprovalModal({ isOverlayMode }: ActionApprovalModalProps)
               onClick={stopAgentLoop}
               title="Halt remaining agent steps"
             >
-              ⏹ Stop Agent
+              <Square size={12} /> Stop Agent
             </button>
           )}
         </div>
@@ -297,7 +302,7 @@ export function ActionApprovalModal({ isOverlayMode }: ActionApprovalModalProps)
               className="btn-select-folder"
               onClick={() => chooseWorkspaceFolder()}
             >
-              📂 Select Folder
+              <FolderOpen size={12} /> Select Folder
             </button>
           )}
         </div>

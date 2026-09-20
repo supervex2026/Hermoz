@@ -3,6 +3,26 @@ import { getCurrentWindow } from "@tauri-apps/api/window";
 import { useMomoStore } from "@/store/useMomoStore";
 import { screenAnalyzer } from "@/core/vision/screenAnalyzer";
 import { memoryStore } from "@/core/memory/memoryStore";
+import {
+  Camera,
+  Mic,
+  Terminal,
+  Maximize2,
+  ChevronDown,
+  Pin,
+  Sliders,
+  X,
+  Send,
+  Database,
+  Sparkles,
+  Zap,
+  Volume2,
+  Moon,
+  MessageSquare,
+  Eye,
+  Flame,
+  Search,
+} from "lucide-react";
 
 interface FloatingOverlayProps {
   onOpenDashboard: () => void;
@@ -11,7 +31,6 @@ interface FloatingOverlayProps {
 export function FloatingOverlay({ onOpenDashboard }: FloatingOverlayProps) {
   const {
     expression,
-    activity,
     bubbleText,
     setBubble,
     startPTT,
@@ -20,6 +39,7 @@ export function FloatingOverlay({ onOpenDashboard }: FloatingOverlayProps) {
     sendMessage,
     isSending,
     isSpeaking,
+    stopSpeaking,
     providerStatus,
     settings,
     updateSettings,
@@ -36,23 +56,22 @@ export function FloatingOverlay({ onOpenDashboard }: FloatingOverlayProps) {
   const [memoriesCount, setMemoriesCount] = useState(() => memoryStore.getMemories().length);
   const [placement, setPlacement] = useState<"top" | "bottom">("top");
   const [align, setAlign] = useState<"left" | "right" | "center">("center");
+  const [showQuickControls, setShowQuickControls] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     const checkEdgePosition = () => {
       try {
         const winY = window.screenY ?? 0;
         const winX = window.screenX ?? 0;
-        const availH = window.screen.availHeight || 1080;
         const availW = window.screen.availWidth || 1920;
 
-        // If near top edge of the screen (< 160px), flip bubble below the capsule
         if (winY < 160) {
           setPlacement("bottom");
         } else {
           setPlacement("top");
         }
 
-        // If near right edge of the screen, align bubble leftward; if near left edge, align rightward
         if (winX > availW - 440) {
           setAlign("left");
         } else if (winX < 180) {
@@ -140,10 +159,10 @@ export function FloatingOverlay({ onOpenDashboard }: FloatingOverlayProps) {
   const activeProvider = providerStatus.find((p) => p.state === "connected");
   const providerLabel = activeProvider
     ? activeProvider.id === "openrouter"
-      ? "OpenRouter (Claude 3.5s)"
+      ? "OpenRouter (Llama 3.3)"
       : activeProvider.id === "groq"
-      ? "Groq (Llama 3.3)"
-      : "Gemini (2.0 Flash)"
+      ? "Groq (GPT-OSS 120B)"
+      : "Gemini (3.6 Flash)"
     : "Local Engine";
 
   // If minimized into floating orb
@@ -155,21 +174,35 @@ export function FloatingOverlay({ onOpenDashboard }: FloatingOverlayProps) {
         title="Click to expand Momo Companion"
       >
         <div className="relative flex items-center justify-center group" data-tauri-drag-region onMouseDown={handleDrag}>
-          {/* Pulse ring */}
-          <span className="absolute w-14 h-14 rounded-full bg-emerald-500/20 animate-ping"></span>
-          {/* Orb Container */}
-          <div className="w-12 h-12 rounded-full bg-[#0c1813] border-2 border-emerald-400/80 flex items-center justify-center shadow-xl shadow-emerald-950/80 group-hover:scale-110 transition-transform">
-            <svg className="w-7 h-7 text-emerald-400" fill="none" viewBox="0 0 48 48">
-              <circle cx="12" cy="11" fill="#042f22" r="5" stroke="#10b981" strokeWidth="2"></circle>
-              <circle cx="36" cy="11" fill="#042f22" r="5" stroke="#10b981" strokeWidth="2"></circle>
-              <rect fill="#0c1d16" height="28" rx="12" stroke="#34d399" strokeWidth="2" width="32" x="8" y="10"></rect>
-              <circle cx="17" cy="22" fill="#34d399" r="2"></circle>
-              <circle cx="31" cy="22" fill="#34d399" r="2"></circle>
-              <path d="M21 30 Q24 33 27 30" fill="none" stroke="#10b981" strokeLinecap="round" strokeWidth="2"></path>
+          <span
+            className="absolute w-12 h-12 rounded-full animate-ping opacity-20"
+            style={{ background: "var(--color-accent)" }}
+          />
+          <div
+            className="w-11 h-11 rounded-full flex items-center justify-center transition-transform group-hover:scale-105"
+            style={{
+              background: "var(--neutral-2)",
+              border: "1.5px solid var(--color-accent)",
+              boxShadow: "var(--shadow-md)",
+            }}
+          >
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="var(--color-accent)">
+              <circle cx="12" cy="13" r="7" />
+              <circle cx="7" cy="7" r="3" />
+              <circle cx="17" cy="7" r="3" />
+              <circle cx="10" cy="12" fill="var(--neutral-1)" r="1.5" />
+              <circle cx="14" cy="12" fill="var(--neutral-1)" r="1.5" />
+              <ellipse cx="12" cy="15" fill="var(--neutral-1)" rx="1.5" ry="1" />
             </svg>
           </div>
-          {/* Unread badge */}
-          <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-emerald-500 text-slate-950 font-bold text-[9px] flex items-center justify-center font-mono ring-2 ring-[#050807]">
+          <span
+            className="absolute -top-1 -right-1 w-4 h-4 rounded-full font-bold text-[9px] flex items-center justify-center font-mono"
+            style={{
+              background: "var(--color-accent)",
+              color: "#ffffff",
+              boxShadow: "var(--shadow-xs)",
+            }}
+          >
             1
           </span>
         </div>
@@ -183,62 +216,88 @@ export function FloatingOverlay({ onOpenDashboard }: FloatingOverlayProps) {
         placement === "bottom" ? "justify-start" : "justify-end"
       } ${
         align === "left" ? "items-start" : align === "right" ? "items-end" : "items-center"
-      } p-2 sm:p-3 gap-2 bg-transparent select-none font-sans text-slate-200 antialiased overflow-hidden`}
+      } p-2 sm:p-3 gap-2 bg-transparent select-none antialiased overflow-hidden`}
+      style={{ fontFamily: "var(--font-sans)", color: "var(--color-text)" }}
       data-purpose="floating-companion-widget"
     >
       {/* 1. Quick Actions Popover (if opened) */}
       {showPopover && (
         <div
-          className={`w-full bg-[#0c1210]/95 backdrop-blur-xl border border-emerald-500/40 rounded-2xl shadow-2xl shadow-black/90 ring-1 ring-emerald-500/30 p-3 flex flex-col gap-2.5 relative z-50 animate-bounce-subtle shrink-0 ${
+          className={`w-full rounded-xl p-3 flex flex-col gap-2 relative z-50 shrink-0 ${
             placement === "bottom" ? "order-3" : "order-1"
           }`}
+          style={{
+            background: "var(--neutral-2)",
+            border: "1px solid var(--color-border-strong)",
+            boxShadow: "var(--shadow-lg)",
+            animation: "cardSlideUp var(--duration-fast) var(--ease-out)",
+          }}
           data-purpose="quick-actions-popover"
         >
           {/* Popover Header */}
-          <div className="flex items-center justify-between pb-2 border-b border-emerald-950/80">
+          <div
+            className="flex items-center justify-between pb-2"
+            style={{ borderBottom: "1px solid var(--color-border)" }}
+          >
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-              <span className="text-xs font-mono font-bold text-white tracking-wide flex items-center gap-1.5">
-                <span>⚡ Quick Actions &amp; Tools</span>
+              <span
+                className="w-2 h-2 rounded-full"
+                style={{ background: "var(--color-accent)" }}
+              />
+              <span
+                className="text-xs font-mono font-semibold flex items-center gap-1.5"
+                style={{ color: "var(--color-text)" }}
+              >
+                <Zap size={12} style={{ color: "var(--color-accent)" }} />
+                <span>Quick Actions &amp; Tools</span>
               </span>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-emerald-950/80 text-emerald-400 border border-emerald-500/30">
-                ⌘K
+              <span
+                className="text-[10px] font-mono px-1.5 py-0.5 rounded"
+                style={{
+                  background: "var(--neutral-3)",
+                  color: "var(--color-text-secondary)",
+                  border: "1px solid var(--color-border)",
+                }}
+              >
+                Ctrl+K
               </span>
               <button
-                className="text-slate-400 hover:text-emerald-400 p-0.5 rounded transition-colors"
+                style={{
+                  color: "var(--color-text-muted)",
+                  background: "transparent",
+                  border: "none",
+                  cursor: "default",
+                  padding: "2px",
+                }}
                 onClick={() => setShowPopover(false)}
                 title="Close Palette"
               >
-                <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    clipRule="evenodd"
-                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                    fillRule="evenodd"
-                  ></path>
-                </svg>
+                <X size={12} />
               </button>
             </div>
           </div>
 
           {/* Mini Filter */}
           <div className="relative flex items-center">
-            <svg
-              className="w-3.5 h-3.5 text-emerald-500/70 absolute left-2.5 pointer-events-none"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-              ></path>
-            </svg>
+            <Search
+              size={12}
+              className="absolute left-2.5 pointer-events-none"
+              style={{ color: "var(--color-text-muted)" }}
+            />
             <input
-              className="w-full bg-[#080d0b] text-[11px] font-mono text-emerald-100 placeholder-emerald-800/70 rounded-lg pl-8 pr-3 py-1.5 border border-emerald-900/50 focus:border-emerald-500/60 focus:ring-1 focus:ring-emerald-500/50 outline-none"
+              style={{
+                width: "100%",
+                background: "var(--neutral-1)",
+                fontSize: "var(--text-xs)",
+                fontFamily: "var(--font-mono)",
+                color: "var(--color-text)",
+                borderRadius: "var(--radius-sm)",
+                padding: "4px 8px 4px 26px",
+                border: "1px solid var(--color-border)",
+                outline: "none",
+              }}
               placeholder="Filter actions or shortcuts..."
               type="text"
               value={popoverFilter}
@@ -250,66 +309,131 @@ export function FloatingOverlay({ onOpenDashboard }: FloatingOverlayProps) {
           <div className="space-y-2 max-h-[220px] overflow-y-auto pr-0.5">
             {/* Vision & Screen */}
             <div>
-              <div className="text-[10px] font-mono uppercase tracking-wider text-emerald-500/70 font-semibold px-1 mb-1 flex items-center gap-1.5">
-                <span>👁️ Vision &amp; Screen</span>
+              <div
+                className="text-[10px] font-mono uppercase tracking-wider font-semibold px-1 mb-1 flex items-center gap-1.5"
+                style={{ color: "var(--color-text-muted)" }}
+              >
+                <Eye size={10} />
+                <span>Vision &amp; Screen</span>
               </div>
               <div className="space-y-1">
                 <button
-                  className="w-full flex items-center justify-between p-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 hover:bg-emerald-500/20 text-left transition-all group"
+                  className="w-full flex items-center justify-between p-2 rounded-lg text-left transition-all"
+                  style={{
+                    background: "var(--neutral-3)",
+                    border: "1px solid var(--color-border)",
+                    color: "var(--color-text)",
+                  }}
                   onClick={() => {
                     setShowPopover(false);
                     handleInspectScreen();
                   }}
                 >
                   <div className="flex items-center gap-2 min-w-0">
-                    <div className="w-6 h-6 rounded-md bg-emerald-950/80 border border-emerald-500/40 flex items-center justify-center text-emerald-400 group-hover:scale-105 transition-transform">
-                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></path>
-                        <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></path>
-                      </svg>
+                    <div
+                      className="w-6 h-6 rounded flex items-center justify-center"
+                      style={{
+                        background: "var(--color-accent-subtle)",
+                        color: "var(--color-accent)",
+                        border: "1px solid var(--color-accent)",
+                      }}
+                    >
+                      <Camera size={13} />
                     </div>
                     <div className="min-w-0">
-                      <div className="text-xs font-mono font-medium text-emerald-200 flex items-center gap-1.5">
+                      <div className="text-xs font-mono font-medium flex items-center gap-1.5">
                         <span>Inspect Active Window</span>
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
                       </div>
-                      <div className="text-[10px] text-slate-400 font-mono truncate">Analyze screen context</div>
+                      <div
+                        className="text-[10px] font-mono truncate"
+                        style={{ color: "var(--color-text-muted)" }}
+                      >
+                        Analyze screen context
+                      </div>
                     </div>
                   </div>
-                  <kbd className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[#070d0a] border border-emerald-800/40 text-emerald-300">
+                  <kbd
+                    className="text-[10px] font-mono px-1.5 py-0.5 rounded"
+                    style={{
+                      background: "var(--neutral-1)",
+                      border: "1px solid var(--color-border)",
+                      color: "var(--color-text-secondary)",
+                    }}
+                  >
                     Alt + S
                   </kbd>
                 </button>
               </div>
             </div>
 
-            {/* Voice & Personality */}
+            {/* Personality */}
             <div>
-              <div className="text-[10px] font-mono uppercase tracking-wider text-emerald-500/70 font-semibold px-1 mb-1 flex items-center gap-1.5">
-                <span>🎙️ Voice &amp; Personality</span>
+              <div
+                className="text-[10px] font-mono uppercase tracking-wider font-semibold px-1 mb-1 flex items-center gap-1.5"
+                style={{ color: "var(--color-text-muted)" }}
+              >
+                <Flame size={10} />
+                <span>Voice &amp; Personality</span>
               </div>
-              <div className="flex items-center justify-between p-1.5 rounded-lg bg-[#070d0a] border border-emerald-950/80">
-                <span className="text-xs font-mono text-slate-300 pl-1">Roast Level</span>
+              <div
+                className="flex items-center justify-between p-2 rounded-lg"
+                style={{
+                  background: "var(--neutral-3)",
+                  border: "1px solid var(--color-border)",
+                }}
+              >
+                <span
+                  className="text-xs font-mono"
+                  style={{ color: "var(--color-text-secondary)" }}
+                >
+                  Roast Level
+                </span>
                 <div className="flex items-center gap-1 text-[10px] font-mono">
                   <span
-                    className={`px-1.5 py-0.5 rounded cursor-pointer ${
-                      settings.personality.roastLevel === 2
-                        ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
-                        : "bg-[#0f1814] text-slate-400 hover:text-emerald-300"
-                    }`}
-                    onClick={() => updateSettings({ personality: { ...settings.personality, roastLevel: 2 } })}
+                    className="px-2 py-0.5 rounded cursor-pointer transition-colors"
+                    style={{
+                      background:
+                        settings.personality.roastLevel === 2
+                          ? "var(--color-accent-subtle)"
+                          : "var(--neutral-1)",
+                      color:
+                        settings.personality.roastLevel === 2
+                          ? "var(--color-accent)"
+                          : "var(--color-text-muted)",
+                      border: `1px solid ${
+                        settings.personality.roastLevel === 2
+                          ? "var(--color-accent)"
+                          : "var(--color-border)"
+                      }`,
+                    }}
+                    onClick={() =>
+                      updateSettings({ personality: { ...settings.personality, roastLevel: 2 } })
+                    }
                   >
                     Cheeky
                   </span>
                   <span
-                    className={`px-1.5 py-0.5 rounded cursor-pointer ${
-                      settings.personality.roastLevel === 3
-                        ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
-                        : "bg-[#0f1814] text-slate-400 hover:text-emerald-300"
-                    }`}
-                    onClick={() => updateSettings({ personality: { ...settings.personality, roastLevel: 3 } })}
+                    className="px-2 py-0.5 rounded cursor-pointer transition-colors"
+                    style={{
+                      background:
+                        settings.personality.roastLevel === 3
+                          ? "var(--color-accent-subtle)"
+                          : "var(--neutral-1)",
+                      color:
+                        settings.personality.roastLevel === 3
+                          ? "var(--color-accent)"
+                          : "var(--color-text-muted)",
+                      border: `1px solid ${
+                        settings.personality.roastLevel === 3
+                          ? "var(--color-accent)"
+                          : "var(--color-border)"
+                      }`,
+                    }}
+                    onClick={() =>
+                      updateSettings({ personality: { ...settings.personality, roastLevel: 3 } })
+                    }
                   >
-                    Savage 🔥
+                    Savage
                   </span>
                 </div>
               </div>
@@ -317,9 +441,16 @@ export function FloatingOverlay({ onOpenDashboard }: FloatingOverlayProps) {
           </div>
 
           {/* Popover Footer */}
-          <div className="pt-2 border-t border-emerald-950/80 flex items-center justify-between text-[10px] font-mono text-slate-400">
+          <div
+            className="pt-2 flex items-center justify-between text-[10px] font-mono"
+            style={{
+              borderTop: "1px solid var(--color-border)",
+              color: "var(--color-text-muted)",
+            }}
+          >
             <span
-              className="text-emerald-400 hover:underline cursor-pointer flex items-center gap-1"
+              className="hover:underline cursor-pointer"
+              style={{ color: "var(--color-accent)" }}
               onClick={() => {
                 setShowPopover(false);
                 setIsMinimized(true);
@@ -332,7 +463,14 @@ export function FloatingOverlay({ onOpenDashboard }: FloatingOverlayProps) {
                 setShowPopover(false);
                 onOpenDashboard();
               }}
-              className="text-emerald-300 hover:text-emerald-200 flex items-center gap-1 bg-transparent border-0 p-0 font-mono"
+              style={{
+                color: "var(--color-text)",
+                background: "transparent",
+                border: "none",
+                padding: "0",
+                fontFamily: "var(--font-mono)",
+                cursor: "default",
+              }}
             >
               Full Window ↵
             </button>
@@ -343,9 +481,15 @@ export function FloatingOverlay({ onOpenDashboard }: FloatingOverlayProps) {
       {/* 2. Interactive Thought Bubble (strictly clamped, screen-edge aware, no overflow) */}
       {bubbleText && (
         <div
-          className={`w-full max-w-[320px] max-h-[120px] hud-glass-elevated rounded-2xl p-2.5 sm:p-3 shadow-2xl shadow-emerald-950/80 border border-emerald-500/40 transition-all duration-200 shrink-0 relative cursor-pointer ${
+          className={`w-full max-w-[320px] max-h-[120px] rounded-xl p-2.5 sm:p-3 transition-all duration-200 shrink-0 relative cursor-pointer ${
             placement === "bottom" ? "order-2" : "order-2"
           }`}
+          style={{
+            background: "var(--neutral-2)",
+            border: "1px solid var(--color-border-strong)",
+            boxShadow: "var(--shadow-md)",
+            animation: "cardSlideUp var(--duration-fast) var(--ease-out)",
+          }}
           onClick={(e) => {
             if ((e.target as HTMLElement).tagName !== "BUTTON") {
               setBubble(null);
@@ -355,55 +499,88 @@ export function FloatingOverlay({ onOpenDashboard }: FloatingOverlayProps) {
         >
           {/* Edge-aware tail */}
           <div
-            className={`absolute w-2.5 h-2.5 bg-[#0c1410] rotate-45 pointer-events-none ${
+            className={`absolute w-2.5 h-2.5 rotate-45 pointer-events-none ${
               placement === "bottom"
-                ? "-top-1.5 border-l border-t border-emerald-500/40"
-                : "-bottom-1.5 border-r border-b border-emerald-500/40"
+                ? "-top-1.5 border-l border-t"
+                : "-bottom-1.5 border-r border-b"
             } ${
-              align === "left" ? "left-8" : align === "right" ? "right-8" : "left-1/2 -translate-x-1/2"
+              align === "left"
+                ? "left-8"
+                : align === "right"
+                ? "right-8"
+                : "left-1/2 -translate-x-1/2"
             }`}
+            style={{
+              background: "var(--neutral-2)",
+              borderColor: "var(--color-border-strong)",
+            }}
           />
 
           {/* Header */}
-          <div className="flex items-center justify-between pb-1 mb-1 border-b border-emerald-500/15 text-[10px] font-mono">
+          <div
+            className="flex items-center justify-between pb-1 mb-1 text-[10px] font-mono"
+            style={{ borderBottom: "1px solid var(--color-border)" }}
+          >
             <div className="flex items-center gap-1.5">
-              <span className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-semibold text-[9.5px]">
+              <span
+                className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded font-semibold text-[9.5px]"
+                style={{
+                  background: "var(--color-accent-subtle)",
+                  color: "var(--color-accent)",
+                  border: "1px solid var(--color-accent)",
+                }}
+              >
                 Momo
               </span>
-              <span className="text-emerald-400/70 text-[9.5px]">Insight</span>
+              <span style={{ color: "var(--color-text-muted)", fontSize: "9.5px" }}>Insight</span>
             </div>
             <button
-              className="text-slate-400 hover:text-emerald-400 p-0.5 transition-colors"
+              style={{
+                color: "var(--color-text-muted)",
+                background: "transparent",
+                border: "none",
+                cursor: "default",
+                padding: "2px",
+              }}
               onClick={() => setBubble(null)}
               title="Dismiss remark"
             >
-              <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  clipRule="evenodd"
-                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                  fillRule="evenodd"
-                ></path>
-              </svg>
+              <X size={10} />
             </button>
           </div>
 
-          {/* Content: Clamped, wrapped, no horizontal/vertical overflow */}
-          <div className="text-[12px] text-emerald-50 leading-snug break-words overflow-hidden line-clamp-3">
+          {/* Content: Clamped, wrapped, strictly bounded to max-height / max-width */}
+          <div
+            className="text-[12px] leading-snug break-words overflow-hidden line-clamp-3"
+            style={{ color: "var(--color-text)" }}
+          >
             <p className="m-0 font-medium">"{bubbleText}"</p>
           </div>
 
           {/* Quick Actions in Bubble */}
-          <div className="mt-1.5 flex items-center justify-between pt-1 border-t border-emerald-950/80 text-[9.5px] font-mono">
+          <div
+            className="mt-1.5 flex items-center justify-between pt-1 text-[9.5px] font-mono"
+            style={{ borderTop: "1px solid var(--color-border)" }}
+          >
             <button
-              className="px-2 py-0.5 rounded-md bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/30 transition-all flex items-center gap-1"
+              className="px-2 py-0.5 rounded flex items-center gap-1 transition-all"
+              style={{
+                background: "var(--color-accent-subtle)",
+                color: "var(--color-accent)",
+                border: "1px solid var(--color-accent)",
+              }}
               onClick={(e) => {
                 e.stopPropagation();
                 sendMessage(`Tell me more about: "${bubbleText}"`);
               }}
             >
-              <span>⚡ Tell me more</span>
+              <Sparkles size={10} />
+              <span>Tell me more</span>
             </button>
-            <span className="text-emerald-400/50 text-[9px] hover:text-emerald-300 transition-colors" onClick={() => setBubble(null)}>
+            <span
+              style={{ color: "var(--color-text-muted)", fontSize: "9px" }}
+              onClick={() => setBubble(null)}
+            >
               Click to dismiss
             </span>
           </div>
@@ -412,223 +589,409 @@ export function FloatingOverlay({ onOpenDashboard }: FloatingOverlayProps) {
 
       {/* 3. The Main Compact Floating Capsule HUD */}
       <div
-        className={`w-full hud-glass rounded-2xl p-3 shadow-2xl shadow-black/80 border border-emerald-500/30 flex flex-col gap-2.5 relative overflow-hidden backdrop-blur-2xl shrink-0 ${
+        className={`w-full rounded-xl p-2.5 flex flex-col gap-2 relative overflow-hidden shrink-0 transition-all duration-150 ${
           placement === "bottom" ? "order-1" : "order-3"
         }`}
+        style={{
+          background: "var(--neutral-2)",
+          border: isHovered
+            ? "1px solid var(--color-border-strong)"
+            : "1px solid var(--color-border)",
+          boxShadow: isHovered ? "var(--shadow-md)" : "var(--shadow-sm)",
+        }}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
         data-purpose="main-companion-capsule"
       >
         {/* Top Grip & Status Pill */}
         <div
-          className="flex items-center justify-between w-full border-b border-emerald-950 pb-1.5 cursor-grab active:cursor-grabbing"
+          className="flex items-center justify-between w-full pb-1 cursor-grab active:cursor-grabbing"
+          style={{ borderBottom: "1px solid var(--color-border)" }}
           data-tauri-drag-region
           onMouseDown={handleDrag}
         >
           {/* Grip Dots & Avatar Indicator */}
           <div className="flex items-center gap-2" data-tauri-drag-region>
-            <div className="flex flex-col gap-0.5 p-0.5 text-emerald-700/60" title="Drag widget anywhere">
+            <div
+              className="flex flex-col gap-0.5 p-0.5 opacity-40"
+              title="Drag widget anywhere"
+            >
               <div className="flex gap-0.5">
-                <span className="w-1 h-1 rounded-full bg-current"></span>
-                <span className="w-1 h-1 rounded-full bg-current"></span>
-                <span className="w-1 h-1 rounded-full bg-current"></span>
+                <span className="w-1 h-1 rounded-full bg-current" />
+                <span className="w-1 h-1 rounded-full bg-current" />
+                <span className="w-1 h-1 rounded-full bg-current" />
               </div>
               <div className="flex gap-0.5">
-                <span className="w-1 h-1 rounded-full bg-current"></span>
-                <span className="w-1 h-1 rounded-full bg-current"></span>
-                <span className="w-1 h-1 rounded-full bg-current"></span>
+                <span className="w-1 h-1 rounded-full bg-current" />
+                <span className="w-1 h-1 rounded-full bg-current" />
+                <span className="w-1 h-1 rounded-full bg-current" />
               </div>
             </div>
 
             <div className="relative flex items-center justify-center">
-              <div className="w-2 h-2 rounded-full bg-emerald-400 animate-ping absolute"></div>
-              <div className="w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-emerald-500/20"></div>
+              <span
+                className="w-2 h-2 rounded-full"
+                style={{ background: "var(--color-success)" }}
+              />
             </div>
 
-            <div className="flex items-center gap-1.5 font-mono text-[11px]" data-tauri-drag-region>
-              <span className="font-bold text-white tracking-wide">Momo</span>
-              <span className="text-emerald-500/60">•</span>
-              <span className="text-emerald-400 font-medium">
-                {expression === "smug" ? "Cheeky" : expression === "thinking" ? "Thinking" : "Happy"}
+            <div
+              className="flex items-center gap-1.5 font-mono text-[11px]"
+              data-tauri-drag-region
+            >
+              <span className="font-semibold" style={{ color: "var(--color-text)" }}>
+                Momo
               </span>
-              <span className="text-[9px] px-1 py-0.2 rounded bg-emerald-950/80 text-emerald-400 border border-emerald-500/20">
-                v2.4 PRO
+              <span style={{ color: "var(--color-text-muted)" }}>•</span>
+              <span style={{ color: "var(--color-accent)", fontWeight: 500 }}>
+                {expression === "smug"
+                  ? "Cheeky"
+                  : expression === "thinking"
+                  ? "Thinking"
+                  : "Ready"}
+              </span>
+              <span
+                className="text-[9px] px-1 py-0.2 rounded font-mono"
+                style={{
+                  background: "var(--neutral-3)",
+                  color: "var(--color-text-secondary)",
+                  border: "1px solid var(--color-border)",
+                }}
+              >
+                v2.4
               </span>
             </div>
           </div>
 
           {/* Controls: Pin, Popover, Full, Minimize */}
-          <div className="flex items-center gap-0.5 text-slate-400">
-            {/* Always on top button */}
+          <div className="flex items-center gap-0.5">
             <button
-              className={`p-1 rounded transition-colors ${
-                isAlwaysOnTop ? "text-emerald-400 hover:text-emerald-300" : "text-slate-500 hover:text-slate-300"
-              }`}
+              style={{
+                padding: "3px",
+                borderRadius: "var(--radius-sm)",
+                color: isAlwaysOnTop ? "var(--color-accent)" : "var(--color-text-muted)",
+                background: "transparent",
+                border: "none",
+                cursor: "default",
+              }}
               onClick={handleToggleAlwaysOnTop}
               title={isAlwaysOnTop ? "Always on Top (Active)" : "Pin Always on Top"}
             >
-              <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M10 2a1 1 0 011 1v2.293l2.854 2.853a1 1 0 01.293.707V10a1 1 0 01-1 1h-2v6a1 1 0 11-2 0v-6H7a1 1 0 01-1-1V8.854a1 1 0 01.293-.707L9.146 5.293V3a1 1 0 011-1z"></path>
-              </svg>
+              <Pin size={13} />
             </button>
 
-            {/* Quick Actions Tools Toggle */}
             <button
-              className="p-1 rounded text-slate-400 hover:text-emerald-400 hover:bg-emerald-950/60 transition-colors"
+              style={{
+                padding: "3px",
+                borderRadius: "var(--radius-sm)",
+                color: "var(--color-text-muted)",
+                background: "transparent",
+                border: "none",
+                cursor: "default",
+              }}
               onClick={() => setShowPopover((prev) => !prev)}
-              title="Quick Actions & Tools (⌘K)"
+              title="Quick Actions & Tools (Ctrl+K)"
             >
-              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path d="M13 10V3L4 14h7v7l9-11h-7z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></path>
-              </svg>
+              <Sliders size={13} />
             </button>
 
-            {/* Expand to Full App Window */}
             <button
-              className="p-1 rounded hover:bg-emerald-950/60 text-slate-400 hover:text-emerald-400 transition-colors group"
+              style={{
+                padding: "3px",
+                borderRadius: "var(--radius-sm)",
+                color: "var(--color-text-muted)",
+                background: "transparent",
+                border: "none",
+                cursor: "default",
+              }}
               onClick={onOpenDashboard}
               title="Expand to Full Momo Window"
             >
-              <svg className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2.2"
-                ></path>
-              </svg>
+              <Maximize2 size={13} />
             </button>
 
-            {/* Collapse to Mini Orb */}
             <button
-              className="p-1 rounded hover:bg-emerald-950/60 text-slate-400 hover:text-emerald-400 transition-colors"
+              style={{
+                padding: "3px",
+                borderRadius: "var(--radius-sm)",
+                color: "var(--color-text-muted)",
+                background: "transparent",
+                border: "none",
+                cursor: "default",
+              }}
               onClick={() => setIsMinimized(true)}
               title="Collapse to Mini Orb"
             >
-              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2"></path>
-              </svg>
+              <ChevronDown size={13} />
             </button>
           </div>
         </div>
 
-        {/* Center Interactive Row: Momo Animated Avatar + Reactive Voice Waveform */}
-        <div className="flex items-center gap-3 px-1">
-          {/* Momo Expressive Panda Icon Avatar */}
+        {/* Center Interactive Row: Avatar + Audio State */}
+        <div className="flex items-center gap-2.5 px-0.5">
+          {/* Avatar Icon */}
           <div
-            className="relative group cursor-pointer shrink-0"
-            onClick={() => sendMessage("Yo Momo, what do you think of my current workspace?")}
-            title="Click Momo for quick banter"
+            className="relative cursor-pointer shrink-0"
+            onClick={() => setShowQuickControls((prev) => !prev)}
+            title="Click for quick controls: Talk / Listen / Chat / Settings / Sleep"
           >
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#0c1a14] via-[#09140f] to-[#040907] border-2 border-emerald-500/40 p-1.5 flex items-center justify-center shadow-lg shadow-emerald-950/60 group-hover:border-emerald-400 transition-all">
-              <svg className="w-8 h-8 text-emerald-400 animate-bounce-subtle" fill="none" viewBox="0 0 48 48">
-                <circle cx="12" cy="11" fill="#042f22" r="6" stroke="#10b981" strokeWidth="2.5"></circle>
-                <circle cx="36" cy="11" fill="#042f22" r="6" stroke="#10b981" strokeWidth="2.5"></circle>
-                <rect fill="#0c1d16" height="30" rx="14" stroke="#34d399" strokeWidth="2.5" width="34" x="7" y="10"></rect>
-                <ellipse cx="16" cy="24" fill="#042f22" rx="5" ry="6"></ellipse>
-                <ellipse cx="32" cy="24" fill="#042f22" rx="5" ry="6"></ellipse>
-                <circle className="animate-pulse" cx="17" cy="23.5" fill="#34d399" r="2.2"></circle>
-                <circle className="animate-pulse" cx="31" cy="23.5" fill="#34d399" r="2.2"></circle>
-                <polygon fill="#34d399" points="24,28 21.5,31 26.5,31"></polygon>
-                <path d="M20 33 Q24 36.5 28 33" fill="none" stroke="#10b981" strokeLinecap="round" strokeWidth="2"></path>
+            <div
+              className="w-10 h-10 rounded-lg flex items-center justify-center transition-all"
+              style={{
+                background: "var(--neutral-1)",
+                border: showQuickControls
+                  ? "1.5px solid var(--color-accent)"
+                  : "1px solid var(--color-border)",
+              }}
+            >
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="var(--color-text-secondary)">
+                <circle cx="12" cy="13" r="7" />
+                <circle cx="7" cy="7" r="3" />
+                <circle cx="17" cy="7" r="3" />
+                <circle cx="10" cy="12" fill="var(--neutral-1)" r="1.5" />
+                <circle cx="14" cy="12" fill="var(--neutral-1)" r="1.5" />
+                <ellipse cx="12" cy="15" fill="var(--neutral-1)" rx="1.5" ry="1" />
               </svg>
-              <div className="absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full bg-[#0c1410] border border-emerald-500 flex items-center justify-center">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-              </div>
             </div>
+            <span
+              className="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full"
+              style={{
+                background: isRecording
+                  ? "var(--color-danger)"
+                  : isSpeaking
+                  ? "var(--color-accent)"
+                  : "var(--color-success)",
+              }}
+            />
           </div>
 
-          {/* Dynamic Status + Equalizer */}
+          {/* Equalizer & Audio State */}
           <div className="flex-1 flex flex-col justify-center min-w-0">
             <div className="flex items-center justify-between text-xs mb-1">
-              <span className="font-mono text-emerald-400 text-[10.5px] font-medium flex items-center gap-1.5">
-                <svg className="w-3 h-3 text-emerald-400 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></path>
-                  <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></path>
-                </svg>
-                Screen Context: Synced
+              <span
+                className="font-mono text-[10.5px] font-medium flex items-center gap-1"
+                style={{ color: "var(--color-text-secondary)" }}
+              >
+                <Eye size={11} style={{ color: "var(--color-accent)" }} />
+                <span>Screen Context: Synced</span>
               </span>
-              <span className="text-[10px] font-mono text-slate-500">142ms</span>
+              <span
+                className="text-[10px] font-mono"
+                style={{ color: "var(--color-text-muted)" }}
+              >
+                142ms
+              </span>
             </div>
 
-            {/* Equalizer Bar */}
-            <div className="h-5 w-full rounded-lg bg-[#070d0a] border border-emerald-950/90 px-2 flex items-center justify-between gap-1 overflow-hidden">
-              <span className="w-1 bg-emerald-500/40 rounded-full h-2 animate-pulse"></span>
-              <span className={`w-1 bg-emerald-400 rounded-full ${isSpeaking || isRecording ? "audio-bar-1" : "h-3.5"}`}></span>
-              <span className={`w-1 bg-emerald-400 rounded-full ${isSpeaking || isRecording ? "audio-bar-2" : "h-2"}`}></span>
-              <span className={`w-1 bg-emerald-300 rounded-full ${isSpeaking || isRecording ? "audio-bar-3" : "h-4"}`}></span>
-              <span className={`w-1 bg-emerald-500 rounded-full ${isSpeaking || isRecording ? "audio-bar-4" : "h-2.5"}`}></span>
-              <span className={`w-1 bg-emerald-400 rounded-full ${isSpeaking || isRecording ? "audio-bar-5" : "h-3"}`}></span>
-              <span className="w-1 bg-emerald-300 rounded-full h-1.5"></span>
-              <span className="text-[9px] font-mono text-emerald-400/70 tracking-tighter uppercase pl-1">
-                {isRecording ? "Listening" : isSpeaking ? "Speaking" : isSending ? "Thinking" : "Online"}
+            <div
+              className="h-4 w-full rounded px-2 flex items-center justify-between gap-1 overflow-hidden"
+              style={{
+                background: "var(--neutral-1)",
+                border: "1px solid var(--color-border)",
+              }}
+            >
+              <span
+                className="w-1 rounded-full h-2"
+                style={{ background: "var(--color-accent)", opacity: 0.4 }}
+              />
+              <span
+                className={`w-1 rounded-full ${
+                  isSpeaking || isRecording ? "audio-bar-1" : "h-2"
+                }`}
+                style={{ background: "var(--color-accent)" }}
+              />
+              <span
+                className={`w-1 rounded-full ${
+                  isSpeaking || isRecording ? "audio-bar-2" : "h-3"
+                }`}
+                style={{ background: "var(--color-accent)" }}
+              />
+              <span
+                className={`w-1 rounded-full ${
+                  isSpeaking || isRecording ? "audio-bar-3" : "h-1.5"
+                }`}
+                style={{ background: "var(--color-accent)" }}
+              />
+              <span
+                className={`w-1 rounded-full ${
+                  isSpeaking || isRecording ? "audio-bar-4" : "h-2.5"
+                }`}
+                style={{ background: "var(--color-accent)" }}
+              />
+              <span
+                className="text-[9px] font-mono tracking-tighter uppercase pl-1"
+                style={{ color: "var(--color-text-muted)" }}
+              >
+                {isRecording
+                  ? "Listening"
+                  : isSpeaking
+                  ? "Speaking"
+                  : isSending
+                  ? "Thinking"
+                  : "Online"}
               </span>
             </div>
           </div>
         </div>
 
+        {/* Compact Click-State Quick Controls Bar (Talk / Listen / Chat / Settings / Sleep) */}
+        {showQuickControls && (
+          <div
+            className="grid grid-cols-5 gap-1 pt-1 pb-0.5"
+            style={{ borderTop: "1px solid var(--color-border)" }}
+          >
+            <button
+              className="flex flex-col items-center justify-center p-1 rounded text-[9.5px] font-mono transition-colors"
+              style={{
+                background: isSpeaking ? "var(--color-accent-subtle)" : "var(--neutral-3)",
+                color: isSpeaking ? "var(--color-accent)" : "var(--color-text-secondary)",
+                border: "1px solid var(--color-border)",
+              }}
+              onClick={() => {
+                if (isSpeaking) {
+                  stopSpeaking();
+                } else {
+                  sendMessage("Tell me a quick joke or punchy observation");
+                }
+              }}
+              title="Talk / Stop speech"
+            >
+              <Volume2 size={12} />
+              <span>Talk</span>
+            </button>
+
+            <button
+              className="flex flex-col items-center justify-center p-1 rounded text-[9.5px] font-mono transition-colors"
+              style={{
+                background: isRecording ? "rgba(239,68,68,0.2)" : "var(--neutral-3)",
+                color: isRecording ? "var(--color-danger)" : "var(--color-text-secondary)",
+                border: "1px solid var(--color-border)",
+              }}
+              onMouseDown={() => startPTT()}
+              onMouseUp={() => stopPTT()}
+              title="Listen (Hold F1)"
+            >
+              <Mic size={12} />
+              <span>Listen</span>
+            </button>
+
+            <button
+              className="flex flex-col items-center justify-center p-1 rounded text-[9.5px] font-mono transition-colors"
+              style={{
+                background: "var(--neutral-3)",
+                color: "var(--color-text-secondary)",
+                border: "1px solid var(--color-border)",
+              }}
+              onClick={() => {
+                setActiveTab("overview");
+                onOpenDashboard();
+              }}
+              title="Open Chat"
+            >
+              <MessageSquare size={12} />
+              <span>Chat</span>
+            </button>
+
+            <button
+              className="flex flex-col items-center justify-center p-1 rounded text-[9.5px] font-mono transition-colors"
+              style={{
+                background: "var(--neutral-3)",
+                color: "var(--color-text-secondary)",
+                border: "1px solid var(--color-border)",
+              }}
+              onClick={() => {
+                setActiveTab("settings");
+                onOpenDashboard();
+              }}
+              title="Settings"
+            >
+              <Sliders size={12} />
+              <span>Settings</span>
+            </button>
+
+            <button
+              className="flex flex-col items-center justify-center p-1 rounded text-[9.5px] font-mono transition-colors"
+              style={{
+                background: "var(--neutral-3)",
+                color: "var(--color-text-secondary)",
+                border: "1px solid var(--color-border)",
+              }}
+              onClick={() => {
+                setShowQuickControls(false);
+                setIsMinimized(true);
+              }}
+              title="Sleep / Minimize"
+            >
+              <Moon size={12} />
+              <span>Sleep</span>
+            </button>
+          </div>
+        )}
+
         {/* Quick Actions Pill Dock */}
-        <div className="grid grid-cols-4 gap-1.5 pt-0.5" data-purpose="quick-actions-pill-dock">
-          {/* Quick Action 1: Inspect Screen [Alt+S] */}
+        <div className="grid grid-cols-4 gap-1 pt-0.5" data-purpose="quick-actions-pill-dock">
+          {/* Quick Action 1: Inspect */}
           <button
-            className="flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-xl bg-gradient-to-r from-emerald-950/70 to-[#0e1914] border border-emerald-500/30 hover:border-emerald-400/70 hover:bg-emerald-900/30 text-emerald-300 text-xs font-mono font-medium transition-all group"
+            className="flex items-center justify-center gap-1 px-2 py-1 rounded text-xs font-mono font-medium transition-all"
+            style={{
+              background: "var(--neutral-3)",
+              border: "1px solid var(--color-border)",
+              color: "var(--color-text)",
+            }}
             onClick={handleInspectScreen}
             disabled={isInspecting || isSending}
             title="Inspect Desktop Screen (Alt + S)"
           >
-            <svg
-              className={`w-3.5 h-3.5 text-emerald-400 group-hover:scale-110 transition-transform ${
-                isInspecting ? "animate-spin" : ""
-              }`}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></path>
-              <path d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></path>
-            </svg>
+            <Camera size={12} style={{ color: "var(--color-accent)" }} />
             <span>Inspect</span>
           </button>
 
-          {/* Quick Action 2: Voice Mic (Hold F1) */}
+          {/* Quick Action 2: Voice */}
           <button
-            className={`flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-xl border text-xs font-mono font-medium transition-all group ${
-              isRecording
-                ? "bg-emerald-500 text-slate-950 border-emerald-400 shadow-md shadow-emerald-500/25"
-                : "bg-gradient-to-r from-emerald-950/70 to-[#0e1914] border-emerald-500/30 hover:border-emerald-400/70 text-emerald-300"
-            }`}
+            className="flex items-center justify-center gap-1 px-2 py-1 rounded text-xs font-mono font-medium transition-all"
+            style={{
+              background: isRecording ? "rgba(239, 68, 68, 0.2)" : "var(--neutral-3)",
+              border: `1px solid ${isRecording ? "var(--color-danger)" : "var(--color-border)"}`,
+              color: isRecording ? "var(--color-danger)" : "var(--color-text)",
+            }}
             onMouseDown={() => startPTT()}
             onMouseUp={() => stopPTT()}
             title="Voice Input (Hold F1)"
           >
-            <svg className="w-3.5 h-3.5 text-current group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></path>
-            </svg>
+            <Mic size={12} style={{ color: isRecording ? "var(--color-danger)" : "var(--color-accent)" }} />
             <span>{isRecording ? "Listening" : "Speak"}</span>
           </button>
 
-          {/* Quick Action 3: Agent Workspace */}
+          {/* Quick Action 3: Workspace */}
           <button
-            className="flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-xl bg-gradient-to-r from-emerald-950/70 to-[#0e1914] border border-emerald-500/30 hover:border-emerald-400/70 text-emerald-300 text-xs font-mono font-medium transition-all group"
+            className="flex items-center justify-center gap-1 px-2 py-1 rounded text-xs font-mono font-medium transition-all"
+            style={{
+              background: "var(--neutral-3)",
+              border: "1px solid var(--color-border)",
+              color: "var(--color-text)",
+            }}
             onClick={() => {
               setActiveTab("workspace");
               onOpenDashboard();
             }}
             title="Open Agent Workspace"
           >
-            <svg className="w-3.5 h-3.5 text-emerald-400 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
+            <Terminal size={12} style={{ color: "var(--color-accent)" }} />
             <span>Agent</span>
           </button>
 
-          {/* Quick Action 4: Open Full Momo App */}
+          {/* Quick Action 4: Full App */}
           <button
-            className="flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-sans font-bold text-xs shadow-md shadow-emerald-500/25 transition-all group"
+            className="flex items-center justify-center gap-1 px-2 py-1 rounded text-xs font-mono font-medium transition-all"
+            style={{
+              background: "var(--color-accent)",
+              border: "1px solid var(--color-accent-hover)",
+              color: "#ffffff",
+            }}
             onClick={onOpenDashboard}
             title="Expand to Full Momo Window"
           >
-            <svg className="w-3.5 h-3.5 text-slate-950 group-hover:rotate-45 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5"></path>
-            </svg>
+            <Maximize2 size={12} />
             <span>Full</span>
           </button>
         </div>
@@ -636,7 +999,17 @@ export function FloatingOverlay({ onOpenDashboard }: FloatingOverlayProps) {
         {/* Collapsible Mini Prompt Input Pill */}
         <div className="relative w-full pt-0.5">
           <input
-            className="w-full bg-[#080d0b] text-xs text-emerald-100 placeholder-emerald-800/70 rounded-xl px-3 py-2 pr-9 border border-emerald-950 focus:border-emerald-500/60 focus:ring-1 focus:ring-emerald-500/50 outline-none transition-all font-mono"
+            style={{
+              width: "100%",
+              background: "var(--neutral-1)",
+              fontSize: "var(--text-xs)",
+              color: "var(--color-text)",
+              borderRadius: "var(--radius-sm)",
+              padding: "4px 28px 4px 8px",
+              border: "1px solid var(--color-border)",
+              outline: "none",
+              fontFamily: "var(--font-mono)",
+            }}
             placeholder="Ask Momo anything or hold F1..."
             type="text"
             value={miniPrompt}
@@ -650,28 +1023,42 @@ export function FloatingOverlay({ onOpenDashboard }: FloatingOverlayProps) {
             disabled={isSending}
           />
           <button
-            className="absolute right-2 top-2.5 p-1 rounded-md text-emerald-400 hover:text-emerald-300 hover:bg-emerald-950/60 transition-colors"
+            style={{
+              position: "absolute",
+              right: "4px",
+              top: "6px",
+              padding: "2px",
+              color: miniPrompt.trim() ? "var(--color-accent)" : "var(--color-text-muted)",
+              background: "transparent",
+              border: "none",
+              cursor: miniPrompt.trim() ? "default" : "not-allowed",
+            }}
             onClick={handleSendMiniPrompt}
             disabled={!miniPrompt.trim() || isSending}
             title="Send"
           >
-            <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
-              <path clipRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 1.414L10.586 9H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z" fillRule="evenodd"></path>
-            </svg>
+            <Send size={12} />
           </button>
         </div>
 
         {/* Glanceable Mini Footer */}
-        <div className="flex items-center justify-between text-[10px] font-mono text-slate-400 pt-1 border-t border-emerald-950/70 px-1">
-          <div className="flex items-center gap-1.5 text-emerald-400/90">
-            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></path>
-            </svg>
-            <span>Mem Vault: {memoriesCount} items</span>
+        <div
+          className="flex items-center justify-between text-[10px] font-mono pt-1 px-0.5"
+          style={{
+            borderTop: "1px solid var(--color-border)",
+            color: "var(--color-text-muted)",
+          }}
+        >
+          <div className="flex items-center gap-1">
+            <Database size={10} />
+            <span>Vault: {memoriesCount} items</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-            <span className="text-emerald-400/90">{providerLabel}</span>
+            <span
+              className="w-1.5 h-1.5 rounded-full"
+              style={{ background: "var(--color-success)" }}
+            />
+            <span>{providerLabel}</span>
           </div>
         </div>
       </div>

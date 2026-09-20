@@ -1,3 +1,5 @@
+/* SpeechBubble Styles — Redesigned with Token System */
+
 .momo-bubble-anchor {
   position: absolute;
   z-index: 999;
@@ -35,18 +37,16 @@
   box-sizing: border-box;
   overflow: hidden;
   scrollbar-width: none;
-  background: rgba(10, 24, 16, 0.96);
-  backdrop-filter: blur(20px) saturate(160%);
-  -webkit-backdrop-filter: blur(20px) saturate(160%);
-  border: 1px solid rgba(142, 224, 72, 0.4);
-  border-radius: 14px;
-  padding: 9px 13px;
-  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.55), 0 0 14px rgba(114, 190, 56, 0.2);
-  animation: momo-bubble-in 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  background: var(--neutral-2);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  padding: 8px 12px;
+  box-shadow: var(--shadow-md);
+  animation: momo-bubble-in var(--duration-fast) var(--ease-out);
   cursor: pointer;
   user-select: none;
   -webkit-user-select: none;
-  transition: transform 0.15s ease;
+  transition: transform var(--duration-fast) var(--ease-out);
 }
 
 .momo-bubble:hover {
@@ -59,14 +59,14 @@
 
 .momo-bubble-text {
   margin: 0;
-  font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
-  font-size: 12.5px;
-  line-height: 1.45;
-  color: #f2f8f3;
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  line-height: var(--leading-ui);
+  color: var(--color-text);
   white-space: normal;
   word-break: break-word;
   overflow-wrap: break-word;
-  font-weight: 500;
+  font-weight: var(--weight-medium);
   display: -webkit-box;
   -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
@@ -75,18 +75,18 @@
 
 .momo-bubble-tail {
   position: absolute;
-  width: 9px;
-  height: 9px;
-  background: rgba(10, 24, 16, 0.96);
+  width: 8px;
+  height: 8px;
+  background: var(--neutral-2);
   transform: rotate(45deg);
 }
 
 /* Top bubble tail points DOWN */
 .momo-bubble-top .momo-bubble-tail {
-  bottom: -5px;
+  bottom: -4px;
   left: 32px;
-  border-right: 1px solid rgba(142, 224, 72, 0.4);
-  border-bottom: 1px solid rgba(142, 224, 72, 0.4);
+  border-right: 1px solid var(--color-border-strong);
+  border-bottom: 1px solid var(--color-border-strong);
 }
 
 .momo-bubble-top.momo-bubble-left .momo-bubble-tail {
@@ -101,10 +101,10 @@
 
 /* Bottom bubble tail points UP */
 .momo-bubble-bottom .momo-bubble-tail {
-  top: -5px;
+  top: -4px;
   left: 32px;
-  border-left: 1px solid rgba(142, 224, 72, 0.4);
-  border-top: 1px solid rgba(142, 224, 72, 0.4);
+  border-left: 1px solid var(--color-border-strong);
+  border-top: 1px solid var(--color-border-strong);
 }
 
 .momo-bubble-bottom.momo-bubble-left .momo-bubble-tail {

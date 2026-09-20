@@ -3,6 +3,20 @@ import { invoke } from "@tauri-apps/api/core";
 import { useMomoStore } from "@/store/useMomoStore";
 import { ttsManager } from "@/core/tts/manager";
 import { cleanTextForSpeech } from "@/core/tts/cleaner";
+import {
+  FolderOpen,
+  Folder,
+  FileText,
+  Tag,
+  AlertTriangle,
+  ArrowUp,
+  RotateCw,
+  Plus,
+  Terminal,
+  Globe,
+  FileCode,
+  ListTodo,
+} from "lucide-react";
 import "./AgentWorkspace.css";
 
 interface CommandResult {
@@ -132,6 +146,17 @@ export function AgentWorkspace() {
       loadWorkspaceFiles("");
     }
   }, [settings.workspaceFolder]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "b") {
+        e.preventDefault();
+        setActiveSubTab((prev) => (prev === "files" ? "terminal" : "files"));
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   const handleOpenFile = async (item: WorkspaceFileEntry) => {
     if (item.isDir) {
@@ -487,7 +512,7 @@ export function AgentWorkspace() {
       {/* Workspace Header */}
       <div className="momo-workspace-header">
         <div className="momo-workspace-title">
-          <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-4 h-4 text-[var(--color-accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
           </svg>
           <span>Agent Workspace</span>
@@ -499,7 +524,7 @@ export function AgentWorkspace() {
       </div>
 
       {/* Granted Workspace Folder Scope Banner */}
-      <div className="flex items-center justify-between px-3 py-1.5 bg-obsidian-950/80 border border-obsidian-800 rounded-lg text-[11px] mb-2">
+      <div className="flex items-center justify-between px-3 py-1.5 bg-[var(--neutral-1)] border border-[var(--color-border)] rounded-lg text-[11px] mb-2">
         <div className="flex items-center gap-1.5 truncate">
           <span className="text-gray-400 font-semibold">Scope:</span>
           <span className="font-mono text-gray-200 truncate" title={settings.workspaceFolder || "No folder granted"}>
@@ -508,10 +533,11 @@ export function AgentWorkspace() {
         </div>
         <button
           type="button"
-          className="px-2 py-0.5 bg-sky-600/20 hover:bg-sky-600/30 text-sky-400 border border-sky-500/30 rounded text-[10.5px] font-semibold shrink-0 transition-colors"
+          className="px-2 py-0.5 bg-sky-600/20 hover:bg-sky-600/30 text-sky-400 border border-sky-500/30 rounded text-[10.5px] font-semibold shrink-0 transition-colors flex items-center gap-1"
           onClick={() => chooseWorkspaceFolder()}
         >
-          📂 Choose Folder
+          <FolderOpen size={11} />
+          <span>Choose Folder</span>
         </button>
       </div>
 
@@ -533,7 +559,7 @@ export function AgentWorkspace() {
           className={`momo-workspace-nav-btn ${activeSubTab === "files" ? "active" : ""}`}
           onClick={() => setActiveSubTab("files")}
         >
-          File Operations
+          Files (Ctrl+B)
         </button>
         <button
           className={`momo-workspace-nav-btn ${activeSubTab === "tasks" ? "active" : ""}`}
@@ -547,9 +573,7 @@ export function AgentWorkspace() {
       {pendingCmd && (
         <div className="momo-approval-card">
           <div className="momo-approval-header">
-            <svg className="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-            </svg>
+            <Terminal size={14} className="text-amber-400" />
             <span>Command Approval Required</span>
           </div>
           <div className="text-[11px] text-gray-400 mb-2">
@@ -578,9 +602,7 @@ export function AgentWorkspace() {
       {pendingFile && (
         <div className="momo-approval-card">
           <div className="momo-approval-header">
-            <svg className="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
+            <FileText size={14} className="text-amber-400" />
             <span>File Modification Approval</span>
           </div>
           <div className="text-[11px] text-gray-400 mb-2">
@@ -608,11 +630,12 @@ export function AgentWorkspace() {
       {pendingRename && (
         <div className="momo-approval-card">
           <div className="momo-approval-header">
-            <span>🏷️ Rename Approval Required</span>
+            <Tag size={14} className="text-purple-400" />
+            <span>Rename Approval Required</span>
           </div>
-          <div className="text-[11px] text-gray-400 mb-2 font-mono">
-            Rename: <span className="text-gray-300">{pendingRename.oldPath}</span> ➔{" "}
-            <span className="text-emerald-400">{pendingRename.newPath}</span>
+          <div className="text-[11px] text-gray-400 mb-2 font-mono flex items-center gap-1.5">
+            Rename: <span className="text-gray-300">{pendingRename.oldPath}</span> →{" "}
+            <span style={{ color: "var(--color-accent)" }}>{pendingRename.newPath}</span>
           </div>
           <div className="momo-approval-actions">
             <button className="momo-reject-btn" onClick={() => setPendingRename(null)}>
@@ -627,9 +650,10 @@ export function AgentWorkspace() {
 
       {/* Delete Approval Card */}
       {pendingDelete && (
-        <div className="momo-approval-card" style={{ borderColor: "#ef4444" }}>
-          <div className="momo-approval-header" style={{ color: "#ef4444" }}>
-            <span>⚠️ Permanent Deletion Warning</span>
+        <div className="momo-approval-card" style={{ borderColor: "var(--color-danger)" }}>
+          <div className="momo-approval-header" style={{ color: "var(--color-danger)" }}>
+            <AlertTriangle size={14} />
+            <span>Permanent Deletion Warning</span>
           </div>
           <div className="text-[11.5px] text-red-300 mb-2 font-mono">
             Are you sure you want to permanently delete: <strong>{pendingDelete.path}</strong>?
@@ -675,7 +699,7 @@ export function AgentWorkspace() {
                     : log.type === "err"
                     ? "momo-terminal-error"
                     : log.type === "info"
-                    ? "text-emerald-400/80"
+                    ? "text-[var(--color-accent)]"
                     : "text-gray-300"
                 }`}
               >
@@ -694,7 +718,7 @@ export function AgentWorkspace() {
             <div className="flex gap-1.5">
               <input
                 type="text"
-                className="flex-1 bg-obsidian-950 border border-obsidian-750 focus:border-emerald-500 rounded-lg px-2.5 py-1.5 text-xs text-gray-200 font-mono placeholder-gray-600 outline-none"
+                className="flex-1 bg-[var(--neutral-1)] border border-[var(--color-border)] focus:border-[var(--color-accent)] rounded-lg px-2.5 py-1.5 text-xs text-gray-200 font-mono placeholder-gray-600 outline-none"
                 placeholder="e.g. git status, cargo check, npm test"
                 value={cmdInput}
                 onChange={(e) => setCmdInput(e.target.value)}
@@ -702,7 +726,7 @@ export function AgentWorkspace() {
               />
               <button
                 type="submit"
-                className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-obsidian-950 font-bold text-xs rounded-lg transition-colors"
+                className="px-3 py-1.5 bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] disabled:opacity-50 text-white font-bold text-xs rounded-lg transition-colors"
                 disabled={isRunning || !cmdInput.trim()}
               >
                 Execute
@@ -712,7 +736,7 @@ export function AgentWorkspace() {
               <span className="text-[10px] text-gray-500 font-mono shrink-0">cwd:</span>
               <input
                 type="text"
-                className="flex-1 bg-obsidian-950 border border-obsidian-800 rounded px-2 py-1 text-[10.5px] text-gray-400 font-mono placeholder-gray-700 outline-none"
+                className="flex-1 bg-[var(--neutral-1)] border border-[var(--color-border)] rounded px-2 py-1 text-[10.5px] text-gray-400 font-mono placeholder-gray-700 outline-none"
                 placeholder="Optional working directory (defaults to workspace)"
                 value={cmdCwd}
                 onChange={(e) => setCmdCwd(e.target.value)}
@@ -732,14 +756,19 @@ export function AgentWorkspace() {
           <div className="flex gap-1.5">
             <input
               type="text"
-              className="flex-1 bg-obsidian-950 border border-obsidian-750 focus:border-emerald-500 rounded-lg px-2.5 py-1.5 text-xs text-gray-200 font-mono placeholder-gray-600 outline-none"
+              className="flex-1 bg-[var(--neutral-1)] border border-[var(--color-border)] focus:border-[var(--color-accent)] rounded-lg px-2.5 py-1.5 text-xs text-gray-200 font-mono placeholder-gray-600 outline-none"
               placeholder="https://..."
               value={researchUrl}
               onChange={(e) => setResearchUrl(e.target.value)}
               disabled={isResearching}
             />
             <button
-              className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-obsidian-950 font-bold text-xs rounded-lg transition-colors"
+              className="px-3 py-1.5 font-bold text-xs rounded-lg transition-colors"
+              style={{
+                background: "var(--color-accent)",
+                color: "#ffffff",
+                border: "1px solid var(--color-accent-hover)",
+              }}
               onClick={handleFetchResearch}
               disabled={isResearching || !researchUrl.trim()}
             >
@@ -748,9 +777,21 @@ export function AgentWorkspace() {
           </div>
 
           {scrapeResult && (
-            <div className="bg-obsidian-950 border border-obsidian-750 rounded-xl p-3 space-y-2">
-              <div className="flex items-center justify-between border-b border-obsidian-800 pb-1.5">
-                <span className="text-xs font-bold text-emerald-400 truncate max-w-[200px]">
+            <div
+              className="rounded-xl p-3 space-y-2"
+              style={{
+                background: "var(--neutral-1)",
+                border: "1px solid var(--color-border)",
+              }}
+            >
+              <div
+                className="flex items-center justify-between pb-1.5"
+                style={{ borderBottom: "1px solid var(--color-border)" }}
+              >
+                <span
+                  className="text-xs font-bold truncate max-w-[200px]"
+                  style={{ color: "var(--color-accent)" }}
+                >
                   {scrapeResult.title || "Web Result"}
                 </span>
                 <span className="text-[10px] font-mono text-gray-400">
@@ -769,15 +810,28 @@ export function AgentWorkspace() {
       {activeSubTab === "files" && (
         <div className="space-y-3">
           {!settings.workspaceFolder ? (
-            <div className="p-4 rounded-xl bg-obsidian-950 border border-obsidian-800 text-center space-y-2.5">
-              <div className="text-2xl">📂</div>
+            <div
+              className="p-5 rounded-xl text-center space-y-2.5"
+              style={{
+                background: "var(--neutral-1)",
+                border: "1px solid var(--color-border)",
+              }}
+            >
+              <div className="flex justify-center">
+                <FolderOpen size={32} style={{ color: "var(--color-accent)" }} />
+              </div>
               <div className="text-xs font-semibold text-gray-200">No Workspace Folder Granted</div>
               <div className="text-[11px] text-gray-400 max-w-[280px] mx-auto leading-relaxed">
                 Choose a project directory to let Momo inspect files, edit code, and manage project assets safely.
               </div>
               <button
                 type="button"
-                className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-obsidian-950 font-bold text-xs rounded-lg transition-all"
+                className="px-3 py-1.5 font-semibold text-xs rounded-lg transition-all"
+                style={{
+                  background: "var(--color-accent)",
+                  color: "#ffffff",
+                  border: "1px solid var(--color-accent-hover)",
+                }}
                 onClick={() => chooseWorkspaceFolder().then(() => loadWorkspaceFiles(""))}
               >
                 Choose Workspace Folder
@@ -786,10 +840,16 @@ export function AgentWorkspace() {
           ) : (
             <>
               {/* Explorer Toolbar & Breadcrumbs */}
-              <div className="bg-obsidian-950 border border-obsidian-800 rounded-xl p-2 space-y-2">
+              <div
+                className="rounded-xl p-2 space-y-2"
+                style={{
+                  background: "var(--neutral-1)",
+                  border: "1px solid var(--color-border)",
+                }}
+              >
                 <div className="flex items-center justify-between text-[11px]">
                   <div className="flex items-center gap-1.5 min-w-0 font-mono text-gray-300">
-                    <span className="text-emerald-400 font-bold">root</span>
+                    <span style={{ color: "var(--color-accent)", fontWeight: "bold" }}>root</span>
                     {currentSubpath && (
                       <span className="truncate text-gray-400">
                         / {currentSubpath}
@@ -799,22 +859,39 @@ export function AgentWorkspace() {
                   <div className="flex items-center gap-1.5 shrink-0">
                     {currentSubpath && (
                       <button
-                        className="px-1.5 py-0.5 rounded bg-obsidian-800 hover:bg-obsidian-750 text-gray-300 text-[10px] font-mono"
+                        className="px-2 py-0.5 rounded text-[10px] font-mono flex items-center gap-1 transition-colors"
+                        style={{
+                          background: "var(--neutral-3)",
+                          border: "1px solid var(--color-border)",
+                          color: "var(--color-text)",
+                        }}
                         onClick={handleNavigateUp}
                         title="Go up one folder"
                       >
-                        ⬆ Up
+                        <ArrowUp size={10} />
+                        <span>Up</span>
                       </button>
                     )}
                     <button
-                      className="px-1.5 py-0.5 rounded bg-obsidian-800 hover:bg-obsidian-750 text-gray-300 text-[10px] font-mono"
+                      className="px-2 py-0.5 rounded text-[10px] font-mono flex items-center gap-1 transition-colors"
+                      style={{
+                        background: "var(--neutral-3)",
+                        border: "1px solid var(--color-border)",
+                        color: "var(--color-text)",
+                      }}
                       onClick={() => loadWorkspaceFiles(currentSubpath)}
                       title="Refresh file tree"
                     >
-                      🔄 Refresh
+                      <RotateCw size={10} />
+                      <span>Refresh</span>
                     </button>
                     <button
-                      className="px-2 py-0.5 rounded bg-emerald-600/30 hover:bg-emerald-600/40 text-emerald-300 border border-emerald-500/30 text-[10px] font-mono font-semibold"
+                      className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold flex items-center gap-1 transition-colors"
+                      style={{
+                        background: "var(--color-accent-subtle)",
+                        border: "1px solid var(--color-accent)",
+                        color: "var(--color-accent)",
+                      }}
                       onClick={() => {
                         const newPath = currentSubpath ? `${currentSubpath}/new-file.txt` : "new-file.txt";
                         setFilePath(newPath);
@@ -824,13 +901,19 @@ export function AgentWorkspace() {
                       }}
                       title="Create new file in current folder"
                     >
-                      ➕ New File
+                      <Plus size={10} />
+                      <span>New File</span>
                     </button>
                   </div>
                 </div>
 
                 {/* File Tree List */}
-                <div className="max-h-48 overflow-y-auto border border-obsidian-850 rounded-lg divide-y divide-obsidian-850 text-xs font-mono">
+                <div
+                  className="max-h-48 overflow-y-auto rounded-lg divide-y text-xs font-mono"
+                  style={{
+                    border: "1px solid var(--color-border)",
+                  }}
+                >
                   {isLoadingFiles ? (
                     <div className="p-3 text-center text-gray-500 animate-pulse text-[11px]">
                       Loading files...
@@ -843,14 +926,26 @@ export function AgentWorkspace() {
                     fileList.map((entry) => (
                       <div
                         key={entry.path}
-                        className={`px-2.5 py-1.5 flex items-center justify-between hover:bg-obsidian-850/80 cursor-pointer transition-colors group ${
-                          filePath === entry.path ? "bg-emerald-950/40 border-l-2 border-emerald-400" : ""
-                        }`}
+                        className="px-2.5 py-1.5 flex items-center justify-between hover:bg-neutral-800/40 cursor-pointer transition-colors group"
+                        style={{
+                          background: filePath === entry.path ? "var(--color-accent-subtle)" : "transparent",
+                          borderLeft: filePath === entry.path ? "2px solid var(--color-accent)" : "none",
+                        }}
                         onClick={() => handleOpenFile(entry)}
                       >
                         <div className="flex items-center gap-2 min-w-0">
-                          <span>{entry.isDir ? "📁" : "📄"}</span>
-                          <span className={`truncate ${entry.isDir ? "text-emerald-300 font-semibold" : "text-gray-200"}`}>
+                          {entry.isDir ? (
+                            <Folder size={13} style={{ color: "var(--color-accent)" }} />
+                          ) : (
+                            <FileText size={13} style={{ color: "var(--color-text-muted)" }} />
+                          )}
+                          <span
+                            className="truncate"
+                            style={{
+                              color: entry.isDir ? "var(--color-accent)" : "var(--color-text)",
+                              fontWeight: entry.isDir ? "var(--weight-semibold)" : "normal",
+                            }}
+                          >
                             {entry.name}
                           </span>
                         </div>
@@ -864,7 +959,7 @@ export function AgentWorkspace() {
                           )}
                           <div className="opacity-0 group-hover:opacity-100 flex items-center gap-1 transition-opacity">
                             <button
-                              className="px-1 py-0.5 rounded bg-obsidian-800 hover:bg-obsidian-750 text-sky-400 text-[9px]"
+                              className="px-1 py-0.5 rounded bg-[var(--neutral-4)] hover:bg-[var(--neutral-4)] text-sky-400 text-[9px]"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 setRenameOldPath(entry.path);
@@ -875,7 +970,7 @@ export function AgentWorkspace() {
                               Rename
                             </button>
                             <button
-                              className="px-1 py-0.5 rounded bg-obsidian-800 hover:bg-red-950 text-red-400 text-[9px]"
+                              className="px-1 py-0.5 rounded bg-[var(--neutral-4)] hover:bg-red-950 text-red-400 text-[9px]"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 setDeletePath(entry.path);
@@ -895,10 +990,10 @@ export function AgentWorkspace() {
 
               {/* File Editor & Preview Drawer */}
               {isEditorOpen && (
-                <div className="bg-obsidian-950 border border-obsidian-800 rounded-xl p-3 space-y-2">
-                  <div className="flex items-center justify-between border-b border-obsidian-800 pb-1.5">
+                <div className="bg-[var(--neutral-1)] border border-[var(--color-border)] rounded-xl p-3 space-y-2">
+                  <div className="flex items-center justify-between border-b border-[var(--color-border)] pb-1.5">
                     <div className="flex items-center gap-2 min-w-0">
-                      <span className="text-xs font-bold text-emerald-400 font-mono truncate">
+                      <span className="text-xs font-bold text-[var(--color-accent)] font-mono truncate">
                         {activeFileName || filePath}
                       </span>
                     </div>
@@ -906,14 +1001,14 @@ export function AgentWorkspace() {
                       className="text-gray-500 hover:text-gray-300 text-xs font-mono"
                       onClick={() => setIsEditorOpen(false)}
                     >
-                      ✕ Close
+                      Close
                     </button>
                   </div>
                   <div className="space-y-1">
                     <label className="text-[10px] text-gray-400 font-mono">Relative Path:</label>
                     <input
                       type="text"
-                      className="w-full bg-obsidian-900 border border-obsidian-750 focus:border-emerald-500 rounded-lg px-2.5 py-1 text-xs text-gray-200 font-mono outline-none"
+                      className="w-full bg-[var(--neutral-2)] border border-[var(--color-border)] focus:border-[var(--color-accent)] rounded-lg px-2.5 py-1 text-xs text-gray-200 font-mono outline-none"
                       value={filePath}
                       onChange={(e) => setFilePath(e.target.value)}
                     />
@@ -921,14 +1016,14 @@ export function AgentWorkspace() {
                   <div className="space-y-1">
                     <label className="text-[10px] text-gray-400 font-mono">File Contents:</label>
                     <textarea
-                      className="w-full h-32 bg-obsidian-900 border border-obsidian-750 focus:border-emerald-500 rounded-lg p-2 text-xs text-gray-200 font-mono outline-none resize-none leading-relaxed"
+                      className="w-full h-32 bg-[var(--neutral-2)] border border-[var(--color-border)] focus:border-[var(--color-accent)] rounded-lg p-2 text-xs text-gray-200 font-mono outline-none resize-none leading-relaxed"
                       placeholder="Write code or text..."
                       value={fileContent}
                       onChange={(e) => setFileContent(e.target.value)}
                     />
                   </div>
                   <button
-                    className="w-full py-1.5 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-obsidian-950 font-bold text-xs rounded-lg transition-colors"
+                    className="w-full py-1.5 bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] disabled:opacity-50 text-white font-bold text-xs rounded-lg transition-colors"
                     onClick={handleRequestSaveFile}
                     disabled={!filePath.trim()}
                   >
@@ -938,20 +1033,20 @@ export function AgentWorkspace() {
               )}
 
               {/* Quick File Operations Collapsible: Rename / Delete */}
-              <div className="border border-obsidian-800 rounded-xl p-2.5 space-y-2.5 bg-obsidian-950/60">
+              <div className="border border-[var(--color-border)] rounded-xl p-2.5 space-y-2.5 bg-[var(--neutral-1)]">
                 <div className="text-[10.5px] font-semibold text-gray-400">File Utilities</div>
                 {/* Rename */}
                 <div className="flex gap-2">
                   <input
                     type="text"
-                    className="flex-1 bg-obsidian-900 border border-obsidian-750 rounded px-2 py-1 text-xs text-gray-200 font-mono placeholder-gray-600 outline-none"
+                    className="flex-1 bg-[var(--neutral-2)] border border-[var(--color-border)] rounded px-2 py-1 text-xs text-gray-200 font-mono placeholder-gray-600 outline-none"
                     placeholder="Old relative path"
                     value={renameOldPath}
                     onChange={(e) => setRenameOldPath(e.target.value)}
                   />
                   <input
                     type="text"
-                    className="flex-1 bg-obsidian-900 border border-obsidian-750 rounded px-2 py-1 text-xs text-gray-200 font-mono placeholder-gray-600 outline-none"
+                    className="flex-1 bg-[var(--neutral-2)] border border-[var(--color-border)] rounded px-2 py-1 text-xs text-gray-200 font-mono placeholder-gray-600 outline-none"
                     placeholder="New relative path"
                     value={renameNewPath}
                     onChange={(e) => setRenameNewPath(e.target.value)}
@@ -976,13 +1071,13 @@ export function AgentWorkspace() {
           {taskHistory.map((item) => (
             <div
               key={item.id}
-              className="p-2 rounded-lg bg-obsidian-950 border border-obsidian-800 text-[11px] flex items-center justify-between"
+              className="p-2 rounded-lg bg-[var(--neutral-1)] border border-[var(--color-border)] text-[11px] flex items-center justify-between"
             >
               <div className="flex items-center space-x-2 truncate">
                 <span
                   className={`w-2 h-2 rounded-full shrink-0 ${
                     item.status === "completed"
-                      ? "bg-emerald-400"
+                      ? "var(--color-accent)"
                       : item.status === "rejected"
                       ? "bg-amber-400"
                       : "bg-red-400"

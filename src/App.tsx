@@ -8,7 +8,7 @@ import { FloatingOverlay } from "@/components/overlay/FloatingOverlay";
 import { IntroLoader } from "@/components/intro/IntroLoader";
 import { OnboardingModal } from "@/components/onboarding/OnboardingModal";
 import { proactiveEngine } from "@/core/initiative/proactiveEngine";
-import "./styles/liquidGlassTheme.css";
+import "./styles/tokens.css";
 import "./styles/global.css";
 import "./App.css";
 
@@ -117,13 +117,13 @@ export default function App() {
     };
   }, [startPTT, stopPTT]);
 
-  // If intro video is active, show the startup intro screen
+  // Show the welcome screen on startup
   if (showIntro) {
     return <IntroLoader onFinish={() => setShowIntro(false)} />;
   }
 
   return (
-    <div className="momo-app-container">
+    <div className="momo-app-container" data-theme="dark">
       {/* First-time API Key Onboarding Modal */}
       {showOnboarding && (
         <OnboardingModal
@@ -135,7 +135,7 @@ export default function App() {
       {/* Autonomous Action & Agent Approval Gate Modal (Dual Mode: Overlay & Dashboard) */}
       <ActionApprovalModal isOverlayMode={isOverlayMode} />
 
-      {/* Main View: Floating Green Panda Overlay or Full Liquid Glass Dashboard */}
+      {/* Main View: Floating Companion Overlay or Full Desktop Dashboard */}
       {isOverlayMode ? (
         <FloatingOverlay onOpenDashboard={() => setIsOverlayMode(false)} />
       ) : (
