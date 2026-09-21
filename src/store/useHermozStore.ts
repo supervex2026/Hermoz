@@ -10,6 +10,7 @@ import type {
   AgentStepRecord,
   AppSettings,
   ChatMessage,
+  ChatSession,
   Expression,
   InteractionMode,
   HermozAction,
@@ -64,6 +65,20 @@ const LOCAL_GREETINGS = [
   "I was starting to think you'd forgotten about me.",
 ];
 
+function loadSavedSessions(): ChatSession[] {
+  try {
+    const raw = localStorage.getItem("hermoz_chat_sessions");
+    if (raw) return JSON.parse(raw);
+  } catch {}
+  return [];
+}
+
+function persistSessions(sessions: ChatSession[]) {
+  try {
+    localStorage.setItem("hermoz_chat_sessions", JSON.stringify(sessions));
+  } catch {}
+}
+
 interface SendMessageOptions {
   forceTts?: boolean;
   image?: string;
@@ -98,6 +113,15 @@ interface HermozStore {
   sendMessage: (text: string, options?: SendMessageOptions) => Promise<void>;
   clearChat: () => void;
   speakMessage: (text: string) => Promise<void>;
+
+  // --- Sessions & Projects ---
+  sessions: ChatSession[];
+  activeSessionId: string | null;
+  sessionSidebarOpen: boolean;
+  toggleSessionSidebar: () => void;
+  createNewSession: () => void;
+  loadSession: (sessionId: string) => void;
+  deleteSession: (sessionId: string) => void;
 
   // --- Agent & Actions ---
   pendingAction: HermozAction | null;
@@ -176,6 +200,11 @@ export const useHermozStore = create<HermozStore>((set, get) => {
     setActiveTab: (tab) => set({ activeTab: tab }),
     agentModeEnabled: false,
     toggleAgentMode: () => set((s) => ({ agentModeEnabled: !s.agentModeEnabled })),
+
+    sessions: loadSavedSessions(),
+    activeSessionId: null,
+    sessionSidebarOpen: true,
+    toggleSessionSidebar: () => set((s) => ({ sessionSidebarOpen: !s.sessionSidebarOpen })),
 
     chatOpen: false,
     settingsOpen: false,
@@ -460,6 +489,77 @@ export const useHermozStore = create<HermozStore>((set, get) => {
 
     clearChat: () => {
       set({ messages: [] });
+    },
+
+    createNewSession: () => {
+      const { messages, activeSessionId, sessions, settings } = get();
+      let currentSessions = [...sessions];
+      if (messages.length > 0) {
+        const title = messages[0].content.slice(0, 32) || "Chat Session";
+        if (activeSessionId) {
+          currentSessions = currentSessions.map((s) =>
+            s.id === activeSessionId
+              ? { ...s, messages, updatedAt: Date.now(), title }
+              : s
+          );
+        } else {
+          currentSessions.unshift({
+            id: crypto.randomUUID(),
+            title,
+            createdAt: Date.now(),
+            updatedAt: Date.now(),
+            messages,
+            folder: settings.workspaceFolder || undefined,
+          });
+        }
+      }
+
+      const newId = crypto.randomUUID();
+      const newSession: ChatSession = {
+        id: newId,
+        title: "New Session",
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+        messages: [],
+        folder: settings.workspaceFolder || undefined,
+      };
+
+      currentSessions.unshift(newSession);
+      persistSessions(currentSessions);
+
+      set({
+        sessions: currentSessions,
+        activeSessionId: newId,
+        messages: [],
+        pendingAction: null,
+        isExecutingAction: false,
+        agentCheckpoint: null,
+      });
+      get().setBubble("Started new session!");
+    },
+
+    loadSession: (sessionId: string) => {
+      const { sessions } = get();
+      const target = sessions.find((s) => s.id === sessionId);
+      if (!target) return;
+      set({
+        messages: target.messages || [],
+        activeSessionId: target.id,
+        pendingAction: null,
+        isExecutingAction: false,
+        agentCheckpoint: null,
+      });
+      get().setBubble(`Loaded: ${target.title}`);
+    },
+
+    deleteSession: (sessionId: string) => {
+      const { sessions, activeSessionId } = get();
+      const remaining = sessions.filter((s) => s.id !== sessionId);
+      persistSessions(remaining);
+      set({ sessions: remaining });
+      if (activeSessionId === sessionId) {
+        get().createNewSession();
+      }
     },
 
     speakMessage: async (text: string) => {

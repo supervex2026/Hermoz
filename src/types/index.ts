@@ -123,6 +123,15 @@ export interface ChatMessage {
   action?: HermozAction;
 }
 
+export interface ChatSession {
+  id: string;
+  title: string;
+  createdAt: number;
+  updatedAt: number;
+  messages: ChatMessage[];
+  folder?: string;
+}
+
 export type ProviderHealthState =
   | "connected"
   | "rate_limited"

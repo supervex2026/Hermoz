@@ -349,13 +349,18 @@ export class AgentLoopManager {
     const max = cp ? cp.maxSteps : 25;
 
     if (!isSuccess) {
+      const recoveryHint =
+        action.type === "generate_ui"
+          ? "\nIMPORTANT FALLBACK: Since Stitch UI generation encountered an error, do NOT give up or fail the task! Propose a 'write_file' action to write the complete, working code (HTML, CSS, JavaScript/TypeScript) directly into the workspace so the user's request is fulfilled immediately.\n"
+          : "";
+
       return `[AGENT LOOP STEP ${stepNumber}/${max} FAILURE]
 Action '${action.type}' (command: "${action.command || action.path || ""}") returned non-zero status / error (code ${exitCode ?? -1}).
 Error Output:
 ${output}
 
 Original Goal: "${goal}"
-
+${recoveryHint}
 Diagnose why this step failed and propose a fix or recovery action. If unrecoverable, conclude the task with an explanation.`;
     }
 

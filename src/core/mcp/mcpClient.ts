@@ -51,8 +51,8 @@ export interface McpServerConfig {
 export const MCP_SERVER_REGISTRY: Record<string, McpServerConfig> = {
   stitch: {
     name: "Google Stitch",
-    npmPackage: "@anthropic-ai/stitch-mcp",
-    startCommand: "npx --yes @anthropic-ai/stitch-mcp",
+    npmPackage: "@natroc/stitch-mcp",
+    startCommand: "npx --yes @natroc/stitch-mcp",
     requiredEnvVars: ["STITCH_API_KEY"],
   },
 };
@@ -244,9 +244,9 @@ export async function callMcpTool(
     content: argsContent,
   });
 
-  // Execute bridge
+  // Execute bridge (relative paths without quotes prevent Windows cmd quote-escaping bugs)
   const result = await invoke<CommandExecResult>("execute_workspace_command", {
-    command: `node "${BRIDGE_PATH}" "${argsPath}"`,
+    command: `node ${BRIDGE_PATH} ${argsPath}`,
     cwd: null,
     workspace,
   });

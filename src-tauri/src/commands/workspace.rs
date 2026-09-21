@@ -232,6 +232,18 @@ pub async fn execute_workspace_command(
         None
     };
 
+    // On Windows, strip \\?\ UNC verbatim prefix which breaks cmd.exe
+    let working_dir = working_dir.map(|p| {
+        #[cfg(target_os = "windows")]
+        {
+            let s = p.to_string_lossy();
+            if let Some(stripped) = s.strip_prefix(r"\\?\") {
+                return PathBuf::from(stripped);
+            }
+        }
+        p
+    });
+
     #[cfg(target_os = "windows")]
     let mut cmd = {
         let mut c = Command::new("cmd.exe");

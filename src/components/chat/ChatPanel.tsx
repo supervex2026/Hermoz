@@ -15,7 +15,9 @@ import {
   ChevronDown,
   Check,
   Zap,
+  PanelLeft,
 } from "lucide-react";
+import { SessionSidebar } from "./SessionSidebar";
 
 const PROVIDER_INFO: Record<string, { label: string; model: string }> = {
   groq: { label: "Groq", model: "openai/gpt-oss-120b" },
@@ -44,6 +46,8 @@ export function ChatPanel({ onClose }: { onClose: () => void }) {
     agentModeEnabled,
     toggleAgentMode,
     stopAgentLoop,
+    sessionSidebarOpen,
+    toggleSessionSidebar,
   } = useHermozStore();
 
   const [draft, setDraft] = useState("");
@@ -115,32 +119,42 @@ export function ChatPanel({ onClose }: { onClose: () => void }) {
   };
 
   return (
-    <section
-      className="w-full h-full flex flex-col relative overflow-hidden"
-      style={{
-        background: "var(--color-bg)",
-        borderRight: "1px solid var(--color-border)",
-        fontFamily: "var(--font-sans)",
-        color: "var(--color-text)",
-      }}
-      data-purpose="chat-main-area"
-    >
-      {/* Conversation Header Bar */}
-      <div
-        className="h-12 px-5 flex items-center justify-between sticky top-0 z-20 shrink-0"
+    <div className="w-full h-full flex overflow-hidden" data-purpose="chat-with-session-sidebar">
+      {sessionSidebarOpen && <SessionSidebar />}
+      <section
+        className="flex-1 h-full flex flex-col relative overflow-hidden"
         style={{
-          borderBottom: "1px solid var(--color-border)",
-          background: "var(--neutral-2)",
+          background: "var(--color-bg)",
+          borderRight: "1px solid var(--color-border)",
+          fontFamily: "var(--font-sans)",
+          color: "var(--color-text)",
         }}
-        data-purpose="chat-header"
+        data-purpose="chat-main-area"
       >
-        <div className="flex items-center space-x-3">
-          <h1
-            className="text-sm font-semibold tracking-tight"
-            style={{ color: "var(--color-text)" }}
-          >
-            Conversation
-          </h1>
+        {/* Conversation Header Bar */}
+        <div
+          className="h-12 px-5 flex items-center justify-between sticky top-0 z-20 shrink-0"
+          style={{
+            borderBottom: "1px solid var(--color-border)",
+            background: "var(--neutral-2)",
+          }}
+          data-purpose="chat-header"
+        >
+          <div className="flex items-center space-x-2.5">
+            <button
+              onClick={toggleSessionSidebar}
+              className="p-1.5 rounded-lg hover:bg-[var(--neutral-3)] transition-colors bg-transparent border-0 cursor-pointer flex items-center justify-center"
+              style={{ color: sessionSidebarOpen ? "var(--color-accent)" : "var(--color-text-muted)" }}
+              title={sessionSidebarOpen ? "Hide Sessions & Projects Sidebar" : "Show Sessions & Projects Sidebar"}
+            >
+              <PanelLeft size={16} />
+            </button>
+            <h1
+              className="text-sm font-semibold tracking-tight"
+              style={{ color: "var(--color-text)" }}
+            >
+              Conversation
+            </h1>
 
           {/* Provider Dropdown Chip */}
           <div
@@ -691,5 +705,6 @@ export function ChatPanel({ onClose }: { onClose: () => void }) {
         </div>
       </div>
     </section>
+    </div>
   );
 }
