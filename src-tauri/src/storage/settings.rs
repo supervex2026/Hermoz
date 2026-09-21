@@ -26,7 +26,7 @@ pub struct AppSettings {
     #[serde(default)]
     pub selected_voice: Option<String>,
     #[serde(default)]
-    pub mute_momo: bool,
+    pub mute_hermoz: bool,
     pub speak_proactive_messages: bool,
     pub speak_chat_responses: bool,
     pub proactive_cooldown_seconds: u32,
@@ -78,7 +78,7 @@ impl Default for AppSettings {
             tts_speed: 1.0,
             tts_pitch: 1.0,
             selected_voice: None,
-            mute_momo: false,
+            mute_hermoz: false,
             speak_proactive_messages: true,
             speak_chat_responses: true,
             proactive_cooldown_seconds: 120,

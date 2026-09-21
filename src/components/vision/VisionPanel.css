@@ -1,6 +1,6 @@
 /* VisionPanel Styles — Redesigned with Token System */
 
-.momo-vision-container {
+.hermoz-vision-container {
   flex: 1;
   height: 100%;
   overflow-y: auto;
@@ -13,33 +13,33 @@
   font-family: var(--font-sans);
 }
 
-.momo-vision-header {
+.hermoz-vision-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-4);
 }
 
-.momo-vision-header-info h2 {
+.hermoz-vision-header-info h2 {
   margin: 0;
   font-size: var(--text-md);
   font-weight: var(--weight-semibold);
   color: var(--color-text);
 }
 
-.momo-vision-header-info p {
+.hermoz-vision-header-info p {
   margin: 4px 0 0;
   font-size: var(--text-xs);
   color: var(--color-text-muted);
 }
 
-.momo-vision-content {
+.hermoz-vision-content {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
 }
 
-.momo-vision-preview-card {
+.hermoz-vision-preview-card {
   padding: var(--space-4);
   min-height: 280px;
   display: flex;
@@ -51,7 +51,7 @@
   border-radius: var(--radius-lg);
 }
 
-.momo-vision-preview-wrapper {
+.hermoz-vision-preview-wrapper {
   position: relative;
   width: 100%;
   border-radius: var(--radius-md);
@@ -59,7 +59,7 @@
   border: 1px solid var(--color-border);
 }
 
-.momo-vision-img {
+.hermoz-vision-img {
   width: 100%;
   max-height: 420px;
   object-fit: contain;
@@ -67,7 +67,7 @@
   display: block;
 }
 
-.momo-vision-badge {
+.hermoz-vision-badge {
   position: absolute;
   top: 12px;
   right: 12px;
@@ -83,7 +83,7 @@
   color: var(--color-accent);
 }
 
-.momo-vision-placeholder {
+.hermoz-vision-placeholder {
   text-align: center;
   padding: 40px 20px;
   display: flex;
@@ -92,44 +92,44 @@
   gap: 8px;
 }
 
-.momo-vision-icon-dim {
+.hermoz-vision-icon-dim {
   color: var(--color-text-muted);
   margin-bottom: 8px;
 }
 
-.momo-vision-placeholder h3 {
+.hermoz-vision-placeholder h3 {
   margin: 0;
   font-size: var(--text-sm);
   color: var(--color-text);
 }
 
-.momo-vision-placeholder p {
+.hermoz-vision-placeholder p {
   margin: 0;
   font-size: var(--text-xs);
   color: var(--color-text-muted);
   max-width: 360px;
 }
 
-.momo-vision-roastback-card {
+.hermoz-vision-roastback-card {
   padding: var(--space-4);
   background: var(--neutral-2);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
 }
 
-.momo-vision-roastback-card h3 {
+.hermoz-vision-roastback-card h3 {
   margin: 0 0 4px;
   font-size: var(--text-sm);
   color: var(--color-text);
 }
 
-.momo-vision-hint {
+.hermoz-vision-hint {
   margin: 0 0 var(--space-3);
   font-size: var(--text-xs);
   color: var(--color-text-muted);
 }
 
-.momo-vision-roast-row {
+.hermoz-vision-roast-row {
   display: flex;
   gap: 10px;
   align-items: center;

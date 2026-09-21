@@ -1,6 +1,6 @@
 /* MemoryPanel Styles — Redesigned with Token System */
 
-.momo-memory-container {
+.hermoz-memory-container {
   flex: 1;
   height: 100%;
   overflow-y: auto;
@@ -14,27 +14,27 @@
   font-family: var(--font-sans);
 }
 
-.momo-memory-header {
+.hermoz-memory-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-3);
 }
 
-.momo-memory-header-info h2 {
+.hermoz-memory-header-info h2 {
   margin: 0;
   font-size: var(--text-sm);
   font-weight: var(--weight-semibold);
   color: var(--color-text);
 }
 
-.momo-memory-header-info p {
+.hermoz-memory-header-info p {
   margin: 2px 0 0;
   font-size: var(--text-2xs);
   color: var(--color-text-muted);
 }
 
-.momo-memory-clear-btn {
+.hermoz-memory-clear-btn {
   padding: 4px 10px;
   font-size: var(--text-2xs);
   color: var(--color-danger);
@@ -44,19 +44,19 @@
   cursor: default;
 }
 
-.momo-memory-add-card {
+.hermoz-memory-add-card {
   padding: var(--space-3);
   border-radius: var(--radius-md);
   background: var(--neutral-2);
   border: 1px solid var(--color-border);
 }
 
-.momo-memory-add-row {
+.hermoz-memory-add-row {
   display: flex;
   gap: var(--space-2);
 }
 
-.momo-memory-category-select {
+.hermoz-memory-category-select {
   width: 120px;
   flex-shrink: 0;
   padding: 4px 8px;
@@ -67,7 +67,7 @@
   color: var(--color-text);
 }
 
-.momo-memory-input {
+.hermoz-memory-input {
   flex: 1;
   padding: 4px 8px;
   font-size: var(--text-xs);
@@ -77,13 +77,13 @@
   color: var(--color-text);
 }
 
-.momo-memory-filter-row {
+.hermoz-memory-filter-row {
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
 }
 
-.momo-memory-search-input {
+.hermoz-memory-search-input {
   padding: 4px 8px;
   font-size: var(--text-xs);
   border-radius: var(--radius-sm);
@@ -92,13 +92,13 @@
   color: var(--color-text);
 }
 
-.momo-memory-pills {
+.hermoz-memory-pills {
   display: flex;
   gap: 4px;
   flex-wrap: wrap;
 }
 
-.momo-memory-pill {
+.hermoz-memory-pill {
   padding: 2px 8px;
   border-radius: var(--radius-xs);
   background: var(--neutral-3);
@@ -111,24 +111,24 @@
   transition: all var(--duration-fast) var(--ease-out);
 }
 
-.momo-memory-pill:hover {
+.hermoz-memory-pill:hover {
   background: var(--neutral-4);
   color: var(--color-text);
 }
 
-.momo-memory-pill.active {
+.hermoz-memory-pill.active {
   background: var(--color-accent-subtle);
   border-color: var(--color-accent);
   color: var(--color-accent);
 }
 
-.momo-memory-list {
+.hermoz-memory-list {
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
 }
 
-.momo-memory-item {
+.hermoz-memory-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -140,11 +140,11 @@
   transition: border-color var(--duration-fast) var(--ease-out);
 }
 
-.momo-memory-item:hover {
+.hermoz-memory-item:hover {
   border-color: var(--color-border-strong);
 }
 
-.momo-memory-item-content {
+.hermoz-memory-item-content {
   flex: 1;
   min-width: 0;
   display: flex;
@@ -152,7 +152,7 @@
   gap: 2px;
 }
 
-.momo-memory-badge {
+.hermoz-memory-badge {
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -163,7 +163,7 @@
   letter-spacing: 0.4px;
 }
 
-.momo-memory-item-content p {
+.hermoz-memory-item-content p {
   margin: 0;
   font-size: var(--text-xs);
   color: var(--color-text);
@@ -171,26 +171,26 @@
   word-break: break-word;
 }
 
-.momo-memory-actions {
+.hermoz-memory-actions {
   display: flex;
   align-items: center;
   gap: 4px;
 }
 
-.momo-memory-edit-box {
+.hermoz-memory-edit-box {
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
   width: 100%;
 }
 
-.momo-memory-edit-actions {
+.hermoz-memory-edit-actions {
   display: flex;
   gap: var(--space-2);
   justify-content: flex-end;
 }
 
-.momo-memory-empty {
+.hermoz-memory-empty {
   text-align: center;
   padding: 30px 16px;
   display: flex;
@@ -200,7 +200,7 @@
   color: var(--color-text-muted);
 }
 
-.momo-memory-empty p {
+.hermoz-memory-empty p {
   margin: 0;
   font-size: var(--text-xs);
   color: var(--color-text-muted);

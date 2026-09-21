@@ -1,6 +1,6 @@
 /* SettingsPanel Styles — Redesigned with Token System */
 
-.momo-settings-panel {
+.hermoz-settings-panel {
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -11,7 +11,7 @@
   box-sizing: border-box;
 }
 
-.momo-settings-body {
+.hermoz-settings-body {
   flex: 1;
   overflow-y: auto;
   padding: var(--space-4) var(--space-6) var(--space-8);
@@ -20,7 +20,7 @@
   gap: var(--space-4);
 }
 
-.momo-settings-body section {
+.hermoz-settings-body section {
   padding: var(--space-4);
   background: var(--neutral-2);
   border: 1px solid var(--color-border);
@@ -28,7 +28,7 @@
   box-sizing: border-box;
 }
 
-.momo-settings-body h3 {
+.hermoz-settings-body h3 {
   margin: 0 0 var(--space-2);
   font-family: var(--font-sans);
   font-size: var(--text-sm);
@@ -37,14 +37,14 @@
   letter-spacing: 0.2px;
 }
 
-.momo-settings-hint {
+.hermoz-settings-hint {
   margin: 0 0 var(--space-3);
   font-size: var(--text-xs);
   color: var(--color-text-muted);
   line-height: var(--leading-ui);
 }
 
-.momo-field {
+.hermoz-field {
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
@@ -52,18 +52,18 @@
   font-size: var(--text-xs);
 }
 
-.momo-field > span:first-child {
+.hermoz-field > span:first-child {
   font-weight: var(--weight-medium);
   color: var(--color-text);
 }
 
-.momo-field-caption {
+.hermoz-field-caption {
   font-size: var(--text-2xs);
   color: var(--color-text-muted);
 }
 
-.momo-field select,
-.momo-key-row-input input {
+.hermoz-field select,
+.hermoz-key-row-input input {
   width: 100%;
   padding: 6px 10px;
   border-radius: var(--radius-sm);
@@ -77,17 +77,17 @@
   transition: all var(--duration-fast) var(--ease-out);
 }
 
-.momo-field select:focus,
-.momo-key-row-input input:focus {
+.hermoz-field select:focus,
+.hermoz-key-row-input input:focus {
   border-color: var(--color-accent);
 }
 
-.momo-segmented {
+.hermoz-segmented {
   display: flex;
   gap: 4px;
 }
 
-.momo-segmented button {
+.hermoz-segmented button {
   flex: 1;
   padding: 6px 0;
   border-radius: var(--radius-sm);
@@ -101,19 +101,19 @@
   transition: all var(--duration-fast) var(--ease-out);
 }
 
-.momo-segmented button:hover {
+.hermoz-segmented button:hover {
   background: var(--neutral-4);
   color: var(--color-text);
 }
 
-.momo-segmented button.active {
+.hermoz-segmented button.active {
   background: var(--color-accent);
   border-color: var(--color-accent-hover);
   color: #ffffff;
   box-shadow: var(--shadow-xs);
 }
 
-.momo-toggle-row {
+.hermoz-toggle-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -122,11 +122,11 @@
   color: var(--color-text);
 }
 
-.momo-key-row {
+.hermoz-key-row {
   margin-bottom: var(--space-3);
 }
 
-.momo-key-row-label {
+.hermoz-key-row-label {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -135,22 +135,22 @@
   margin-bottom: var(--space-1);
 }
 
-.momo-key-status {
+.hermoz-key-status {
   font-size: var(--text-2xs);
   font-weight: var(--weight-semibold);
   color: var(--color-danger);
 }
 
-.momo-key-status-on {
+.hermoz-key-status-on {
   color: var(--color-success);
 }
 
-.momo-key-row-input {
+.hermoz-key-row-input {
   display: flex;
   gap: var(--space-2);
 }
 
-.momo-key-row-input button {
+.hermoz-key-row-input button {
   padding: 0 12px;
   border-radius: var(--radius-sm);
   border: 1px solid var(--color-accent-hover);
@@ -164,22 +164,22 @@
   transition: all var(--duration-fast) var(--ease-out);
 }
 
-.momo-key-row-input button:hover:not(:disabled) {
+.hermoz-key-row-input button:hover:not(:disabled) {
   background: var(--color-accent-hover);
 }
 
-.momo-key-row-input button:disabled {
+.hermoz-key-row-input button:disabled {
   opacity: 0.45;
   cursor: not-allowed;
 }
 
-.momo-key-row-input button.momo-key-clear {
+.hermoz-key-row-input button.hermoz-key-clear {
   background: rgba(239, 68, 68, 0.15);
   border-color: rgba(239, 68, 68, 0.3);
   color: var(--color-danger);
 }
 
-.momo-status-list {
+.hermoz-status-list {
   list-style: none;
   margin: 8px 0 0;
   padding: 0;
@@ -189,7 +189,7 @@
   gap: 4px;
 }
 
-.momo-status-dot {
+.hermoz-status-dot {
   display: inline-block;
   width: 6px;
   height: 6px;
@@ -198,23 +198,23 @@
   background: var(--color-text-muted);
 }
 
-.momo-status-dot-connected {
+.hermoz-status-dot-connected {
   background: var(--color-success);
 }
 
-.momo-status-dot-rate_limited {
+.hermoz-status-dot-rate_limited {
   background: var(--color-warning);
 }
 
-.momo-status-dot-error {
+.hermoz-status-dot-error {
   background: var(--color-danger);
 }
 
-.momo-status-dot-unconfigured {
+.hermoz-status-dot-unconfigured {
   background: var(--neutral-5);
 }
 
-.momo-btn-secondary {
+.hermoz-btn-secondary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -232,17 +232,17 @@
   transition: all var(--duration-fast) var(--ease-out);
 }
 
-.momo-btn-secondary:hover:not(:disabled) {
+.hermoz-btn-secondary:hover:not(:disabled) {
   background: var(--neutral-4);
   border-color: var(--color-border-strong);
 }
 
-.momo-btn-secondary:disabled {
+.hermoz-btn-secondary:disabled {
   opacity: 0.45;
   cursor: not-allowed;
 }
 
-.momo-voice-alert {
+.hermoz-voice-alert {
   padding: 8px 10px;
   border-radius: var(--radius-sm);
   background: rgba(251, 191, 36, 0.12);
@@ -253,7 +253,7 @@
   line-height: var(--leading-ui);
 }
 
-.momo-mic-badge {
+.hermoz-mic-badge {
   display: flex;
   align-items: center;
   gap: var(--space-2);

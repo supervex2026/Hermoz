@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "Momo",
+  "productName": "Hermoz",
   "version": "0.1.0",
-  "identifier": "com.momo.desktop",
+  "identifier": "com.hermoz.desktop",
   "build": {
     "beforeDevCommand": "npm run dev",
     "beforeBuildCommand": "npm run build",
@@ -14,7 +14,7 @@
     "windows": [
       {
         "label": "main",
-        "title": "Momo",
+        "title": "Hermoz",
         "width": 960,
         "height": 640,
         "minWidth": 200,
@@ -37,7 +37,7 @@
     },
     "trayIcon": {
       "iconPath": "icons/32x32.png",
-      "tooltip": "Momo"
+      "tooltip": "Hermoz"
     }
   },
   "bundle": {

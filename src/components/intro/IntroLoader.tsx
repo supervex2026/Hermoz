@@ -9,7 +9,7 @@ interface IntroLoaderProps {
 export function IntroLoader({ onFinish }: IntroLoaderProps) {
   return (
     <div
-      className="momo-intro-backdrop"
+      className="hermoz-intro-backdrop"
       data-tauri-drag-region
       onMouseDown={(e) => {
         if (e.button === 0 && !(e.target as HTMLElement).closest("button")) {
@@ -20,7 +20,7 @@ export function IntroLoader({ onFinish }: IntroLoaderProps) {
       }}
     >
       <div
-        className="momo-intro-card"
+        className="hermoz-intro-card"
         style={{
           maxWidth: "460px",
           background: "var(--neutral-2)",
@@ -35,7 +35,7 @@ export function IntroLoader({ onFinish }: IntroLoaderProps) {
           gap: "var(--space-5)",
         }}
       >
-        {/* Momo Mascot Avatar */}
+        {/* Hermoz Mascot Avatar */}
         <div
           style={{
             width: "56px",
@@ -70,7 +70,7 @@ export function IntroLoader({ onFinish }: IntroLoaderProps) {
               letterSpacing: "0.2px",
             }}
           >
-            Welcome to Momo
+            Welcome to Hermoz
           </h2>
           <p
             style={{

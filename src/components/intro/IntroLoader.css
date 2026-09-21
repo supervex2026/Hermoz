@@ -1,6 +1,6 @@
 /* IntroLoader Styles — Redesigned with Token System */
 
-.momo-intro-backdrop {
+.hermoz-intro-backdrop {
   position: fixed;
   inset: 0;
   z-index: 9999;
@@ -12,17 +12,17 @@
   user-select: none;
 }
 
-.momo-intro-card {
+.hermoz-intro-card {
   width: 100%;
   max-width: 480px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
   border-radius: var(--radius-lg);
-  animation: momo-intro-pop var(--duration-slow) var(--motion-ease);
+  animation: hermoz-intro-pop var(--duration-slow) var(--motion-ease);
 }
 
-@keyframes momo-intro-pop {
+@keyframes hermoz-intro-pop {
   from {
     opacity: 0;
     transform: scale(0.96) translateY(8px);

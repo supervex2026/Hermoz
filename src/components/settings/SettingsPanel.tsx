@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useMomoStore } from "@/store/useMomoStore";
+import { useHermozStore } from "@/store/useHermozStore";
 import { memoryStore } from "@/core/memory/memoryStore";
 import { ChevronUp, ChevronDown } from "lucide-react";
 import type { CompanionStyle, Proactivity, ProviderId, RoastLevel, Seriousness } from "@/types";
@@ -30,7 +30,7 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
     isSpeaking,
     activeMicName,
     checkActiveMic,
-  } = useMomoStore();
+  } = useHermozStore();
 
   const [activeTab, setActiveTab] = useState<SettingsTab>("providers");
   const [searchQuery, setSearchQuery] = useState("");
@@ -84,7 +84,7 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
         className="h-12 bg-[var(--neutral-3)] border-b border-[var(--color-border)] px-4 flex items-center justify-between select-none shrink-0"
         data-purpose="window-titlebar"
       >
-        {/* Left: Momo Symbol & Title */}
+        {/* Left: Hermoz Symbol & Title */}
         <div className="flex items-center space-x-3">
           <div className="relative w-7 h-7 rounded-lg bg-[var(--neutral-4)] border border-[var(--color-accent)] flex items-center justify-center shadow-inner group">
             <svg
@@ -103,7 +103,7 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
           </div>
           <div className="flex items-center space-x-2">
             <span className="text-sm font-semibold tracking-wide text-slate-100 font-mono">
-              Momo Desktop
+              Hermoz Desktop
             </span>
             <span className="text-xs text-slate-400 font-normal">Settings</span>
             <span className="text-[10px] uppercase font-mono font-bold bg-[var(--color-accent-subtle)] border border-[var(--color-accent)] text-[var(--color-accent)] px-1.5 py-0.5 rounded tracking-wider">
@@ -353,7 +353,7 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                   </span>
                 </div>
                 <p className="text-xs text-slate-400 mt-1 max-w-2xl leading-relaxed">
-                  Momo supports three interchangeable AI brains. If your top priority provider hits a rate limit or runtime error, Momo automatically falls over to the next one in milliseconds with zero loss of memory, conversation, or screen context.
+                  Hermoz supports three interchangeable AI brains. If your top priority provider hits a rate limit or runtime error, Hermoz automatically falls over to the next one in milliseconds with zero loss of memory, conversation, or screen context.
                 </p>
               </div>
 
@@ -559,7 +559,7 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                   Personality &amp; Behavior
                 </h2>
                 <p className="text-xs text-slate-400 mt-0.5">
-                  Customize Momo's attitude, roast intensity, proactive reactions, and humor style.
+                  Customize Hermoz's attitude, roast intensity, proactive reactions, and humor style.
                 </p>
               </div>
 
@@ -775,12 +775,12 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
 
                   <label className="flex items-center space-x-2.5 bg-[var(--neutral-2)]/60 p-2.5 rounded-lg border border-[var(--color-border)] cursor-pointer hover:border-[var(--color-border)]/60 transition">
                     <input
-                      checked={settings.muteMomo}
-                      onChange={(e) => updateSettings({ muteMomo: e.target.checked })}
+                      checked={settings.muteHermoz}
+                      onChange={(e) => updateSettings({ muteHermoz: e.target.checked })}
                       className="w-4 h-4 rounded text-[var(--color-accent)] bg-[var(--neutral-4)] border-[var(--color-border)]/80 focus:ring-0"
                       type="checkbox"
                     />
-                    <span className="text-xs font-mono text-slate-300">Mute Momo completely</span>
+                    <span className="text-xs font-mono text-slate-300">Mute Hermoz completely</span>
                   </label>
                 </div>
 
@@ -792,7 +792,7 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                         F1 Hotkey
                       </span>
                       <span className="text-xs text-slate-200 font-medium">
-                        Hold anywhere to speak to Momo like a real desktop companion
+                        Hold anywhere to speak to Hermoz like a real desktop companion
                       </span>
                     </div>
                     <span className="text-[11px] font-mono text-slate-400">Release F1 to send</span>
@@ -852,7 +852,7 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                       Launch at Windows Startup
                     </div>
                     <div className="text-[11px] text-slate-400">
-                      Silently start Momo minimized into the system tray when logging into Windows.
+                      Silently start Hermoz minimized into the system tray when logging into Windows.
                     </div>
                   </div>
                   <label className="relative inline-flex items-center cursor-pointer">
@@ -872,7 +872,7 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                       Always on Top
                     </div>
                     <div className="text-[11px] text-slate-400">
-                      Keeps Momo floating above other windows even during full-screen coding.
+                      Keeps Hermoz floating above other windows even during full-screen coding.
                     </div>
                   </div>
                   <label className="relative inline-flex items-center cursor-pointer">
@@ -892,7 +892,7 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                       Click-through Mode
                     </div>
                     <div className="text-[11px] text-slate-400">
-                      Ignores mouse clicks directly over Momo so you can interact with windows directly underneath.
+                      Ignores mouse clicks directly over Hermoz so you can interact with windows directly underneath.
                     </div>
                   </div>
                   <label className="relative inline-flex items-center cursor-pointer">
@@ -909,10 +909,10 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                 <div className="flex items-center justify-between py-3 last:pb-0">
                   <div className="space-y-0.5">
                     <div className="text-xs font-mono font-medium text-slate-200">
-                      Hide Momo from screen captures
+                      Hide Hermoz from screen captures
                     </div>
                     <div className="text-[11px] text-slate-400">
-                      Momo will not appear in screenshots, screen shares, or recordings.
+                      Hermoz will not appear in screenshots, screen shares, or recordings.
                     </div>
                   </div>
                   <label className="relative inline-flex items-center cursor-pointer">
@@ -942,7 +942,7 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                   </span>
                 </h2>
                 <p className="text-xs text-slate-400 mt-0.5">
-                  Long-term memory lets Momo remember your personal projects, favorite languages, past errors, and daily goals between reboot sessions.
+                  Long-term memory lets Hermoz remember your personal projects, favorite languages, past errors, and daily goals between reboot sessions.
                 </p>
               </div>
 
@@ -953,7 +953,7 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                       Memory Status: Active ({memories.length} items stored)
                     </div>
                     <div className="text-[11px] text-slate-400 font-mono">
-                      Persistent JSON Vault: <span className="text-slate-200">~/.momo/memory.json</span>
+                      Persistent JSON Vault: <span className="text-slate-200">~/.hermoz/memory.json</span>
                     </div>
                   </div>
                   <div className="flex items-center space-x-2">
@@ -1036,7 +1036,7 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                 </div>
 
                 <div className="flex items-center justify-between py-2 border-b border-[var(--color-border)]">
-                  <span className="text-slate-300">Interrupt / Stop Momo Speaking</span>
+                  <span className="text-slate-300">Interrupt / Stop Hermoz Speaking</span>
                   <kbd className="px-2 py-1 bg-[var(--neutral-2)] border border-[var(--color-border)]/40 rounded text-[var(--color-accent)] font-bold">
                     Esc
                   </kbd>

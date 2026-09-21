@@ -1,10 +1,10 @@
-# Momo build roadmap
+# Hermoz build roadmap
 
 This tracks the phased build order from the product spec against what's
 actually implemented in this codebase right now. Nothing below is
 described as done unless it actually runs.
 
-## ✅ Phase 1 — Floating Momo
+## ✅ Phase 1 — Floating Hermoz
 - Transparent, borderless, always-on-top window (`tauri.conf.json`)
 - Draggable via real OS window dragging (`Panda.tsx` → `startDragging()`)
 - Idle animation, blinking, per-expression face art (`components/panda/`)
@@ -53,7 +53,7 @@ producing the structured `visible_context` shape from section 13 - never
 persisting raw screenshots.
 
 ## ⬜ Phase 6 — Initiative
-Not implemented — right now Momo only speaks when spoken to (plus one
+Not implemented — right now Hermoz only speaks when spoken to (plus one
 greeting on launch). This is the biggest remaining piece of the product's
 actual identity. Build it as a standalone `initiative` module that:
 1. Watches for triggers (app change, inactivity, task completion signals)

@@ -1,7 +1,7 @@
 import type { Expression } from "@/types";
 
 /**
- * Momo's face is built from a small set of reusable parts (eyes, brows,
+ * Hermoz's face is built from a small set of reusable parts (eyes, brows,
  * mouth, decorations) rather than 14 fully separate drawings. Each
  * Expression maps to a combination of parts below. This keeps the art
  * consistent (same head, same proportions) while still giving every
@@ -291,13 +291,13 @@ function DecorationLayer({ kind }: { kind: Decoration }) {
   switch (kind) {
     case "question":
       return (
-        <text x={148} y={62} fontSize={26} fontWeight={700} fill={INK} className="momo-deco momo-deco-bob">
+        <text x={148} y={62} fontSize={26} fontWeight={700} fill={INK} className="hermoz-deco hermoz-deco-bob">
           ?
         </text>
       );
     case "zzz":
       return (
-        <text x={140} y={56} fontSize={22} fontWeight={700} fill={INK} className="momo-deco momo-deco-float">
+        <text x={140} y={56} fontSize={22} fontWeight={700} fill={INK} className="hermoz-deco hermoz-deco-float">
           z z z
         </text>
       );
@@ -306,7 +306,7 @@ function DecorationLayer({ kind }: { kind: Decoration }) {
         <path
           d="M 156 78 C 156 86 148 86 148 78 C 148 73 152 68 156 62 C 160 68 156 73 156 78 Z"
           fill="#7cc4ea"
-          className="momo-deco momo-deco-drip"
+          className="hermoz-deco hermoz-deco-drip"
         />
       );
     case "tear":
@@ -314,19 +314,19 @@ function DecorationLayer({ kind }: { kind: Decoration }) {
         <path
           d="M 66 128 C 66 136 58 136 58 128 C 58 123 62 118 66 112 C 70 118 66 123 66 128 Z"
           fill="#7cc4ea"
-          className="momo-deco momo-deco-drip"
+          className="hermoz-deco hermoz-deco-drip"
         />
       );
     case "sparkles":
       return (
-        <g className="momo-deco momo-deco-twinkle" fill="var(--momo-accent, #ff8f6b)">
+        <g className="hermoz-deco hermoz-deco-twinkle" fill="var(--hermoz-accent, #ff8f6b)">
           <path d="M 40 55 l 3 8 l 8 3 l -8 3 l -3 8 l -3 -8 l -8 -3 l 8 -3 z" />
           <path d="M 165 45 l 2.4 6.5 l 6.5 2.4 l -6.5 2.4 l -2.4 6.5 l -2.4 -6.5 l -6.5 -2.4 l 6.5 -2.4 z" />
         </g>
       );
     case "thoughtDots":
       return (
-        <g className="momo-deco momo-deco-float" fill={INK}>
+        <g className="hermoz-deco hermoz-deco-float" fill={INK}>
           <circle cx={148} cy={70} r={3} />
           <circle cx={158} cy={60} r={4} />
           <circle cx={170} cy={48} r={5.5} />

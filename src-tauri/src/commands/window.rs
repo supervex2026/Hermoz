@@ -5,7 +5,7 @@ use crate::storage::settings::WindowPosition;
 
 /// Grows or shrinks the (otherwise chrome-less) window to fit whichever
 /// panel is currently open. Position is left untouched by the caller so
-/// Momo doesn't appear to jump.
+/// Hermoz doesn't appear to jump.
 #[tauri::command]
 pub fn resize_window(window: tauri::Window, width: f64, height: f64) -> Result<(), String> {
     window
@@ -58,7 +58,7 @@ pub fn close_window(window: tauri::Window) -> Result<(), String> {
     window.close().map_err(|e| e.to_string())
 }
 
-/// Excludes or includes Momo's window in screen captures (WDA_EXCLUDEFROMCAPTURE = 0x00000011 vs WDA_NONE = 0).
+/// Excludes or includes Hermoz's window in screen captures (WDA_EXCLUDEFROMCAPTURE = 0x00000011 vs WDA_NONE = 0).
 /// Persists the choice into settings and applies affinity live.
 #[tauri::command]
 pub fn set_exclude_from_capture(

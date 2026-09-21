@@ -23,7 +23,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           transition: "border-color var(--duration-fast) var(--ease-out)",
           ...style,
         }}
-        className={`momo-input ${className}`}
+        className={`hermoz-input ${className}`}
         {...props}
       />
     );
@@ -53,7 +53,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           resize: "vertical",
           ...style,
         }}
-        className={`momo-textarea ${className}`}
+        className={`hermoz-textarea ${className}`}
         {...props}
       />
     );
@@ -83,7 +83,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
           cursor: "default",
           ...style,
         }}
-        className={`momo-select ${className}`}
+        className={`hermoz-select ${className}`}
         {...props}
       >
         {options.map((opt) => (

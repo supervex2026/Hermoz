@@ -1,14 +1,14 @@
 /**
- * Long-Term Memory Vault for Momo
+ * Long-Term Memory Vault for Hermoz
  * Stores persistent facts, user projects, preferences, and inside jokes across sessions.
- * Never belongs to an AI provider - Momo owns this state.
+ * Never belongs to an AI provider - Hermoz owns this state.
  */
 
 import { invoke } from "@tauri-apps/api/core";
 import type { MemoryCategory, MemoryItem } from "@/types";
 export type { MemoryCategory, MemoryItem };
 
-const STORAGE_KEY = "momo_long_term_memories";
+const STORAGE_KEY = "hermoz_long_term_memories";
 
 const INITIAL_MEMORIES: MemoryItem[] = [
   {
@@ -21,7 +21,7 @@ const INITIAL_MEMORIES: MemoryItem[] = [
   {
     id: "init-2",
     category: "PROJECT",
-    content: "Project: Momo — an AI desktop companion living on the screen with personality, voice, and vision.",
+    content: "Project: Hermoz — an AI desktop companion living on the screen with personality, voice, and vision.",
     createdAt: Date.now() - 80000,
     importance: "high",
   },

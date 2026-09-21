@@ -1,6 +1,6 @@
 /* Floating Overlay Styles — Redesigned with Token System */
 
-.momo-overlay-root {
+.hermoz-overlay-root {
   position: relative;
   width: 100%;
   height: 100%;
@@ -12,7 +12,7 @@
   box-sizing: border-box;
 }
 
-.momo-overlay-character {
+.hermoz-overlay-character {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -21,15 +21,15 @@
   cursor: grab;
 }
 
-.momo-overlay-character:active {
+.hermoz-overlay-character:active {
   cursor: grabbing;
 }
 
-.momo-overlay-character.locked {
+.hermoz-overlay-character.locked {
   cursor: default;
 }
 
-.momo-lock-toast {
+.hermoz-lock-toast {
   position: absolute;
   top: 8px;
   left: 50%;
@@ -46,15 +46,69 @@
   border: 1px solid var(--color-accent);
   box-shadow: var(--shadow-md);
   z-index: 1001;
-  animation: momo-toast-fade var(--duration-fast) var(--ease-out);
+  animation: hermoz-toast-fade var(--duration-fast) var(--ease-out);
 }
 
-@keyframes momo-toast-fade {
+@keyframes hermoz-toast-fade {
   from { opacity: 0; transform: translate(-50%, -4px); }
   to { opacity: 1; transform: translate(-50%, 0); }
 }
 
-.momo-overlay-menu {
+/* --- Redesigned companion capsule: entrance + ambient motion --- */
+.hermoz-capsule-in {
+  animation: hermoz-capsule-in 0.35s var(--ease-spring);
+}
+@keyframes hermoz-capsule-in {
+  from { opacity: 0; transform: translateY(10px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.hermoz-avatar-ring {
+  position: relative;
+}
+.hermoz-avatar-ring::before {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: inherit;
+  background: var(--gradient-antigravity);
+  opacity: 0.35;
+  z-index: -1;
+  filter: blur(6px);
+  animation: hermoz-avatar-breathe 3.2s ease-in-out infinite;
+}
+@keyframes hermoz-avatar-breathe {
+  0%, 100% { opacity: 0.22; transform: scale(0.96); }
+  50% { opacity: 0.45; transform: scale(1.06); }
+}
+
+.hermoz-mini-orb-glow {
+  background: var(--gradient-antigravity);
+  filter: blur(8px);
+  opacity: 0.4;
+  animation: hermoz-avatar-breathe 2.6s ease-in-out infinite;
+}
+
+.hermoz-mini-badge {
+  animation: hermoz-badge-pop 0.25s var(--ease-spring);
+}
+@keyframes hermoz-badge-pop {
+  from { transform: scale(0); }
+  to { transform: scale(1); }
+}
+
+/* Consistent hover-lift for the capsule's buttons, applied via className */
+.hermoz-btn-lift {
+  transition: transform 0.15s var(--ease-out), box-shadow 0.15s var(--ease-out), background 0.15s var(--ease-out), color 0.15s var(--ease-out), border-color 0.15s var(--ease-out);
+}
+.hermoz-btn-lift:hover {
+  transform: translateY(-1px);
+}
+.hermoz-btn-lift:active {
+  transform: translateY(0) scale(0.97);
+}
+
+.hermoz-overlay-menu {
   position: absolute;
   top: 10px;
   left: 10px;
@@ -70,15 +124,15 @@
   border: 1px solid var(--color-border);
   box-shadow: var(--shadow-lg);
   overflow-y: auto;
-  animation: momo-overlay-menu-pop var(--duration-base) var(--ease-spring);
+  animation: hermoz-overlay-menu-pop var(--duration-base) var(--ease-spring);
 }
 
-@keyframes momo-overlay-menu-pop {
+@keyframes hermoz-overlay-menu-pop {
   from { opacity: 0; transform: scale(0.94) translateY(6px); }
   to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
-.momo-overlay-menu-header {
+.hermoz-overlay-menu-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -86,7 +140,7 @@
   border-bottom: 1px solid var(--color-border);
 }
 
-.momo-overlay-badge {
+.hermoz-overlay-badge {
   display: flex;
   align-items: center;
   gap: var(--space-2);
@@ -95,13 +149,13 @@
   color: var(--color-text);
 }
 
-.momo-overlay-mini-logo {
+.hermoz-overlay-mini-logo {
   width: 20px;
   height: 20px;
   border-radius: 50%;
 }
 
-.momo-overlay-close-btn {
+.hermoz-overlay-close-btn {
   background: transparent;
   border: none;
   color: var(--color-text-muted);
@@ -109,17 +163,17 @@
   padding: 2px;
   display: flex;
 }
-.momo-overlay-close-btn:hover {
+.hermoz-overlay-close-btn:hover {
   color: var(--color-text);
 }
 
-.momo-overlay-menu-actions {
+.hermoz-overlay-menu-actions {
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
 }
 
-.momo-overlay-voice-card {
+.hermoz-overlay-voice-card {
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
@@ -129,7 +183,7 @@
   border: 1px solid var(--color-border);
 }
 
-.momo-overlay-action-label {
+.hermoz-overlay-action-label {
   font-size: var(--text-2xs);
   font-weight: var(--weight-semibold);
   text-transform: uppercase;
@@ -137,49 +191,49 @@
   letter-spacing: 0.5px;
 }
 
-.momo-overlay-voice-btns {
+.hermoz-overlay-voice-btns {
   display: flex;
   gap: var(--space-2);
 }
 
-.momo-overlay-rec-btn {
+.hermoz-overlay-rec-btn {
   flex: 1;
   padding: 6px 10px;
   font-size: var(--text-xs);
 }
 
-.momo-overlay-ptt-btn {
+.hermoz-overlay-ptt-btn {
   padding: 6px 10px;
   font-size: var(--text-xs);
 }
-.momo-overlay-ptt-btn.active {
+.hermoz-overlay-ptt-btn.active {
   background: var(--color-danger);
   border-color: var(--color-danger);
   color: white;
 }
 
-.momo-overlay-recording-row,
-.momo-overlay-recorded-row {
+.hermoz-overlay-recording-row,
+.hermoz-overlay-recorded-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   font-size: var(--text-xs);
 }
 
-.momo-overlay-rec-pulse {
+.hermoz-overlay-rec-pulse {
   width: 8px;
   height: 8px;
   border-radius: 50%;
   background: var(--color-danger);
-  animation: momo-dot-pulse 0.8s ease-in-out infinite;
+  animation: hermoz-dot-pulse 0.8s ease-in-out infinite;
 }
 
-.momo-overlay-send-group {
+.hermoz-overlay-send-group {
   display: flex;
   gap: var(--space-1);
 }
 
-.momo-overlay-action-btn {
+.hermoz-overlay-action-btn {
   width: 100%;
   justify-content: flex-start;
   padding: 8px 12px;

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { useMomoStore } from "@/store/useMomoStore";
+import { useHermozStore } from "@/store/useHermozStore";
+import { ThinkingOrb } from "thinking-orbs";
 import {
   Camera,
   Mic,
@@ -13,6 +14,7 @@ import {
   Paperclip,
   ChevronDown,
   Check,
+  Zap,
 } from "lucide-react";
 
 const PROVIDER_INFO: Record<string, { label: string; model: string }> = {
@@ -38,7 +40,9 @@ export function ChatPanel({ onClose }: { onClose: () => void }) {
     startPTT,
     stopPTT,
     captureScreenWithCheck,
-  } = useMomoStore();
+    agentModeEnabled,
+    toggleAgentMode,
+  } = useHermozStore();
 
   const [draft, setDraft] = useState("");
   const [isCapturing, setIsCapturing] = useState(false);
@@ -252,7 +256,7 @@ export function ChatPanel({ onClose }: { onClose: () => void }) {
               className="text-xs font-semibold font-mono"
               style={{ color: "var(--color-text)" }}
             >
-              Momo Companion Ready
+              Hermoz Companion Ready
             </h3>
             <p
               className="text-xs max-w-sm mt-1 leading-relaxed"
@@ -277,14 +281,14 @@ export function ChatPanel({ onClose }: { onClose: () => void }) {
         )}
 
         {messages.map((m, idx) => {
-          const isMomo = m.role === "momo";
-          const isInspectPrompt = !isMomo && m.content.includes("Inspect Screen");
+          const isHermoz = m.role === "hermoz";
+          const isInspectPrompt = !isHermoz && m.content.includes("Inspect Screen");
           const timeFormatted = new Date(m.createdAt).toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit",
           });
 
-          if (!isMomo) {
+          if (!isHermoz) {
             return (
               <div
                 key={m.id}
@@ -324,7 +328,7 @@ export function ChatPanel({ onClose }: { onClose: () => void }) {
             );
           }
 
-          // Momo message card
+          // Hermoz message card
           const isVisionRoast =
             m.interactionMode === "argument" ||
             m.interactionMode === "playful" ||
@@ -335,9 +339,9 @@ export function ChatPanel({ onClose }: { onClose: () => void }) {
             <div
               key={m.id}
               className="flex items-start space-x-3 group"
-              data-purpose="momo-message"
+              data-purpose="hermoz-message"
             >
-              {/* Momo Tiny Avatar */}
+              {/* Hermoz Tiny Avatar */}
               <div
                 className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 overflow-hidden"
                 style={{
@@ -364,7 +368,7 @@ export function ChatPanel({ onClose }: { onClose: () => void }) {
                   boxShadow: "var(--shadow-xs)",
                 }}
               >
-                {/* Momo Header Meta */}
+                {/* Hermoz Header Meta */}
                 <div
                   className="flex items-center justify-between pb-1.5 mb-2"
                   style={{ borderBottom: "1px solid var(--color-border)" }}
@@ -374,7 +378,7 @@ export function ChatPanel({ onClose }: { onClose: () => void }) {
                       className="text-xs font-semibold tracking-wide"
                       style={{ color: "var(--color-accent)" }}
                     >
-                      Momo
+                      Hermoz
                     </span>
                     <span
                       className="text-[10px] font-mono px-1.5 py-0.2 rounded"
@@ -496,22 +500,9 @@ export function ChatPanel({ onClose }: { onClose: () => void }) {
                 className="text-xs font-mono font-medium"
                 style={{ color: "var(--color-accent)" }}
               >
-                Momo is thinking
+                Hermoz is thinking
               </span>
-              <div className="flex items-center space-x-1">
-                <span
-                  className="w-1.5 h-1.5 rounded-full animate-bounce"
-                  style={{ background: "var(--color-accent)" }}
-                />
-                <span
-                  className="w-1.5 h-1.5 rounded-full animate-bounce"
-                  style={{ background: "var(--color-accent)", animationDelay: "0.2s" }}
-                />
-                <span
-                  className="w-1.5 h-1.5 rounded-full animate-bounce"
-                  style={{ background: "var(--color-accent)", animationDelay: "0.4s" }}
-                />
-              </div>
+              <ThinkingOrb state="working" size={20} theme="dark" aria-label="Hermoz is thinking" />
             </div>
           </div>
         )}
@@ -549,7 +540,7 @@ export function ChatPanel({ onClose }: { onClose: () => void }) {
             ref={inputRef}
             className="w-full bg-transparent border-0 focus:ring-0 text-xs px-2 py-1 font-sans focus:outline-none"
             style={{ color: "var(--color-text)" }}
-            placeholder="Message Momo (Enter to send, hold F1 to speak)..."
+            placeholder="Message Hermoz (Enter to send, hold F1 to speak)..."
             type="text"
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
@@ -577,6 +568,23 @@ export function ChatPanel({ onClose }: { onClose: () => void }) {
             <span className="text-xs font-medium hidden sm:inline">
               {isCapturing ? "Inspecting..." : "Inspect"}
             </span>
+          </button>
+
+          {/* Agent Mode toggle — build/create requests route to the Canvas */}
+          <button
+            className="p-1.5 rounded transition-all mr-1 shrink-0 flex items-center gap-1"
+            style={{
+              background: agentModeEnabled ? "var(--gradient-antigravity)" : "transparent",
+              color: agentModeEnabled ? "var(--color-accent-text)" : "var(--color-text-muted)",
+              border: agentModeEnabled ? "none" : "1px solid var(--color-border)",
+              boxShadow: agentModeEnabled ? "var(--glow-accent-sm)" : "none",
+            }}
+            title={agentModeEnabled ? "Agent Mode ON — build requests open the Canvas" : "Agent Mode OFF — click to enable"}
+            aria-label="Toggle Agent Mode"
+            onClick={toggleAgentMode}
+          >
+            <Zap size={13} />
+            <span className="text-[10px] font-semibold hidden sm:inline">Agent</span>
           </button>
 
           {/* Voice PTT Mic trigger button */}

@@ -1,16 +1,16 @@
 use tauri::AppHandle;
 
 use crate::storage::state_store::{
-    append_message, load_state, save_state, CanonicalMomoState, StoredMessage,
+    append_message, load_state, save_state, CanonicalHermozState, StoredMessage,
 };
 
 #[tauri::command]
-pub fn get_canonical_state(app: AppHandle) -> CanonicalMomoState {
+pub fn get_canonical_state(app: AppHandle) -> CanonicalHermozState {
     load_state(&app)
 }
 
 #[tauri::command]
-pub fn update_canonical_state(app: AppHandle, state: CanonicalMomoState) -> Result<(), String> {
+pub fn update_canonical_state(app: AppHandle, state: CanonicalHermozState) -> Result<(), String> {
     save_state(&app, &state)
 }
 

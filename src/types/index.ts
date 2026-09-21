@@ -1,5 +1,5 @@
 /**
- * Shared types for the Momo frontend.
+ * Shared types for the Hermoz frontend.
  *
  * Mirrors the Rust-side structs in src-tauri/src/ai/types.rs,
  * src-tauri/src/storage/state_store.rs, and src-tauri/src/state.rs.
@@ -28,7 +28,7 @@ export type Expression =
   | "offline"
   | "visionActive";
 
-export type MomoActivity =
+export type HermozActivity =
   | "idle"
   | "observing"
   | "thinking"
@@ -39,12 +39,12 @@ export type MomoActivity =
   | "roasting"
   | "visionActive";
 
-export interface MomoVisualState {
+export interface HermozVisualState {
   expression: Expression;
-  activity: MomoActivity;
+  activity: HermozActivity;
 }
 
-export type ChatRole = "user" | "momo";
+export type ChatRole = "user" | "hermoz";
 
 export type ProviderId = "groq" | "openrouter" | "gemini";
 
@@ -57,7 +57,7 @@ export type InteractionMode =
   | "serious"
   | "focused";
 
-export type MomoActionType =
+export type HermozActionType =
   | "command"
   | "analyze_file"
   | "write_file"
@@ -65,10 +65,12 @@ export type MomoActionType =
   | "delete_file"
   | "web_fetch"
   | "open_url"
-  | "launch_app";
+  | "launch_app"
+  | "generate_ui"
+  | "install_skill";
 
-export interface MomoAction {
-  type: MomoActionType;
+export interface HermozAction {
+  type: HermozActionType;
   command?: string;
   path?: string;
   newPath?: string;
@@ -82,7 +84,7 @@ export interface MomoAction {
 
 export interface AgentStepRecord {
   stepNumber: number;
-  action: MomoAction;
+  action: HermozAction;
   fullOutput: string;
   truncatedOutput: string;
   exitCode?: number;
@@ -95,7 +97,7 @@ export interface AgentCheckpoint {
   goal: string;
   completedSteps: AgentStepRecord[];
   lastOutput: string;
-  pendingAction: MomoAction | null;
+  pendingAction: HermozAction | null;
   stepCount: number;
   maxSteps: number;
   activeProvider: ProviderId;
@@ -118,7 +120,7 @@ export interface ChatMessage {
   speechDisplay?: string;
   provider?: ProviderId;
   interactionMode?: InteractionMode;
-  action?: MomoAction;
+  action?: HermozAction;
 }
 
 export type ProviderHealthState =
@@ -135,9 +137,9 @@ export interface ProviderStatus {
 }
 
 /**
- * Normalized Momo AI response contract
+ * Normalized Hermoz AI response contract
  */
-export interface MomoResponse {
+export interface HermozResponse {
   message: string;
   bubbleText: string;
   speechDisplay?: string;
@@ -146,7 +148,7 @@ export interface MomoResponse {
   speak: boolean;
   animation: string;
   provider: ProviderId;
-  action?: MomoAction;
+  action?: HermozAction;
 }
 
 export type RoastLevel = 0 | 1 | 2 | 3;
@@ -178,7 +180,7 @@ export interface AppSettings {
   ttsSpeed: number; // 0.5..2
   ttsPitch: number; // 0.5..1.5
   selectedVoice: string | null;
-  muteMomo: boolean;
+  muteHermoz: boolean;
   speakProactiveMessages: boolean;
   speakChatResponses: boolean;
   proactiveCooldownSeconds: number;
@@ -208,7 +210,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   ttsSpeed: 1.0,
   ttsPitch: 1.0,
   selectedVoice: null,
-  muteMomo: false,
+  muteHermoz: false,
   speakProactiveMessages: true,
   speakChatResponses: true,
   proactiveCooldownSeconds: 120,
@@ -267,4 +269,5 @@ export interface RequestContextPayload {
   argumentContext?: string;
   screenContext?: string;
   userProfile?: string;
+  loadedSkills?: string;
 }

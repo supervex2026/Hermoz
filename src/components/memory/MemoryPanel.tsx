@@ -53,7 +53,7 @@ export function MemoryPanel() {
   };
 
   const handleClear = () => {
-    if (window.confirm("Clear all stored memories? Momo will start fresh.")) {
+    if (window.confirm("Clear all stored memories? Hermoz will start fresh.")) {
       memoryStore.clearAll();
       refresh();
     }
@@ -81,24 +81,24 @@ export function MemoryPanel() {
   });
 
   return (
-    <div className="momo-memory-container">
-      <header className="momo-memory-header">
-        <div className="momo-memory-header-info">
+    <div className="hermoz-memory-container">
+      <header className="hermoz-memory-header">
+        <div className="hermoz-memory-header-info">
           <h2>Memory Vault</h2>
-          <p>Long-term knowledge Momo uses across conversations.</p>
+          <p>Long-term knowledge Hermoz uses across conversations.</p>
         </div>
         {memories.length > 0 && (
-          <button className="liquid-glass-btn momo-memory-clear-btn" onClick={handleClear}>
+          <button className="liquid-glass-btn hermoz-memory-clear-btn" onClick={handleClear}>
             <TrashIcon size={14} /> Clear All
           </button>
         )}
       </header>
 
       {/* Add Memory Card */}
-      <div className="momo-memory-add-card liquid-glass-card">
-        <div className="momo-memory-add-row">
+      <div className="hermoz-memory-add-card liquid-glass-card">
+        <div className="hermoz-memory-add-row">
           <select
-            className="liquid-glass-input momo-memory-category-select"
+            className="liquid-glass-input hermoz-memory-category-select"
             value={newCategory}
             onChange={(e) => setNewCategory(e.target.value as MemoryCategory)}
           >
@@ -111,7 +111,7 @@ export function MemoryPanel() {
           </select>
           <input
             type="text"
-            className="liquid-glass-input momo-memory-input selectable-text"
+            className="liquid-glass-input hermoz-memory-input selectable-text"
             placeholder="e.g. 'I am building a game called Nebula'..."
             value={newContent}
             onChange={(e) => setNewContent(e.target.value)}
@@ -133,17 +133,17 @@ export function MemoryPanel() {
       </div>
 
       {/* Filter / Search Bar */}
-      <div className="momo-memory-filter-row">
+      <div className="hermoz-memory-filter-row">
         <input
           type="text"
-          className="liquid-glass-input momo-memory-search-input selectable-text"
+          className="liquid-glass-input hermoz-memory-search-input selectable-text"
           placeholder="Search memories..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
-        <div className="momo-memory-pills">
+        <div className="hermoz-memory-pills">
           <button
-            className={`momo-memory-pill ${selectedCategory === "ALL" ? "active" : ""}`}
+            className={`hermoz-memory-pill ${selectedCategory === "ALL" ? "active" : ""}`}
             onClick={() => setSelectedCategory("ALL")}
           >
             All ({memories.length})
@@ -151,7 +151,7 @@ export function MemoryPanel() {
           {["PROJECT", "PREFERENCE", "IMPORTANT_FACT", "INSIDE_JOKE"].map((cat) => (
             <button
               key={cat}
-              className={`momo-memory-pill ${selectedCategory === cat ? "active" : ""}`}
+              className={`hermoz-memory-pill ${selectedCategory === cat ? "active" : ""}`}
               onClick={() => setSelectedCategory(cat)}
             >
               {categoryLabels[cat as MemoryCategory] || cat}
@@ -161,21 +161,21 @@ export function MemoryPanel() {
       </div>
 
       {/* Memory Cards Stream */}
-      <div className="momo-memory-list">
+      <div className="hermoz-memory-list">
         {filtered.length === 0 ? (
-          <div className="momo-memory-empty liquid-glass-card">
+          <div className="hermoz-memory-empty liquid-glass-card">
             <MemoryIcon size={32} />
             <p>
               {searchQuery
                 ? "No memories match your search."
-                : "Vault is empty. Add a fact or talk with Momo to start remembering."}
+                : "Vault is empty. Add a fact or talk with Hermoz to start remembering."}
             </p>
           </div>
         ) : (
           filtered.map((m) => (
-            <div key={m.id} className="momo-memory-item liquid-glass-card">
+            <div key={m.id} className="hermoz-memory-item liquid-glass-card">
               {editingId === m.id ? (
-                <div className="momo-memory-edit-box">
+                <div className="hermoz-memory-edit-box">
                   <input
                     type="text"
                     className="liquid-glass-input selectable-text"
@@ -187,7 +187,7 @@ export function MemoryPanel() {
                       if (e.key === "Escape") handleCancelEdit();
                     }}
                   />
-                  <div className="momo-memory-edit-actions">
+                  <div className="hermoz-memory-edit-actions">
                     <button className="liquid-glass-btn liquid-glass-btn-primary" onClick={() => handleSaveEdit(m.id)}>
                       Save
                     </button>
@@ -198,22 +198,22 @@ export function MemoryPanel() {
                 </div>
               ) : (
                 <>
-                  <div className="momo-memory-item-content">
-                    <span className="momo-memory-badge">
+                  <div className="hermoz-memory-item-content">
+                    <span className="hermoz-memory-badge">
                       <SparklesIcon size={11} /> {categoryLabels[m.category] || m.category}
                     </span>
                     <p className="selectable-text">{m.content}</p>
                   </div>
-                  <div className="momo-memory-actions">
+                  <div className="hermoz-memory-actions">
                     <button
-                      className="momo-icon-btn"
+                      className="hermoz-icon-btn"
                       onClick={() => handleStartEdit(m)}
                       title="Edit memory"
                     >
                       Edit
                     </button>
                     <button
-                      className="momo-icon-btn"
+                      className="hermoz-icon-btn"
                       onClick={() => handleDelete(m.id)}
                       title="Delete memory"
                     >

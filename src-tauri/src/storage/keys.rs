@@ -6,7 +6,7 @@ use std::sync::Mutex;
 
 use crate::ai::types::ProviderId;
 
-const SERVICE: &str = "momo-desktop-companion";
+const SERVICE: &str = "hermoz-desktop-companion";
 
 // In-memory cache so keys are always immediately accessible once set
 static MEMORY_KEYS: Mutex<Option<HashMap<String, String>>> = Mutex::new(None);
@@ -17,11 +17,11 @@ fn get_fallback_file_path() -> Option<PathBuf> {
     } else if let Ok(local) = std::env::var("LOCALAPPDATA") {
         PathBuf::from(local)
     } else if let Ok(user) = std::env::var("USERPROFILE") {
-        PathBuf::from(user).join(".momo")
+        PathBuf::from(user).join(".hermoz")
     } else {
         return None;
     };
-    let dir = base.join("momo");
+    let dir = base.join("hermoz");
     let _ = fs::create_dir_all(&dir);
     Some(dir.join(".keys"))
 }

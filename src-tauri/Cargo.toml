@@ -1,13 +1,13 @@
 [package]
-name = "momo"
+name = "hermoz"
 version = "0.1.0"
-description = "Momo - an AI desktop companion"
+description = "Hermoz - an AI desktop companion"
 authors = ["you"]
 edition = "2021"
 rust-version = "1.77"
 
 [lib]
-name = "momo_lib"
+name = "hermoz_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]

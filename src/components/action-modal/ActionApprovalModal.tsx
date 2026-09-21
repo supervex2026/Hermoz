@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useMomoStore } from "@/store/useMomoStore";
+import { useHermozStore } from "@/store/useHermozStore";
 import {
   Terminal, FileSearch, FileEdit, Tag, AlertTriangle,
   Globe, Rocket, Lightbulb, File, Sparkles, Trash2,
-  Link, Square, FolderOpen, Camera
+  Link, Square, FolderOpen, Camera, Package
 } from "lucide-react";
 import "./ActionApprovalModal.css";
 
@@ -22,7 +22,7 @@ export function ActionApprovalModal({ isOverlayMode }: ActionApprovalModalProps)
     chooseWorkspaceFolder,
     capturePromptOpen,
     resolveCaptureConfirmation,
-  } = useMomoStore();
+  } = useHermozStore();
 
   const [isProcessing, setIsProcessing] = useState(false);
 
@@ -135,6 +135,10 @@ export function ActionApprovalModal({ isOverlayMode }: ActionApprovalModalProps)
         return <span className="action-badge badge-web"><Globe size={12} /> OPEN IN BROWSER</span>;
       case "launch_app":
         return <span className="action-badge badge-cmd"><Rocket size={12} /> LAUNCH APP</span>;
+      case "generate_ui":
+        return <span className="action-badge badge-write"><Sparkles size={12} /> STITCH UI GENERATION</span>;
+      case "install_skill":
+        return <span className="action-badge badge-cmd"><Package size={12} /> INSTALL SKILL</span>;
       default:
         return <span className="action-badge badge-cmd">ACTION REQUEST</span>;
     }
@@ -145,7 +149,7 @@ export function ActionApprovalModal({ isOverlayMode }: ActionApprovalModalProps)
       return (
         <div className="action-executing-box">
           <div className="action-spinner" />
-          <p className="action-exec-text">Momo is executing task step in workspace...</p>
+          <p className="action-exec-text">Hermoz is executing task step in workspace...</p>
         </div>
       );
     }
@@ -156,7 +160,7 @@ export function ActionApprovalModal({ isOverlayMode }: ActionApprovalModalProps)
       case "command":
         return (
           <div className="action-details">
-            <p className="action-question">Allow Momo to run this terminal command?</p>
+            <p className="action-question">Allow Hermoz to run this terminal command?</p>
             <div className="code-block-preview">
               <code>$ {action.command}</code>
             </div>
@@ -167,7 +171,7 @@ export function ActionApprovalModal({ isOverlayMode }: ActionApprovalModalProps)
       case "analyze_file":
         return (
           <div className="action-details">
-            <p className="action-question">Allow Momo to inspect this file?</p>
+            <p className="action-question">Allow Hermoz to inspect this file?</p>
             <div className="code-block-preview file-preview">
               <code><File size={12} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 4 }} />{action.path}</code>
             </div>
@@ -178,7 +182,7 @@ export function ActionApprovalModal({ isOverlayMode }: ActionApprovalModalProps)
       case "write_file":
         return (
           <div className="action-details">
-            <p className="action-question">Allow Momo to write changes to this file?</p>
+            <p className="action-question">Allow Hermoz to write changes to this file?</p>
             <div className="code-block-preview file-preview">
               <code><FileEdit size={12} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 4 }} />{action.path}</code>
             </div>
@@ -196,7 +200,7 @@ export function ActionApprovalModal({ isOverlayMode }: ActionApprovalModalProps)
       case "rename_file":
         return (
           <div className="action-details">
-            <p className="action-question">Allow Momo to rename this file/folder?</p>
+            <p className="action-question">Allow Hermoz to rename this file/folder?</p>
             <div className="rename-flow-preview">
               <span className="rename-old"><File size={12} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 4 }} />{action.path}</span>
               <span className="rename-arrow">→</span>
@@ -223,7 +227,7 @@ export function ActionApprovalModal({ isOverlayMode }: ActionApprovalModalProps)
       case "web_fetch":
         return (
           <div className="action-details">
-            <p className="action-question">Allow Momo to fetch web documentation?</p>
+            <p className="action-question">Allow Hermoz to fetch web documentation?</p>
             <div className="code-block-preview web-preview">
               <code><Link size={12} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 4 }} />{action.url}</code>
             </div>
@@ -235,7 +239,7 @@ export function ActionApprovalModal({ isOverlayMode }: ActionApprovalModalProps)
         return (
           <div className="action-details">
             <p className="action-question">
-              Allow Momo to open this web address in {action.browser ? action.browser.toUpperCase() : "your browser"}?
+              Allow Hermoz to open this web address in {action.browser ? action.browser.toUpperCase() : "your browser"}?
             </p>
             <div className="code-block-preview web-preview">
               <code><Link size={12} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 4 }} />{action.url}</code>
@@ -248,11 +252,45 @@ export function ActionApprovalModal({ isOverlayMode }: ActionApprovalModalProps)
         return (
           <div className="action-details">
             <p className="action-question">
-              Allow Momo to launch <strong>{action.target}</strong>
+              Allow Hermoz to launch <strong>{action.target}</strong>
               {action.arg ? ` with argument "${action.arg}"` : ""}?
             </p>
             <div className="code-block-preview">
               <code><Rocket size={12} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 4 }} />{action.target} {action.arg || ""}</code>
+            </div>
+            {action.reason && <p className="action-reason"><Lightbulb size={12} /> {action.reason}</p>}
+          </div>
+        );
+
+      case "generate_ui":
+        return (
+          <div className="action-details">
+            <p className="action-question">
+              Allow Hermoz to generate this UI with Stitch and write it to <strong>{action.path || "frontend/index.html"}</strong>?
+            </p>
+            {action.content && (
+              <pre className="content-snippet-box">
+                {action.content.length > 300
+                  ? `${action.content.slice(0, 300)}...\n(${action.content.length} characters total)`
+                  : action.content}
+              </pre>
+            )}
+            <p className="action-reason"><Lightbulb size={12} /> The generated markup is used exactly as Stitch returns it, unedited.</p>
+            {action.reason && <p className="action-reason"><Lightbulb size={12} /> {action.reason}</p>}
+          </div>
+        );
+
+      case "install_skill":
+        return (
+          <div className="action-details">
+            <p className="action-question">
+              Allow Hermoz to install and load the <strong>{action.target}</strong> skill{action.arg ? ` from ${action.arg}` : ""}?
+            </p>
+            <div className="code-block-preview">
+              <code>
+                <Terminal size={12} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 4 }} />
+                npx skills add {action.arg ? `${action.arg} --skill ${action.target}` : action.target}
+              </code>
             </div>
             {action.reason && <p className="action-reason"><Lightbulb size={12} /> {action.reason}</p>}
           </div>

@@ -21,7 +21,7 @@ impl fmt::Display for ProviderId {
 }
 
 impl ProviderId {
-    /// Every provider Momo currently knows about, in default failover order.
+    /// Every provider Hermoz currently knows about, in default failover order.
     pub fn all() -> [ProviderId; 3] {
         [ProviderId::Groq, ProviderId::OpenRouter, ProviderId::Gemini]
     }
@@ -173,14 +173,19 @@ pub struct RequestContext {
     pub screen_context: Option<String>,
     #[serde(default)]
     pub user_profile: Option<String>,
+    /// Full text of any installed Hermoz skills (Claude Code / Antigravity /
+    /// Codex style SKILL.md files) whose exact name appears in the user's
+    /// current message. Populated client-side by the skill loader.
+    #[serde(default)]
+    pub loaded_skills: Option<String>,
 }
 
-/// Tool action proposal that Momo can request user approval to perform
+/// Tool action proposal that Hermoz can request user approval to perform
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct MomoAction {
+pub struct HermozAction {
     #[serde(rename = "type")]
-    pub action_type: String, // "open_url" | "command" | "analyze_file" | "write_file" | "rename_file" | "delete_file" | "web_fetch"
+    pub action_type: String, // "open_url" | "command" | "analyze_file" | "write_file" | "rename_file" | "delete_file" | "web_fetch" | "launch_app" | "generate_ui" | "install_skill"
     #[serde(default)]
     pub command: Option<String>,
     #[serde(default)]
@@ -230,7 +235,7 @@ pub struct GenerateResponse {
     pub speak: bool,
     pub provider: ProviderId,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub action: Option<MomoAction>,
+    pub action: Option<HermozAction>,
 }
 
 pub const VALID_EMOTIONS: &[&str] = &[
@@ -325,7 +330,7 @@ pub fn derive_bubble_text(full: &str) -> String {
     derive_speech_display(full)
 }
 
-/// Parses any provider's raw output into the structured Momo contract.
+/// Parses any provider's raw output into the structured Hermoz contract.
 pub fn parse_model_output(raw: &str, provider: ProviderId) -> GenerateResponse {
     #[derive(Deserialize)]
     #[serde(rename_all = "camelCase")]
@@ -345,7 +350,7 @@ pub fn parse_model_output(raw: &str, provider: ProviderId) -> GenerateResponse {
         #[serde(default)]
         animation: Option<String>,
         #[serde(default)]
-        action: Option<MomoAction>,
+        action: Option<HermozAction>,
     }
 
     let trimmed = raw.trim();
@@ -407,7 +412,7 @@ pub fn parse_model_output(raw: &str, provider: ProviderId) -> GenerateResponse {
 /// Normalizes and defensively verifies action proposals before passing them to the system.
 /// Protects against model drift (e.g. model outputting `command: "start https://..."` instead of `launch_app`),
 /// and strictly blocks non-allowlisted executables like calc.exe.
-pub fn normalize_action(action: Option<MomoAction>) -> Option<MomoAction> {
+pub fn normalize_action(action: Option<HermozAction>) -> Option<HermozAction> {
     let mut act = action?;
     let t = act.action_type.trim().to_lowercase();
 
@@ -452,7 +457,7 @@ pub fn normalize_action(action: Option<MomoAction>) -> Option<MomoAction> {
                 let rest = cmd[6..].trim().trim_matches('"').trim_matches('\'').trim();
                 let rest_lower = rest.to_lowercase();
                 if rest_lower.contains("youtube.com") || rest_lower.contains("youtu.be") {
-                    return Some(MomoAction {
+                    return Some(HermozAction {
                         action_type: "launch_app".to_string(),
                         target: Some("youtube".to_string()),
                         arg: Some(rest.to_string()),
@@ -465,7 +470,7 @@ pub fn normalize_action(action: Option<MomoAction>) -> Option<MomoAction> {
                         reason: act.reason.or_else(|| Some("Open YouTube in browser".to_string())),
                     });
                 } else if rest_lower.contains("github.com") {
-                    return Some(MomoAction {
+                    return Some(HermozAction {
                         action_type: "launch_app".to_string(),
                         target: Some("github".to_string()),
                         arg: Some(rest.to_string()),
@@ -478,7 +483,7 @@ pub fn normalize_action(action: Option<MomoAction>) -> Option<MomoAction> {
                         reason: act.reason.or_else(|| Some("Open GitHub in browser".to_string())),
                     });
                 } else if rest_lower.contains("google.com") {
-                    return Some(MomoAction {
+                    return Some(HermozAction {
                         action_type: "launch_app".to_string(),
                         target: Some("google".to_string()),
                         arg: Some(rest.to_string()),
@@ -491,7 +496,7 @@ pub fn normalize_action(action: Option<MomoAction>) -> Option<MomoAction> {
                         reason: act.reason.or_else(|| Some("Open Google in browser".to_string())),
                     });
                 } else if rest_lower.starts_with("http://") || rest_lower.starts_with("https://") {
-                    return Some(MomoAction {
+                    return Some(HermozAction {
                         action_type: "launch_app".to_string(),
                         target: Some("browser".to_string()),
                         arg: Some(rest.to_string()),
@@ -514,7 +519,7 @@ pub fn normalize_action(action: Option<MomoAction>) -> Option<MomoAction> {
                 } else {
                     None
                 };
-                return Some(MomoAction {
+                return Some(HermozAction {
                     action_type: "launch_app".to_string(),
                     target: Some("vscode".to_string()),
                     arg,
@@ -536,7 +541,7 @@ pub fn normalize_action(action: Option<MomoAction>) -> Option<MomoAction> {
                 } else {
                     None
                 };
-                return Some(MomoAction {
+                return Some(HermozAction {
                     action_type: "launch_app".to_string(),
                     target: Some("notepad".to_string()),
                     arg,
@@ -558,7 +563,7 @@ pub fn normalize_action(action: Option<MomoAction>) -> Option<MomoAction> {
                 } else {
                     None
                 };
-                return Some(MomoAction {
+                return Some(HermozAction {
                     action_type: "launch_app".to_string(),
                     target: Some("explorer".to_string()),
                     arg,
@@ -574,7 +579,7 @@ pub fn normalize_action(action: Option<MomoAction>) -> Option<MomoAction> {
 
             // Rewrite `wt` or `wt.exe`
             if cmd_lower == "wt" || cmd_lower == "wt.exe" || cmd_lower.starts_with("wt ") {
-                return Some(MomoAction {
+                return Some(HermozAction {
                     action_type: "launch_app".to_string(),
                     target: Some("terminal".to_string()),
                     arg: None,
@@ -599,7 +604,7 @@ pub fn normalize_action(action: Option<MomoAction>) -> Option<MomoAction> {
                 } else {
                     None
                 };
-                return Some(MomoAction {
+                return Some(HermozAction {
                     action_type: "launch_app".to_string(),
                     target: Some("brave".to_string()),
                     arg,
@@ -624,7 +629,7 @@ pub fn normalize_action(action: Option<MomoAction>) -> Option<MomoAction> {
                 } else {
                     None
                 };
-                return Some(MomoAction {
+                return Some(HermozAction {
                     action_type: "launch_app".to_string(),
                     target: Some("chrome".to_string()),
                     arg,
@@ -650,7 +655,7 @@ mod tests {
     #[test]
     fn test_normalize_action_rewrites_and_blocks() {
         // 1. YouTube command rewritten to launch_app
-        let yt_cmd = MomoAction {
+        let yt_cmd = HermozAction {
             action_type: "command".to_string(),
             command: Some("start https://www.youtube.com".to_string()),
             path: None,
@@ -667,7 +672,7 @@ mod tests {
         assert_eq!(norm_yt.target.as_deref(), Some("youtube"));
 
         // 2. VS Code command rewritten to launch_app
-        let vs_cmd = MomoAction {
+        let vs_cmd = HermozAction {
             action_type: "command".to_string(),
             command: Some("code src/main.rs".to_string()),
             path: None,
@@ -685,7 +690,7 @@ mod tests {
         assert_eq!(norm_vs.arg.as_deref(), Some("src/main.rs"));
 
         // 3. Normal developer CLI command preserved as command
-        let npm_cmd = MomoAction {
+        let npm_cmd = HermozAction {
             action_type: "command".to_string(),
             command: Some("npm --version".to_string()),
             path: None,
@@ -702,7 +707,7 @@ mod tests {
         assert_eq!(norm_npm.command.as_deref(), Some("npm --version"));
 
         // 4. Notepad command rewritten to launch_app
-        let np_cmd = MomoAction {
+        let np_cmd = HermozAction {
             action_type: "command".to_string(),
             command: Some("notepad notes.txt".to_string()),
             path: None,
@@ -719,7 +724,7 @@ mod tests {
         assert_eq!(norm_np.target.as_deref(), Some("notepad"));
 
         // 5. Calc rejected (returns None)
-        let calc_cmd = MomoAction {
+        let calc_cmd = HermozAction {
             action_type: "command".to_string(),
             command: Some("calc.exe".to_string()),
             path: None,
@@ -733,7 +738,7 @@ mod tests {
         };
         assert!(normalize_action(Some(calc_cmd)).is_none());
 
-        let calc_launch = MomoAction {
+        let calc_launch = HermozAction {
             action_type: "launch_app".to_string(),
             command: None,
             path: None,
@@ -748,7 +753,7 @@ mod tests {
         assert!(normalize_action(Some(calc_launch)).is_none());
 
         // 6. Brave launch_app target is preserved
-        let brave_launch = MomoAction {
+        let brave_launch = HermozAction {
             action_type: "launch_app".to_string(),
             command: None,
             path: None,
@@ -766,7 +771,7 @@ mod tests {
         assert_eq!(norm_brave.arg.as_deref(), Some("https://www.youtube.com"));
 
         // 7. Brave command rewritten to launch_app
-        let brave_cmd = MomoAction {
+        let brave_cmd = HermozAction {
             action_type: "command".to_string(),
             command: Some("brave https://www.youtube.com".to_string()),
             path: None,

@@ -53,8 +53,8 @@ pub async fn call(
     let resp = client
         .post(ENDPOINT)
         .bearer_auth(api_key)
-        .header("HTTP-Referer", "https://momo.app")
-        .header("X-Title", "Momo")
+        .header("HTTP-Referer", "https://hermoz.app")
+        .header("X-Title", "Hermoz")
         .json(&body)
         .send()
         .await

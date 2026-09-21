@@ -1,24 +1,24 @@
-.momo-panda {
+.hermoz-panda {
   width: 132px;
   height: 158px;
   filter: drop-shadow(var(--shadow-panda));
   cursor: grab;
-  animation: momo-idle-bob 3.6s ease-in-out infinite;
+  animation: hermoz-idle-bob 3.6s ease-in-out infinite;
   transform-origin: 50% 100%;
 }
 
-.momo-panda:active {
+.hermoz-panda:active {
   cursor: grabbing;
 }
 
-.momo-panda-svg {
+.hermoz-panda-svg {
   width: 100%;
   height: 100%;
   display: block;
   overflow: visible;
 }
 
-@keyframes momo-idle-bob {
+@keyframes hermoz-idle-bob {
   0%,
   100% {
     transform: translateY(0) scale(1);
@@ -29,10 +29,10 @@
 }
 
 /* Activity-specific overrides of the base idle animation */
-.momo-activity-sleeping {
-  animation: momo-sleep-breathe 4.5s ease-in-out infinite;
+.hermoz-activity-sleeping {
+  animation: hermoz-sleep-breathe 4.5s ease-in-out infinite;
 }
-@keyframes momo-sleep-breathe {
+@keyframes hermoz-sleep-breathe {
   0%,
   100% {
     transform: translateY(0) scale(1);
@@ -42,10 +42,10 @@
   }
 }
 
-.momo-activity-thinking {
-  animation: momo-think-sway 2.8s ease-in-out infinite;
+.hermoz-activity-thinking {
+  animation: hermoz-think-sway 2.8s ease-in-out infinite;
 }
-@keyframes momo-think-sway {
+@keyframes hermoz-think-sway {
   0%,
   100% {
     transform: rotate(0deg) translateY(0);
@@ -55,10 +55,10 @@
   }
 }
 
-.momo-activity-listening {
-  animation: momo-listen-lean 1.6s ease-in-out infinite;
+.hermoz-activity-listening {
+  animation: hermoz-listen-lean 1.6s ease-in-out infinite;
 }
-@keyframes momo-listen-lean {
+@keyframes hermoz-listen-lean {
   0%,
   100% {
     transform: rotate(0deg) translateY(0);
@@ -68,10 +68,10 @@
   }
 }
 
-.momo-activity-speaking {
-  animation: momo-talk-bounce 0.55s ease-in-out infinite;
+.hermoz-activity-speaking {
+  animation: hermoz-talk-bounce 0.55s ease-in-out infinite;
 }
-@keyframes momo-talk-bounce {
+@keyframes hermoz-talk-bounce {
   0%,
   100% {
     transform: translateY(0) scale(1);
@@ -81,10 +81,10 @@
   }
 }
 
-.momo-activity-arguing {
-  animation: momo-argue-pulse 0.8s ease-in-out infinite;
+.hermoz-activity-arguing {
+  animation: hermoz-argue-pulse 0.8s ease-in-out infinite;
 }
-@keyframes momo-argue-pulse {
+@keyframes hermoz-argue-pulse {
   0%, 100% {
     transform: rotate(0deg) translateY(0);
   }
@@ -96,10 +96,10 @@
   }
 }
 
-.momo-activity-roasting {
-  animation: momo-roast-bounce 1.2s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+.hermoz-activity-roasting {
+  animation: hermoz-roast-bounce 1.2s cubic-bezier(0.16, 1, 0.3, 1) infinite;
 }
-@keyframes momo-roast-bounce {
+@keyframes hermoz-roast-bounce {
   0%, 100% {
     transform: rotate(0deg) translateY(0);
   }
@@ -108,11 +108,11 @@
   }
 }
 
-.momo-activity-visionActive,
-.momo-activity-observing {
-  animation: momo-vision-focus 2.2s ease-in-out infinite;
+.hermoz-activity-visionActive,
+.hermoz-activity-observing {
+  animation: hermoz-vision-focus 2.2s ease-in-out infinite;
 }
-@keyframes momo-vision-focus {
+@keyframes hermoz-vision-focus {
   0%, 100% {
     transform: translateY(0) scale(1);
   }
@@ -122,10 +122,10 @@
 }
 
 /* Decoration animations (question mark, zzz, sparkles, tears, sweat) */
-.momo-deco-bob {
-  animation: momo-deco-bob 1.4s ease-in-out infinite;
+.hermoz-deco-bob {
+  animation: hermoz-deco-bob 1.4s ease-in-out infinite;
 }
-@keyframes momo-deco-bob {
+@keyframes hermoz-deco-bob {
   0%,
   100% {
     transform: translateY(0);
@@ -135,11 +135,11 @@
   }
 }
 
-.momo-deco-float {
-  animation: momo-deco-float 2.4s ease-in-out infinite;
+.hermoz-deco-float {
+  animation: hermoz-deco-float 2.4s ease-in-out infinite;
   opacity: 0.9;
 }
-@keyframes momo-deco-float {
+@keyframes hermoz-deco-float {
   0% {
     transform: translate(0, 0);
     opacity: 0.3;
@@ -153,10 +153,10 @@
   }
 }
 
-.momo-deco-drip {
-  animation: momo-deco-drip 1.6s ease-in infinite;
+.hermoz-deco-drip {
+  animation: hermoz-deco-drip 1.6s ease-in infinite;
 }
-@keyframes momo-deco-drip {
+@keyframes hermoz-deco-drip {
   0% {
     transform: translateY(0);
     opacity: 1;
@@ -170,10 +170,10 @@
   }
 }
 
-.momo-deco-twinkle {
-  animation: momo-deco-twinkle 1.1s ease-in-out infinite;
+.hermoz-deco-twinkle {
+  animation: hermoz-deco-twinkle 1.1s ease-in-out infinite;
 }
-@keyframes momo-deco-twinkle {
+@keyframes hermoz-deco-twinkle {
   0%,
   100% {
     opacity: 0.5;
@@ -186,14 +186,14 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .momo-panda,
-  .momo-activity-sleeping,
-  .momo-activity-thinking,
-  .momo-activity-speaking,
-  .momo-deco-bob,
-  .momo-deco-float,
-  .momo-deco-drip,
-  .momo-deco-twinkle {
+  .hermoz-panda,
+  .hermoz-activity-sleeping,
+  .hermoz-activity-thinking,
+  .hermoz-activity-speaking,
+  .hermoz-deco-bob,
+  .hermoz-deco-float,
+  .hermoz-deco-drip,
+  .hermoz-deco-twinkle {
     animation: none;
   }
 }

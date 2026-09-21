@@ -3,7 +3,7 @@ use std::sync::Mutex;
 use crate::ai::health::HealthTracker;
 use crate::storage::settings::AppSettings;
 
-/// Everything Momo needs to stay itself no matter which AI provider is
+/// Everything Hermoz needs to stay itself no matter which AI provider is
 /// currently answering. Per the product spec: memory, personality, and
 /// conversation state belong to the application, never to a provider's
 /// chat history.

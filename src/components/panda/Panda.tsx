@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { PandaBody, PandaFace } from "./pandaArt";
-import type { Expression, MomoActivity } from "@/types";
+import type { Expression, HermozActivity } from "@/types";
 import "./Panda.css";
 
 interface PandaProps {
   expression: Expression;
-  activity: MomoActivity;
+  activity: HermozActivity;
   onClick: () => void;
   /** Fired once the window has actually been moved by the user (mouse up). */
   onDragEnd?: () => void;
@@ -14,7 +14,7 @@ interface PandaProps {
 
 /**
  * The floating character itself. A mousedown starts a native OS window drag
- * (so Momo moves like a real desktop object, not a DOM element scrolling
+ * (so Hermoz moves like a real desktop object, not a DOM element scrolling
  * inside a fixed window) while a plain click (no movement) opens the chat
  * panel via `onClick`.
  */
@@ -92,14 +92,14 @@ export function Panda({ expression, activity, onClick, onDragEnd }: PandaProps) 
 
   return (
     <div
-      className={`momo-panda momo-activity-${activity}`}
+      className={`hermoz-panda hermoz-activity-${activity}`}
       onPointerDown={handlePointerDown}
       onPointerUp={handlePointerUp}
       role="button"
-      aria-label="Momo"
+      aria-label="Hermoz"
       tabIndex={0}
     >
-      <svg viewBox="0 0 200 240" className="momo-panda-svg" xmlns="http://www.w3.org/2000/svg">
+      <svg viewBox="0 0 200 240" className="hermoz-panda-svg" xmlns="http://www.w3.org/2000/svg">
         <PandaBody>
           <PandaFace expression={displayExpression} mouthOpen={isTalking && mouthOpen} />
         </PandaBody>

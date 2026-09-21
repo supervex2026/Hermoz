@@ -2,7 +2,7 @@ import { invoke } from "@tauri-apps/api/core";
 import type {
   AgentCheckpoint,
   AgentStepRecord,
-  MomoAction,
+  HermozAction,
   ProviderId,
 } from "@/types";
 
@@ -107,10 +107,10 @@ export class AgentLoopManager {
   }
 
   /**
-   * Executes an approved Momo action safely within the scoped workspace.
+   * Executes an approved Hermoz action safely within the scoped workspace.
    */
   public async executeApprovedAction(
-    action: MomoAction,
+    action: HermozAction,
     workspaceFolder?: string,
   ): Promise<{ fullOutput: string; truncatedOutput: string; isSuccess: boolean; exitCode?: number }> {
     const ws = workspaceFolder || undefined;
@@ -234,6 +234,140 @@ export class AgentLoopManager {
         };
       }
 
+      case "generate_ui": {
+        const prompt = action.content || "";
+        const path = action.path || "frontend/index.html";
+        const argsPath = ".hermoz/.tmp-stitch-args.json";
+        const bridgePath = ".hermoz/stitch-bridge.mjs";
+
+        if (!ws) {
+          const msg = "No workspace folder is set — pick one in Settings first so Hermoz has somewhere to run Stitch and write the generated UI.";
+          return { fullOutput: msg, truncatedOutput: msg, isSuccess: false, exitCode: 1 };
+        }
+
+        const { ensureStitchBridgeReady } = await import("@/core/integrations/stitchBridge");
+        const ready = await ensureStitchBridgeReady(ws);
+        if (!ready.ok) {
+          return { fullOutput: ready.log, truncatedOutput: truncateOutputForModel(ready.log), isSuccess: false, exitCode: 1 };
+        }
+
+        // Args go through a workspace file rather than an inline CLI string
+        // so arbitrarily long/quoted prompts never hit shell-escaping limits.
+        await invoke("write_workspace_file", {
+          workspace: ws,
+          path: argsPath,
+          content: JSON.stringify({ prompt, targetPath: path }),
+        });
+
+        const result = await invoke<CommandExecResult>("execute_workspace_command", {
+          command: `node "${bridgePath}" "${argsPath}"`,
+          cwd: null,
+          workspace: ws,
+        });
+
+        if (result.exitCode !== 0) {
+          const errOutput = result.stderr.trim() || result.stdout.trim() || "Stitch bridge failed with no output.";
+          return {
+            fullOutput: errOutput,
+            truncatedOutput: truncateOutputForModel(errOutput),
+            isSuccess: false,
+            exitCode: result.exitCode,
+          };
+        }
+
+        let bridgeResult: { html?: string; error?: string } = {};
+        try {
+          bridgeResult = JSON.parse(result.stdout.trim());
+        } catch {
+          return {
+            fullOutput: `Stitch bridge returned non-JSON output:\n${result.stdout}`,
+            truncatedOutput: truncateOutputForModel(result.stdout),
+            isSuccess: false,
+            exitCode: 1,
+          };
+        }
+
+        if (!bridgeResult.html) {
+          const errMsg = bridgeResult.error || "Stitch did not return any HTML.";
+          return { fullOutput: errMsg, truncatedOutput: errMsg, isSuccess: false, exitCode: 1 };
+        }
+
+        // Write Stitch's output exactly as returned — no hand-editing.
+        await invoke("write_workspace_file", {
+          workspace: ws,
+          path,
+          content: bridgeResult.html,
+        });
+
+        const summary = `Stitch generated the UI and it was written to '${path}' exactly as returned (${bridgeResult.html.length} characters).`;
+        return { fullOutput: summary, truncatedOutput: summary, isSuccess: true, exitCode: 0 };
+      }
+
+      case "install_skill": {
+        const target = (action.target || "").trim();
+        const source = (action.arg || "").trim();
+        const q = (s: string) => `"${s.replace(/"/g, "")}"`;
+
+        if (!target) {
+          const msg = "No skill name was given — I need the exact skill/plugin name to install.";
+          return { fullOutput: msg, truncatedOutput: msg, isSuccess: false, exitCode: 1 };
+        }
+
+        // Primary strategy: skills.sh's `npx skills` installer, which only
+        // needs Node (already required to run Hermoz's dev build) — no
+        // separate Claude Code / Antigravity / Codex install required.
+        const cmd = source
+          ? `npx --yes skills add ${q(source)} --skill ${q(target)}`
+          : `npx --yes skills add ${q(target)}`;
+
+        const result = await invoke<CommandExecResult>("execute_workspace_command", {
+          command: cmd,
+          cwd: null,
+          workspace: ws,
+        });
+
+        const cmdOutput = (result.stdout + "\n" + result.stderr).trim();
+
+        if (result.exitCode !== 0) {
+          const msg = source
+            ? `Install command failed:\n${cmdOutput}`
+            : `Install command failed (no source repo was given, so Hermoz guessed the skill name is also the package):\n${cmdOutput}\n\nTell me the GitHub repo it lives in (e.g. "owner/repo") and I'll retry.`;
+          return { fullOutput: msg, truncatedOutput: truncateOutputForModel(msg), isSuccess: false, exitCode: result.exitCode };
+        }
+
+        // `npx skills add` installs to .agents/skills/<name>/, some tools use
+        // .claude/skills/<name>/ — check both for the resulting SKILL.md.
+        const candidatePaths = [`.agents/skills/${target}`, `.claude/skills/${target}`];
+        let foundPath: string | null = null;
+        let skillMd = "";
+        for (const candidate of candidatePaths) {
+          try {
+            skillMd = await invoke<string>("read_workspace_file", {
+              workspace: ws,
+              path: `${candidate}/SKILL.md`,
+            });
+            foundPath = candidate;
+            break;
+          } catch {
+            continue;
+          }
+        }
+
+        if (!foundPath) {
+          const msg = `Install command ran successfully, but I couldn't find a SKILL.md afterward to load:\n${cmdOutput}`;
+          return { fullOutput: msg, truncatedOutput: truncateOutputForModel(msg), isSuccess: false, exitCode: 1 };
+        }
+
+        const firstLine = skillMd.split("\n").find((l) => l.trim().length > 0) || "";
+        if (ws) {
+          const { registerSkill } = await import("@/core/skills/skillLoader");
+          await registerSkill(ws, { name: target, path: foundPath, description: firstLine.slice(0, 200) });
+        }
+
+        const summary = `Installed the '${target}' skill to ${foundPath} and loaded it — it'll now apply automatically whenever '${target}' is mentioned.`;
+        return { fullOutput: summary, truncatedOutput: summary, isSuccess: true, exitCode: 0 };
+      }
+
       default:
         throw new Error(`Unsupported action type: ${(action as any).type}`);
     }
@@ -245,7 +379,7 @@ export class AgentLoopManager {
    */
   public buildNextTurnPrompt(
     stepNumber: number,
-    action: MomoAction,
+    action: HermozAction,
     output: string,
     isSuccess: boolean,
     exitCode?: number,

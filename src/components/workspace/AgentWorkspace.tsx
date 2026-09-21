@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
-import { useMomoStore } from "@/store/useMomoStore";
+import { useHermozStore } from "@/store/useHermozStore";
 import { ttsManager } from "@/core/tts/manager";
 import { cleanTextForSpeech } from "@/core/tts/cleaner";
 import {
@@ -92,14 +92,14 @@ const ALLOWED_CMDS = [
 ];
 
 export function AgentWorkspace() {
-  const { settings, chooseWorkspaceFolder } = useMomoStore();
+  const { settings, chooseWorkspaceFolder } = useHermozStore();
   const [activeSubTab, setActiveSubTab] = useState<"terminal" | "research" | "files" | "tasks">("terminal");
 
   // Terminal & Command State
   const [cmdInput, setCmdInput] = useState("");
   const [cmdCwd, setCmdCwd] = useState("");
   const [terminalLogs, setTerminalLogs] = useState<Array<{ type: "cmd" | "out" | "err" | "info"; text: string }>>([
-    { type: "info", text: "Momo Agent Workspace Subsystem initialized. Safe developer commands allowed." },
+    { type: "info", text: "Hermoz Agent Workspace Subsystem initialized. Safe developer commands allowed." },
   ]);
   const [isRunning, setIsRunning] = useState(false);
   const [pendingCmd, setPendingCmd] = useState<PendingCommandApproval | null>(null);
@@ -508,15 +508,15 @@ export function AgentWorkspace() {
   };
 
   return (
-    <div className="momo-workspace-container">
+    <div className="hermoz-workspace-container">
       {/* Workspace Header */}
-      <div className="momo-workspace-header">
-        <div className="momo-workspace-title">
+      <div className="hermoz-workspace-header">
+        <div className="hermoz-workspace-title">
           <svg className="w-4 h-4 text-[var(--color-accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
           </svg>
           <span>Agent Workspace</span>
-          <span className="momo-workspace-badge">Dell OptiPlex Ready</span>
+          <span className="hermoz-workspace-badge">Dell OptiPlex Ready</span>
         </div>
         <div className="text-[10px] text-gray-500 font-mono">
           Safe Mode Active
@@ -542,27 +542,27 @@ export function AgentWorkspace() {
       </div>
 
       {/* Sub Navigation */}
-      <nav className="momo-workspace-subnav">
+      <nav className="hermoz-workspace-subnav">
         <button
-          className={`momo-workspace-nav-btn ${activeSubTab === "terminal" ? "active" : ""}`}
+          className={`hermoz-workspace-nav-btn ${activeSubTab === "terminal" ? "active" : ""}`}
           onClick={() => setActiveSubTab("terminal")}
         >
           Terminal
         </button>
         <button
-          className={`momo-workspace-nav-btn ${activeSubTab === "research" ? "active" : ""}`}
+          className={`hermoz-workspace-nav-btn ${activeSubTab === "research" ? "active" : ""}`}
           onClick={() => setActiveSubTab("research")}
         >
           Web Research
         </button>
         <button
-          className={`momo-workspace-nav-btn ${activeSubTab === "files" ? "active" : ""}`}
+          className={`hermoz-workspace-nav-btn ${activeSubTab === "files" ? "active" : ""}`}
           onClick={() => setActiveSubTab("files")}
         >
           Files (Ctrl+B)
         </button>
         <button
-          className={`momo-workspace-nav-btn ${activeSubTab === "tasks" ? "active" : ""}`}
+          className={`hermoz-workspace-nav-btn ${activeSubTab === "tasks" ? "active" : ""}`}
           onClick={() => setActiveSubTab("tasks")}
         >
           Log ({taskHistory.length})
@@ -571,15 +571,15 @@ export function AgentWorkspace() {
 
       {/* Command Approval Modal / Card */}
       {pendingCmd && (
-        <div className="momo-approval-card">
-          <div className="momo-approval-header">
+        <div className="hermoz-approval-card">
+          <div className="hermoz-approval-header">
             <Terminal size={14} className="text-amber-400" />
             <span>Command Approval Required</span>
           </div>
           <div className="text-[11px] text-gray-400 mb-2">
-            Momo wants to execute the following command on your local machine:
+            Hermoz wants to execute the following command on your local machine:
           </div>
-          <div className="momo-approval-cmd">
+          <div className="hermoz-approval-cmd">
             {pendingCmd.command}
             {pendingCmd.cwd && (
               <div className="text-[9.5px] text-gray-400 mt-1 font-sans">
@@ -587,11 +587,11 @@ export function AgentWorkspace() {
               </div>
             )}
           </div>
-          <div className="momo-approval-actions">
-            <button className="momo-reject-btn" onClick={handleRejectCommand}>
+          <div className="hermoz-approval-actions">
+            <button className="hermoz-reject-btn" onClick={handleRejectCommand}>
               Reject
             </button>
-            <button className="momo-approve-btn" onClick={handleApproveCommand}>
+            <button className="hermoz-approve-btn" onClick={handleApproveCommand}>
               Approve &amp; Run
             </button>
           </div>
@@ -600,26 +600,26 @@ export function AgentWorkspace() {
 
       {/* File Approval Modal / Card */}
       {pendingFile && (
-        <div className="momo-approval-card">
-          <div className="momo-approval-header">
+        <div className="hermoz-approval-card">
+          <div className="hermoz-approval-header">
             <FileText size={14} className="text-amber-400" />
             <span>File Modification Approval</span>
           </div>
           <div className="text-[11px] text-gray-400 mb-2">
             Target: <strong className="text-gray-200 font-mono">{pendingFile.path}</strong>
           </div>
-          <div className="momo-approval-diff">
+          <div className="hermoz-approval-diff">
             <div className="text-[10px] text-gray-500 mb-1">--- Proposed Content Preview ---</div>
-            <pre className="momo-diff-add">{pendingFile.newContent.slice(0, 400)}</pre>
+            <pre className="hermoz-diff-add">{pendingFile.newContent.slice(0, 400)}</pre>
             {pendingFile.newContent.length > 400 && (
               <div className="text-[9px] text-gray-500">... ({pendingFile.newContent.length - 400} more chars)</div>
             )}
           </div>
-          <div className="momo-approval-actions">
-            <button className="momo-reject-btn" onClick={handleRejectFile}>
+          <div className="hermoz-approval-actions">
+            <button className="hermoz-reject-btn" onClick={handleRejectFile}>
               Reject
             </button>
-            <button className="momo-approve-btn" onClick={handleApproveFile}>
+            <button className="hermoz-approve-btn" onClick={handleApproveFile}>
               Approve &amp; Write File
             </button>
           </div>
@@ -628,8 +628,8 @@ export function AgentWorkspace() {
 
       {/* Rename Approval Card */}
       {pendingRename && (
-        <div className="momo-approval-card">
-          <div className="momo-approval-header">
+        <div className="hermoz-approval-card">
+          <div className="hermoz-approval-header">
             <Tag size={14} className="text-purple-400" />
             <span>Rename Approval Required</span>
           </div>
@@ -637,11 +637,11 @@ export function AgentWorkspace() {
             Rename: <span className="text-gray-300">{pendingRename.oldPath}</span> →{" "}
             <span style={{ color: "var(--color-accent)" }}>{pendingRename.newPath}</span>
           </div>
-          <div className="momo-approval-actions">
-            <button className="momo-reject-btn" onClick={() => setPendingRename(null)}>
+          <div className="hermoz-approval-actions">
+            <button className="hermoz-reject-btn" onClick={() => setPendingRename(null)}>
               Cancel
             </button>
-            <button className="momo-approve-btn" onClick={handleApproveRename}>
+            <button className="hermoz-approve-btn" onClick={handleApproveRename}>
               Approve &amp; Rename
             </button>
           </div>
@@ -650,20 +650,20 @@ export function AgentWorkspace() {
 
       {/* Delete Approval Card */}
       {pendingDelete && (
-        <div className="momo-approval-card" style={{ borderColor: "var(--color-danger)" }}>
-          <div className="momo-approval-header" style={{ color: "var(--color-danger)" }}>
+        <div className="hermoz-approval-card" style={{ borderColor: "var(--color-danger)" }}>
+          <div className="hermoz-approval-header" style={{ color: "var(--color-danger)" }}>
             <AlertTriangle size={14} />
             <span>Permanent Deletion Warning</span>
           </div>
           <div className="text-[11.5px] text-red-300 mb-2 font-mono">
             Are you sure you want to permanently delete: <strong>{pendingDelete.path}</strong>?
           </div>
-          <div className="momo-approval-actions">
-            <button className="momo-reject-btn" onClick={() => setPendingDelete(null)}>
+          <div className="hermoz-approval-actions">
+            <button className="hermoz-reject-btn" onClick={() => setPendingDelete(null)}>
               Cancel
             </button>
             <button
-              className="momo-approve-btn"
+              className="hermoz-approve-btn"
               style={{ background: "#dc2626", color: "#fff" }}
               onClick={handleApproveDelete}
             >
@@ -679,9 +679,9 @@ export function AgentWorkspace() {
           {/* Allowlist Indicators */}
           <div className="space-y-1">
             <div className="text-[10px] text-gray-400 font-medium">Safe Allowlist (No Shells):</div>
-            <div className="momo-allowlist-row">
+            <div className="hermoz-allowlist-row">
               {ALLOWED_CMDS.map((cmd) => (
-                <span key={cmd} className="momo-allowlist-pill">
+                <span key={cmd} className="hermoz-allowlist-pill">
                   {cmd}
                 </span>
               ))}
@@ -689,15 +689,15 @@ export function AgentWorkspace() {
           </div>
 
           {/* Terminal Console Output */}
-          <div className="momo-terminal-box">
+          <div className="hermoz-terminal-box">
             {terminalLogs.map((log, idx) => (
               <div
                 key={idx}
-                className={`momo-terminal-line ${
+                className={`hermoz-terminal-line ${
                   log.type === "cmd"
-                    ? "momo-terminal-prompt"
+                    ? "hermoz-terminal-prompt"
                     : log.type === "err"
-                    ? "momo-terminal-error"
+                    ? "hermoz-terminal-error"
                     : log.type === "info"
                     ? "text-[var(--color-accent)]"
                     : "text-gray-300"
@@ -707,7 +707,7 @@ export function AgentWorkspace() {
               </div>
             ))}
             {isRunning && (
-              <div className="momo-terminal-line text-amber-400 animate-pulse">
+              <div className="hermoz-terminal-line text-amber-400 animate-pulse">
                 Running process...
               </div>
             )}
@@ -822,7 +822,7 @@ export function AgentWorkspace() {
               </div>
               <div className="text-xs font-semibold text-gray-200">No Workspace Folder Granted</div>
               <div className="text-[11px] text-gray-400 max-w-[280px] mx-auto leading-relaxed">
-                Choose a project directory to let Momo inspect files, edit code, and manage project assets safely.
+                Choose a project directory to let Hermoz inspect files, edit code, and manage project assets safely.
               </div>
               <button
                 type="button"

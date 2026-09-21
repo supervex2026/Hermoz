@@ -192,7 +192,7 @@ pub async fn choose_workspace_folder() -> Result<Option<String>, String> {
             "-NoProfile",
             "-STA",
             "-Command",
-            "Add-Type -AssemblyName System.Windows.Forms; $f = New-Object System.Windows.Forms.FolderBrowserDialog; $f.ShowNewFolderButton = $true; $f.Description = 'Select Momo Workspace Folder'; $res = $f.ShowDialog(); if ($res -eq [System.Windows.Forms.DialogResult]::OK) { Write-Output $f.SelectedPath }",
+            "Add-Type -AssemblyName System.Windows.Forms; $f = New-Object System.Windows.Forms.FolderBrowserDialog; $f.ShowNewFolderButton = $true; $f.Description = 'Select Hermoz Workspace Folder'; $res = $f.ShowDialog(); if ($res -eq [System.Windows.Forms.DialogResult]::OK) { Write-Output $f.SelectedPath }",
         ])
         .output()
         .map_err(|e| format!("Failed to open folder picker: {e}"))?;
@@ -322,7 +322,7 @@ pub async fn fetch_web_content(
     }
 
     let client = reqwest::Client::builder()
-        .user_agent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 MomoAgent/2.0")
+        .user_agent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 HermozAgent/2.0")
         .timeout(std::time::Duration::from_secs(12))
         .build()
         .map_err(|e| e.to_string())?;

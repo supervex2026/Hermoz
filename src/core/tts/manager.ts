@@ -6,7 +6,7 @@ type SpeakingListener = (isSpeaking: boolean) => void;
 
 /**
  * TTSManager
- * Central coordinator for all Text-to-Speech playback in Momo.
+ * Central coordinator for all Text-to-Speech playback in Hermoz.
  * The rest of the application interacts exclusively with this manager.
  */
 export class TTSManager {

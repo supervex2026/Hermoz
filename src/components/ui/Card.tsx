@@ -43,7 +43,7 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
           boxShadow: variant === "raised" ? "var(--shadow-sm)" : "none",
           ...style,
         }}
-        className={`momo-card ${className}`}
+        className={`hermoz-card ${className}`}
         {...props}
       >
         {children}
@@ -74,7 +74,7 @@ export const Panel = React.forwardRef<HTMLDivElement, PanelProps>(
           border: "1px solid var(--color-border)",
           ...style,
         }}
-        className={`momo-panel ${className}`}
+        className={`hermoz-panel ${className}`}
         {...props}
       >
         {(title || actions) && (

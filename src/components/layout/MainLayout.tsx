@@ -1,5 +1,5 @@
 import { useState, useEffect, lazy, Suspense } from "react";
-import { useMomoStore } from "@/store/useMomoStore";
+import { useHermozStore } from "@/store/useHermozStore";
 import { memoryStore } from "@/core/memory/memoryStore";
 import { screenAnalyzer } from "@/core/vision/screenAnalyzer";
 import { TitleBar } from "@/components/titlebar/TitleBar";
@@ -10,8 +10,9 @@ import { SettingsPanel } from "@/components/settings/SettingsPanel";
 import "./MainLayout.css";
 
 const AgentWorkspace = lazy(() => import("@/components/workspace/AgentWorkspace"));
+const CanvasView = lazy(() => import("@/components/canvas/CanvasView").then((m) => ({ default: m.CanvasView })));
 
-export type SecondaryTab = "overview" | "vision" | "workspace" | "memory" | "settings";
+export type SecondaryTab = "overview" | "vision" | "workspace" | "canvas" | "memory" | "settings";
 
 interface MainLayoutProps {
   onSwitchToOverlay: () => void;
@@ -31,7 +32,7 @@ export function MainLayout({ onSwitchToOverlay }: MainLayoutProps) {
     closeSettings,
     openSettings,
     captureScreenWithCheck,
-  } = useMomoStore();
+  } = useHermozStore();
 
   const [memories, setMemories] = useState(() => memoryStore.getMemories());
   const [screenInfo, setScreenInfo] = useState(() => screenAnalyzer.getDebugInfo());
@@ -47,7 +48,7 @@ export function MainLayout({ onSwitchToOverlay }: MainLayoutProps) {
 
   const handlePandaPoke = () => {
     const pokeMessages = [
-      "Hey Momo, what's up?",
+      "Hey Hermoz, what's up?",
       "Checking in, how are you feeling?",
       "Tell me a quick thought about my current setup.",
     ];
@@ -90,9 +91,10 @@ export function MainLayout({ onSwitchToOverlay }: MainLayoutProps) {
       : "Chill";
 
   return (
-    <div className="w-full h-full bg-[var(--neutral-1)] text-gray-200 font-sans antialiased select-none flex flex-col overflow-hidden">
+    <div className="hermoz-antigravity-field w-full h-full text-gray-200 font-sans antialiased select-none flex flex-col overflow-hidden">
       {/* Main Container Window Frame */}
-      <div className="relative w-full h-full bg-[var(--neutral-2)] flex flex-col overflow-hidden">
+      <div className="relative w-full h-full bg-[var(--neutral-2)]/80 flex flex-col overflow-hidden">
+        <div className="hermoz-starfield" aria-hidden="true" />
         {/* Obsidian Titlebar */}
         <TitleBar />
 
@@ -108,18 +110,18 @@ export function MainLayout({ onSwitchToOverlay }: MainLayoutProps) {
             className="hidden lg:flex w-[35%] flex-col bg-[var(--neutral-1)] p-4 space-y-4 overflow-y-auto border-l border-[var(--color-border)]"
             data-purpose="companion-diagnostics-hud"
           >
-            {/* TOP WIDGET: Momo Avatar & Mood Hub */}
+            {/* TOP WIDGET: Hermoz Avatar & Mood Hub */}
             <div
               className="bg-[var(--neutral-2)] border border-[var(--color-border)] rounded-2xl p-4 relative shadow-card-ambient overflow-hidden"
               data-purpose="avatar-mood-widget"
             >
               <div className="absolute -right-12 -top-12 w-32 h-32 bg-[var(--color-accent-subtle)] rounded-full blur-2xl pointer-events-none"></div>
               <div className="flex items-start space-x-3.5">
-                {/* Momo Panda Stylized Visual Avatar */}
+                {/* Hermoz Panda Stylized Visual Avatar */}
                 <div
                   className="relative shrink-0 cursor-pointer group"
                   onClick={handlePandaPoke}
-                  title="Click to poke or chat with Momo"
+                  title="Click to poke or chat with Hermoz"
                 >
                   <div className="w-16 h-16 rounded-2xl bg-gradient-to-b from-obsidian-800 to-obsidian-900 border-2 border-[var(--color-accent)] flex items-center justify-center shadow-xs group-hover:border-[var(--color-accent)] transition-all">
                     {/* Digital Panda Character */}
@@ -225,7 +227,7 @@ export function MainLayout({ onSwitchToOverlay }: MainLayoutProps) {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between">
                     <h2 className="text-base font-bold text-white tracking-wide">
-                      Momo
+                      Hermoz
                     </h2>
                     <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[var(--color-accent-subtle)] text-[var(--color-accent)] border border-[var(--color-accent)]">
                       {activity.toUpperCase()}
@@ -250,7 +252,7 @@ export function MainLayout({ onSwitchToOverlay }: MainLayoutProps) {
 
             {/* Mode Navigation Tabs */}
             <nav
-              className="grid grid-cols-5 gap-1 p-1 bg-[var(--neutral-2)] rounded-xl border border-[var(--color-border)] text-xs shrink-0"
+              className="grid grid-cols-6 gap-1 p-1 bg-[var(--neutral-2)] rounded-xl border border-[var(--color-border)] text-xs shrink-0"
               data-purpose="hud-sub-tabs"
             >
               <button
@@ -323,6 +325,30 @@ export function MainLayout({ onSwitchToOverlay }: MainLayoutProps) {
                   ></path>
                 </svg>
                 <span>Agent</span>
+              </button>
+
+              <button
+                className={`py-1.5 px-1.5 text-center rounded-lg font-medium flex items-center justify-center space-x-1 transition-all ${
+                  activeTab === "canvas"
+                    ? "bg-[var(--color-accent-subtle)] text-[var(--color-accent)] border border-[var(--color-accent)] shadow-sm"
+                    : "text-gray-400 hover:text-gray-200 hover:bg-[var(--neutral-4)]"
+                }`}
+                onClick={() => setActiveTab("canvas")}
+              >
+                <svg
+                  className="w-3 h-3 text-[var(--color-accent)]"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M4 4h6v6H4V4zm10 10h6v6h-6v-6zM4 20l6-6m10-10l-6 6"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                  ></path>
+                </svg>
+                <span>Canvas</span>
               </button>
 
               <button
@@ -403,10 +429,10 @@ export function MainLayout({ onSwitchToOverlay }: MainLayoutProps) {
                         <strong className="text-gray-200">
                           {screenInfo.contextAgeSeconds}s ago
                         </strong>{" "}
-                        ({screenInfo.isStale ? "Stale" : "Fresh"}). Momo observes desktop workspace context.
+                        ({screenInfo.isStale ? "Stale" : "Fresh"}). Hermoz observes desktop workspace context.
                       </>
                     ) : (
-                      "Momo can observe desktop workspace context and assist proactively."
+                      "Hermoz can observe desktop workspace context and assist proactively."
                     )}
                   </p>
                   {/* Inspect Action Button */}
@@ -478,7 +504,7 @@ export function MainLayout({ onSwitchToOverlay }: MainLayoutProps) {
                   <div className="space-y-1.5">
                     {memories.length === 0 ? (
                       <div className="p-2 rounded-lg bg-[var(--neutral-3)] border border-[var(--color-border)] text-[11px] text-gray-400">
-                        No memories saved yet. Momo learns as you chat.
+                        No memories saved yet. Hermoz learns as you chat.
                       </div>
                     ) : (
                       memories.slice(0, 3).map((m) => (
@@ -583,15 +609,30 @@ export function MainLayout({ onSwitchToOverlay }: MainLayoutProps) {
               </div>
             )}
 
+            {/* TAB CONTENT: Build Canvas */}
+            {activeTab === "canvas" && (
+              <div className="flex-1 overflow-hidden">
+                <Suspense
+                  fallback={
+                    <div className="p-4 text-xs text-gray-500 font-mono animate-pulse">
+                      Loading Canvas...
+                    </div>
+                  }
+                >
+                  <CanvasView />
+                </Suspense>
+              </div>
+            )}
+
             {/* Spacer */}
             <div className="flex-1"></div>
 
-            {/* Float Momo on Desktop Action Button */}
+            {/* Float Hermoz on Desktop Action Button */}
             <div className="pt-2 shrink-0" data-purpose="floating-mode-action">
               <button
                 className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-[var(--color-accent)] to-[var(--color-accent-hover)] hover:from-[var(--color-accent-hover)] hover:to-[var(--color-accent)] text-white font-bold text-xs tracking-wide shadow-xs hover:shadow-sm transition-all flex items-center justify-center space-x-2 active:scale-95"
                 onClick={onSwitchToOverlay}
-                title="Float Momo on Desktop"
+                title="Float Hermoz on Desktop"
               >
                 <svg
                   className="w-4 h-4"
@@ -606,7 +647,7 @@ export function MainLayout({ onSwitchToOverlay }: MainLayoutProps) {
                     strokeWidth="2"
                   ></path>
                 </svg>
-                <span>Float Momo on Desktop</span>
+                <span>Float Hermoz on Desktop</span>
               </button>
             </div>
           </aside>

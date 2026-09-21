@@ -1,6 +1,6 @@
 /* Custom TitleBar Styles — Redesigned with Token System */
 
-.momo-titlebar {
+.hermoz-titlebar {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -16,7 +16,7 @@
   flex-shrink: 0;
 }
 
-.momo-titlebar-title {
+.hermoz-titlebar-title {
   display: flex;
   align-items: center;
   gap: var(--space-2);
@@ -27,14 +27,14 @@
   pointer-events: none;
 }
 
-.momo-titlebar-icon {
+.hermoz-titlebar-icon {
   width: 18px;
   height: 18px;
   border-radius: var(--radius-sm);
   object-fit: contain;
 }
 
-.momo-titlebar-controls {
+.hermoz-titlebar-controls {
   display: flex;
   align-items: center;
   gap: 0;
@@ -42,7 +42,7 @@
   app-region: no-drag;
 }
 
-.momo-titlebar-btn {
+.hermoz-titlebar-btn {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -56,16 +56,16 @@
   border-radius: 0;
 }
 
-.momo-titlebar-btn:hover {
+.hermoz-titlebar-btn:hover {
   background: var(--neutral-3);
   color: var(--color-text);
 }
 
-.momo-titlebar-btn-close:hover {
+.hermoz-titlebar-btn-close:hover {
   background: var(--color-danger);
   color: #ffffff;
 }
 
-.momo-titlebar-btn:active {
+.hermoz-titlebar-btn:active {
   background: var(--neutral-4);
 }

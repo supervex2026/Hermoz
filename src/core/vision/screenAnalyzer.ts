@@ -1,11 +1,11 @@
 /**
- * Screen Vision Analyzer for Momo
+ * Screen Vision Analyzer for Hermoz
  * Captures screen frames safely on demand and performs multimodal analysis.
  * Stores structured screen context that survives AI provider switching.
  */
 
 import { invoke } from "@tauri-apps/api/core";
-import type { MomoResponse, ScreenContext } from "@/types";
+import type { HermozResponse, ScreenContext } from "@/types";
 
 export interface ScreenDebugInfo {
   monitor: string;
@@ -143,7 +143,7 @@ export class ScreenAnalyzer {
   public async analyzeScreen(
     imageBase64: string,
     userPrompt?: string,
-  ): Promise<{ response: MomoResponse; context: ScreenContext }> {
+  ): Promise<{ response: HermozResponse; context: ScreenContext }> {
     const now = Date.now();
     const isoNow = new Date(now).toISOString();
 
@@ -158,12 +158,12 @@ You MUST output ONLY a valid JSON object matching this schema (no markdown fence
   "likelyTask": "<what the user is attempting to accomplish>",
   "confidence": 0.85,
   "timestamp": "${isoNow}",
-  "speechDisplay": "<short 1-sentence punchy reaction under 85 chars for Momo's desktop thought bubble. If confidence < 0.6, honestly admit you are not totally sure what they are working on>",
+  "speechDisplay": "<short 1-sentence punchy reaction under 85 chars for Hermoz's desktop thought bubble. If confidence < 0.6, honestly admit you are not totally sure what they are working on>",
   "bubbleText": "<same as speechDisplay>",
-  "message": "<Momo's witty conversational feedback observing their screen with sharp observations and banter>"
+  "message": "<Hermoz's witty conversational feedback observing their screen with sharp observations and banter>"
 }`;
 
-    const response = await invoke<MomoResponse>("ai_generate", {
+    const response = await invoke<HermozResponse>("ai_generate", {
       request: {
         message: structuredVisionPrompt,
         history: [],

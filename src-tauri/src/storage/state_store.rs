@@ -28,7 +28,7 @@ pub struct StoredMemory {
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct CanonicalMomoState {
+pub struct CanonicalHermozState {
     #[serde(default)]
     pub messages: Vec<StoredMessage>,
     #[serde(default)]
@@ -51,23 +51,23 @@ fn state_file_path(app: &tauri::AppHandle) -> Result<PathBuf, String> {
         .app_data_dir()
         .map_err(|e| format!("could not resolve app data dir: {e}"))?;
     let _ = fs::create_dir_all(&dir);
-    Ok(dir.join("momo_canonical_state.json"))
+    Ok(dir.join("hermoz_canonical_state.json"))
 }
 
-pub fn load_state(app: &tauri::AppHandle) -> CanonicalMomoState {
+pub fn load_state(app: &tauri::AppHandle) -> CanonicalHermozState {
     let Ok(path) = state_file_path(app) else {
-        return CanonicalMomoState::default();
+        return CanonicalHermozState::default();
     };
     if !path.exists() {
-        return CanonicalMomoState::default();
+        return CanonicalHermozState::default();
     }
     match fs::read_to_string(&path) {
         Ok(data) => serde_json::from_str(&data).unwrap_or_default(),
-        Err(_) => CanonicalMomoState::default(),
+        Err(_) => CanonicalHermozState::default(),
     }
 }
 
-pub fn save_state(app: &tauri::AppHandle, state: &CanonicalMomoState) -> Result<(), String> {
+pub fn save_state(app: &tauri::AppHandle, state: &CanonicalHermozState) -> Result<(), String> {
     let path = state_file_path(app)?;
     let json = serde_json::to_string_pretty(state).map_err(|e| e.to_string())?;
     fs::write(path, json).map_err(|e| format!("could not save state: {e}"))

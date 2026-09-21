@@ -1,4 +1,4 @@
-.momo-app-container {
+.hermoz-app-container {
   width: 100vw;
   height: 100vh;
   margin: 0;
@@ -8,7 +8,7 @@
   user-select: none;
 }
 
-.momo-root {
+.hermoz-root {
   position: relative;
   width: 100%;
   height: 100%;
@@ -18,18 +18,18 @@
   padding: 10px;
 }
 
-.momo-root-expanded {
+.hermoz-root-expanded {
   align-items: stretch;
   justify-content: flex-start;
 }
 
-.momo-stage {
+.hermoz-stage {
   position: relative;
   display: flex;
   align-items: flex-end;
 }
 
-.momo-settings-affordance {
+.hermoz-settings-affordance {
   position: absolute;
   top: var(--space-3);
   right: var(--space-3);
@@ -49,12 +49,12 @@
   z-index: 20;
 }
 
-.momo-settings-affordance:hover {
+.hermoz-settings-affordance:hover {
   opacity: 1;
   transform: scale(1.08);
 }
 
-.momo-recording-indicator {
+.hermoz-recording-indicator {
   position: absolute;
   bottom: 0;
   left: 50%;
@@ -73,15 +73,15 @@
   pointer-events: none;
 }
 
-.momo-rec-dot {
+.hermoz-rec-dot {
   width: 7px;
   height: 7px;
   border-radius: 50%;
   background: var(--color-danger);
-  animation: momo-dot-pulse 0.9s ease-in-out infinite;
+  animation: hermoz-dot-pulse 0.9s ease-in-out infinite;
 }
 
-@keyframes momo-dot-pulse {
+@keyframes hermoz-dot-pulse {
   0%, 100% {
     opacity: 1;
     transform: scale(1);

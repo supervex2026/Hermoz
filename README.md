@@ -1,6 +1,6 @@
-# Momo
+# Hermoz
 
-Momo is an AI desktop companion for Windows: a small floating panda that
+Hermoz is an AI desktop companion for Windows: a small floating panda that
 lives on your screen, remembers your projects, argues with you, and makes
 solo work feel less solo.
 
@@ -13,16 +13,34 @@ state).
 ## What you get right now
 
 - A transparent, always-on-top panda you can drag anywhere on the screen
-- Click Momo to open a real chat panel
-- Groq + OpenRouter behind one router with automatic failover — if one is
-  rate-limited or down, Momo keeps talking through the other one
+- Click Hermoz to open a real chat panel
+- Groq + OpenRouter + Gemini behind one router with automatic failover — if
+  one is rate-limited or down mid-task, Hermoz keeps going on the next one,
+  seamlessly, since the full conversation/task state is always resent
 - API keys stored in Windows Credential Manager, never in a file
 - Basic text-to-speech (your Windows system voice) for chat replies and
   the startup greeting
 - A settings panel for personality (roast level, proactivity, seriousness,
   companion style), window behavior, and voice
-- `Ctrl+Shift+M` (or `Cmd+Shift+M` on macOS) and a tray icon to bring Momo
+- `Ctrl+Shift+M` (or `Cmd+Shift+M` on macOS) and a tray icon to bring Hermoz
   back or quit, since the window has no title bar
+- **The Canvas.** An infinite pan/zoom build view — Start → Planner →
+  sub-agents → End — for "build me a real working X" requests. Turn on
+  **Agent Mode** in chat (the lightning-bolt toggle) and a build/create-app
+  request opens the Canvas and runs it for real: plans an architecture,
+  spins up one sub-agent per piece, and executes each through the same
+  approve-then-run pipeline as everything else. A "Where's Hermoz?" button
+  jumps the view to whatever node is currently working.
+- **UI generation via Stitch.** Ask Hermoz to build or edit an app, website,
+  full-stack app, or desktop app UI and it routes the visual work through
+  [Google Stitch](https://stitch.withgoogle.com) (via the official
+  `@google/stitch-sdk`) and writes exactly what Stitch returns — no
+  hand-editing. Requires a `STITCH_API_KEY` in your environment (see below).
+- **Install & use named skills.** Say "install the X skill" (Claude Code,
+  Antigravity, or Codex-style skills all work the same way — a folder with a
+  `SKILL.md`) and Hermoz runs the install for real via the terminal (the
+  [`npx skills`](https://skills.sh) installer), then automatically loads that
+  skill's instructions into future turns that mention it by name.
 
 ---
 
@@ -59,29 +77,55 @@ hot-reloads on save; Rust changes trigger a recompile + relaunch.
 
 ## Set up your AI keys
 
-Momo will run and float on your desktop with **zero keys configured** — it
+Hermoz will run and float on your desktop with **zero keys configured** — it
 just won't be able to talk back yet (you'll see a local canned greeting
 instead of an AI-generated one). To turn on real conversation:
 
-1. Click Momo → click the ⚙ (or the small gear in the corner) → **Settings**
+1. Click Hermoz → click the ⚙ (or the small gear in the corner) → **Settings**
 2. Under **AI providers**, paste a Groq key and/or an OpenRouter key
    - Groq: <https://console.groq.com/keys> (free tier, very fast, good default)
    - OpenRouter: <https://openrouter.ai/keys> (works as the failover, or
      as your only provider)
-3. That's it — no restart needed. If you configure both, Momo prefers Groq
+3. That's it — no restart needed. If you configure both, Hermoz prefers Groq
    and silently falls back to OpenRouter if Groq is rate-limited or down.
 
 Keys are saved via the `keyring` crate into **Windows Credential Manager**
 (or macOS Keychain / Linux Secret Service in dev), under the service name
-`momo-desktop-companion`. They're never written into `settings.json` or
+`hermoz-desktop-companion`. They're never written into `settings.json` or
 any other plaintext file, and never leave your machine except in the
 direct HTTPS request to whichever provider you're using.
+
+## Set up Stitch (for UI generation)
+
+Ask Hermoz to build or edit an app/website/UI and it routes that through
+[Stitch](https://stitch.withgoogle.com) (Google's AI UI-design tool) rather
+than hand-writing HTML itself. This needs one extra thing the AI provider
+keys above don't cover:
+
+1. Get a Stitch API key (Google Cloud project — see
+   <https://github.com/google-labs-code/stitch-sdk> for setup)
+2. Set it as an environment variable before launching Hermoz:
+   `STITCH_API_KEY=your-key-here` (this is the `@google/stitch-sdk`'s own
+   convention, not a Hermoz setting — it isn't stored anywhere by Hermoz)
+3. Pick a workspace folder in Settings → General — this is where generated
+   UI files, the Stitch bridge, and installed skills get written
+
+Without a key, `generate_ui` actions fail with a clear message telling you
+what's missing rather than silently doing nothing.
+
+## Install & use skills
+
+Say "install the &lt;name&gt; skill" for any Claude Code, Antigravity, or
+Codex-style skill and Hermoz runs the real install (via
+[`npx skills`](https://skills.sh)) and loads its `SKILL.md` automatically
+into any future message that mentions that skill by name. Needs a workspace
+folder set, same as above.
 
 ## Voice
 
 Voice uses whatever default voice is installed in Windows (Settings →
 Time & Language → Speech). No setup needed. Volume, speed, and which
-messages get spoken out loud are all in Momo's Settings panel. Local
+messages get spoken out loud are all in Hermoz's Settings panel. Local
 neural voices (Piper/Kokoro) aren't wired up yet — see the roadmap.
 
 ## Build a Windows installer
@@ -99,14 +143,14 @@ users.
 ## Project structure
 
 ```
-momo/
+hermoz/
 ├── src/                     # React/TS frontend
 │   ├── components/
 │   │   ├── panda/           # The character: SVG art + expression system
 │   │   ├── speech-bubble/
 │   │   ├── chat/
 │   │   └── settings/
-│   ├── store/                useMomoStore.ts - all app state (zustand)
+│   ├── store/                useHermozStore.ts - all app state (zustand)
 │   └── types/                 shared TS types, mirrored in Rust
 ├── src-tauri/               # Rust backend
 │   └── src/
@@ -125,10 +169,10 @@ in Rust-only secure storage instead of the frontend.
 
 ## Permissions & privacy
 
-- Momo does not capture your screen. Screen awareness (Phase 5) isn't
+- Hermoz does not capture your screen. Screen awareness (Phase 5) isn't
   implemented yet - see the roadmap. When it lands, it will be
   permission-gated and off by default, per the product spec.
-- Memory (Phase 4) isn't implemented yet either - Momo currently only
+- Memory (Phase 4) isn't implemented yet either - Hermoz currently only
   knows the current conversation, nothing persists between chat sessions
   except your Settings.
 - The only network calls this app makes are to `api.groq.com` and/or
@@ -154,7 +198,7 @@ entire frontend has no such risk since those don't depend on
 fast-moving windowing/tray APIs.
 
 **Window appears in the wrong place / off-screen.** Delete
-`%APPDATA%/com.momo.desktop/settings.json` (Windows) and relaunch - this
+`%APPDATA%/com.hermoz.desktop/settings.json` (Windows) and relaunch - this
 resets the remembered window position along with the rest of your
 settings.
 

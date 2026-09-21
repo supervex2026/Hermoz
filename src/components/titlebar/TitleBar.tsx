@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import { useMomoStore } from "@/store/useMomoStore";
+import { useHermozStore } from "@/store/useHermozStore";
 import { Terminal, Minus, Square, X } from "lucide-react";
 
 export function TitleBar() {
   const [isMaximized, setIsMaximized] = useState(false);
-  const { providerStatus, activeTab, setActiveTab } = useMomoStore();
+  const { providerStatus, activeTab, setActiveTab } = useHermozStore();
   const activeProvider = providerStatus.find((p) => p.state === "connected");
 
   const handleMinimize = async () => {
@@ -95,7 +95,7 @@ export function TitleBar() {
     >
       {/* Left: Logo & Window Identity */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }} data-tauri-drag-region>
-        {/* Momo Avatar Mini */}
+        {/* Hermoz Avatar Mini */}
         <div style={{
           width: 22, height: 22, borderRadius: '50%',
           background: 'var(--neutral-3)', border: '1px solid var(--color-border-strong)',
@@ -119,7 +119,7 @@ export function TitleBar() {
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }} data-tauri-drag-region>
           <span style={{ fontSize: 'var(--text-sm)', fontWeight: 'var(--weight-semibold)', color: 'var(--color-text)' }}>
-            Momo
+            Hermoz
           </span>
           <span style={{
             fontSize: 'var(--text-2xs)', fontFamily: 'var(--font-mono)',

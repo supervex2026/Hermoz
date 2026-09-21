@@ -1,10 +1,10 @@
-# Momo Releases
+# Hermoz Releases
 
-This directory contains standalone release builds and setup installers for Momo.
+This directory contains standalone release builds and setup installers for Hermoz.
 
-## Latest Release: v2.4 (Momo Desktop v0.1.0)
+## Latest Release: v2.4 (Hermoz Desktop v0.1.0)
 
-- **Installer**: `Momo_0.1.0_x64-setup.exe` (5.85 MB)
+- **Installer**: `Hermoz_0.1.0_x64-setup.exe` (5.85 MB)
 - **Platform**: Windows 10 / 11 (x86_64)
 - **Hardware Profile**: Optimized for lightweight desktop environments (Intel HD Graphics 530, 4GB RAM, zero Chromium overhead).
 

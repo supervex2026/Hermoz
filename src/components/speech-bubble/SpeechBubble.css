@@ -1,35 +1,35 @@
 /* SpeechBubble Styles — Redesigned with Token System */
 
-.momo-bubble-anchor {
+.hermoz-bubble-anchor {
   position: absolute;
   z-index: 999;
   pointer-events: auto;
 }
 
-.momo-bubble-anchor.momo-bubble-top {
+.hermoz-bubble-anchor.hermoz-bubble-top {
   bottom: calc(100% + 10px);
 }
 
-.momo-bubble-anchor.momo-bubble-bottom {
+.hermoz-bubble-anchor.hermoz-bubble-bottom {
   top: calc(100% + 10px);
 }
 
-.momo-bubble-anchor.momo-bubble-right {
+.hermoz-bubble-anchor.hermoz-bubble-right {
   left: 50%;
   transform: translateX(-20%);
 }
 
-.momo-bubble-anchor.momo-bubble-left {
+.hermoz-bubble-anchor.hermoz-bubble-left {
   right: 50%;
   transform: translateX(20%);
 }
 
-.momo-bubble-anchor.momo-bubble-center {
+.hermoz-bubble-anchor.hermoz-bubble-center {
   left: 50%;
   transform: translateX(-50%);
 }
 
-.momo-bubble {
+.hermoz-bubble {
   position: relative;
   max-width: 300px;
   min-width: 90px;
@@ -42,22 +42,22 @@
   border-radius: var(--radius-md);
   padding: 8px 12px;
   box-shadow: var(--shadow-md);
-  animation: momo-bubble-in var(--duration-fast) var(--ease-out);
+  animation: hermoz-bubble-in var(--duration-fast) var(--ease-out);
   cursor: pointer;
   user-select: none;
   -webkit-user-select: none;
   transition: transform var(--duration-fast) var(--ease-out);
 }
 
-.momo-bubble:hover {
+.hermoz-bubble:hover {
   transform: scale(1.02);
 }
 
-.momo-bubble::-webkit-scrollbar {
+.hermoz-bubble::-webkit-scrollbar {
   display: none;
 }
 
-.momo-bubble-text {
+.hermoz-bubble-text {
   margin: 0;
   font-family: var(--font-sans);
   font-size: var(--text-xs);
@@ -73,7 +73,7 @@
   overflow: hidden;
 }
 
-.momo-bubble-tail {
+.hermoz-bubble-tail {
   position: absolute;
   width: 8px;
   height: 8px;
@@ -82,42 +82,42 @@
 }
 
 /* Top bubble tail points DOWN */
-.momo-bubble-top .momo-bubble-tail {
+.hermoz-bubble-top .hermoz-bubble-tail {
   bottom: -4px;
   left: 32px;
   border-right: 1px solid var(--color-border-strong);
   border-bottom: 1px solid var(--color-border-strong);
 }
 
-.momo-bubble-top.momo-bubble-left .momo-bubble-tail {
+.hermoz-bubble-top.hermoz-bubble-left .hermoz-bubble-tail {
   left: auto;
   right: 32px;
 }
 
-.momo-bubble-top.momo-bubble-center .momo-bubble-tail {
+.hermoz-bubble-top.hermoz-bubble-center .hermoz-bubble-tail {
   left: 50%;
   transform: translateX(-50%) rotate(45deg);
 }
 
 /* Bottom bubble tail points UP */
-.momo-bubble-bottom .momo-bubble-tail {
+.hermoz-bubble-bottom .hermoz-bubble-tail {
   top: -4px;
   left: 32px;
   border-left: 1px solid var(--color-border-strong);
   border-top: 1px solid var(--color-border-strong);
 }
 
-.momo-bubble-bottom.momo-bubble-left .momo-bubble-tail {
+.hermoz-bubble-bottom.hermoz-bubble-left .hermoz-bubble-tail {
   left: auto;
   right: 32px;
 }
 
-.momo-bubble-bottom.momo-bubble-center .momo-bubble-tail {
+.hermoz-bubble-bottom.hermoz-bubble-center .hermoz-bubble-tail {
   left: 50%;
   transform: translateX(-50%) rotate(45deg);
 }
 
-@keyframes momo-bubble-in {
+@keyframes hermoz-bubble-in {
   from {
     opacity: 0;
     transform: translateY(5px) scale(0.95);

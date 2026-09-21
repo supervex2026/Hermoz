@@ -1,26 +1,28 @@
 /* ============================================================
-   Momo Design Tokens — derived from desktop-ui-mastery
-   hue=250 temperature=cool density=compact register=instrument
-   
-   Dark-first desktop companion. Obsidian neutrals, slate-sapphire
-   accent, compact spacing, instrument-grade responsiveness.
+   Hermoz Design Tokens — "Antigravity" theme
+   hue=265→195 temperature=cool density=compact register=instrument
+
+   Deep-space obsidian neutrals with a violet→cyan antigravity
+   gradient accent. Panels float: glassy, blurred, edge-lit with a
+   soft glow instead of a hard shadow. Compact spacing,
+   instrument-grade responsiveness carried over unchanged.
    ============================================================ */
 
-/* Dark theme is the default for Momo */
+/* Dark theme is the default for Hermoz */
 :root {
-  /* --- Neutral Ramp (Dark) --- */
-  --neutral-1: oklch(0.165 0.006 240);
-  --neutral-2: oklch(0.190 0.006 240);
-  --neutral-3: oklch(0.215 0.006 240);
-  --neutral-4: oklch(0.245 0.006 240);
-  --neutral-5: oklch(0.280 0.006 240);
-  --neutral-6: oklch(0.330 0.006 240);
-  --neutral-7: oklch(0.420 0.006 240);
-  --neutral-8: oklch(0.520 0.006 240);
-  --neutral-9: oklch(0.620 0.006 240);
-  --neutral-10: oklch(0.720 0.006 240);
-  --neutral-11: oklch(0.840 0.006 240);
-  --neutral-12: oklch(0.955 0.006 240);
+  /* --- Neutral Ramp (Dark, deep-space) --- */
+  --neutral-1: oklch(0.145 0.014 275);
+  --neutral-2: oklch(0.175 0.016 275);
+  --neutral-3: oklch(0.205 0.018 275);
+  --neutral-4: oklch(0.240 0.018 275);
+  --neutral-5: oklch(0.280 0.020 275);
+  --neutral-6: oklch(0.335 0.022 275);
+  --neutral-7: oklch(0.430 0.022 275);
+  --neutral-8: oklch(0.530 0.020 275);
+  --neutral-9: oklch(0.630 0.018 275);
+  --neutral-10: oklch(0.730 0.016 275);
+  --neutral-11: oklch(0.850 0.012 275);
+  --neutral-12: oklch(0.960 0.008 275);
 
   /* --- Semantic Surfaces --- */
   --color-bg: var(--neutral-1);
@@ -38,11 +40,15 @@
   --color-border: var(--neutral-4);
   --color-border-strong: var(--neutral-6);
 
-  /* --- Accent: Slate-Sapphire (hue 250) --- */
-  --color-accent: oklch(0.680 0.150 250);
-  --color-accent-hover: oklch(0.740 0.150 250);
-  --color-accent-subtle: oklch(0.260 0.050 250);
-  --color-accent-text: oklch(0.140 0.020 250);
+  /* --- Accent: Antigravity Violet (hue 265) + Ion Cyan (hue 195) --- */
+  --color-accent: oklch(0.700 0.175 265);
+  --color-accent-hover: oklch(0.760 0.175 265);
+  --color-accent-subtle: oklch(0.275 0.070 265);
+  --color-accent-text: oklch(0.140 0.020 265);
+  --color-accent-2: oklch(0.760 0.140 195);
+  --color-accent-2-subtle: oklch(0.275 0.060 195);
+  --gradient-antigravity: linear-gradient(135deg, oklch(0.700 0.175 265) 0%, oklch(0.720 0.160 225) 50%, oklch(0.760 0.140 195) 100%);
+  --gradient-antigravity-subtle: linear-gradient(135deg, oklch(0.275 0.070 265) 0%, oklch(0.260 0.050 195) 100%);
 
   /* --- Status --- */
   --color-success: oklch(0.700 0.140 150);
@@ -95,17 +101,25 @@
   --radius-xl: 12px;
   --radius-full: 9999px;
 
-  /* --- Shadow --- */
+  /* --- Shadow (floating / antigravity) --- */
   --shadow-xs: 0 1px 2px rgba(0,0,0,0.3);
   --shadow-sm: 0 1px 3px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.2);
   --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.5), 0 2px 4px -2px rgba(0,0,0,0.3);
-  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.6), 0 4px 6px -4px rgba(0,0,0,0.4);
+  --shadow-lg: 0 18px 40px -12px rgba(0,0,0,0.65), 0 4px 6px -4px rgba(0,0,0,0.4);
+  --glow-accent: 0 0 0 1px oklch(0.700 0.175 265 / 0.35), 0 0 24px oklch(0.700 0.175 265 / 0.22), 0 0 60px oklch(0.760 0.140 195 / 0.12);
+  --glow-accent-sm: 0 0 0 1px oklch(0.700 0.175 265 / 0.3), 0 0 10px oklch(0.700 0.175 265 / 0.18);
+
+  /* --- Glass --- */
+  --glass-bg: color-mix(in oklch, var(--neutral-2) 72%, transparent);
+  --glass-bg-raised: color-mix(in oklch, var(--neutral-3) 68%, transparent);
+  --glass-border: color-mix(in oklch, var(--neutral-7) 55%, transparent);
+  --glass-blur: 20px;
 
   /* --- Panda Character Tokens --- */
   --panda-white: #fbfbf9;
   --panda-black: #1e2329;
-  --panda-blush: rgba(100, 140, 255, 0.2);
-  --shadow-panda: 0 8px 16px rgba(0, 0, 0, 0.35);
+  --panda-blush: rgba(140, 130, 255, 0.22);
+  --shadow-panda: 0 10px 24px rgba(0, 0, 0, 0.4), var(--glow-accent-sm);
 
   /* --- Motion --- */
   --duration-fast: 120ms;

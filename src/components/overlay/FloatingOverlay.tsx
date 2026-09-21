@@ -1,8 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import { useMomoStore } from "@/store/useMomoStore";
+import { useHermozStore } from "@/store/useHermozStore";
 import { screenAnalyzer } from "@/core/vision/screenAnalyzer";
 import { memoryStore } from "@/core/memory/memoryStore";
+import { ThinkingOrb, type OrbState } from "thinking-orbs";
+import "./FloatingOverlay.css";
 import {
   Camera,
   Mic,
@@ -31,6 +33,7 @@ interface FloatingOverlayProps {
 export function FloatingOverlay({ onOpenDashboard }: FloatingOverlayProps) {
   const {
     expression,
+    activity,
     bubbleText,
     setBubble,
     startPTT,
@@ -45,7 +48,7 @@ export function FloatingOverlay({ onOpenDashboard }: FloatingOverlayProps) {
     updateSettings,
     captureScreenWithCheck,
     setActiveTab,
-  } = useMomoStore();
+  } = useHermozStore();
 
   const [isMinimized, setIsMinimized] = useState(false);
   const [showPopover, setShowPopover] = useState(false);
@@ -165,46 +168,51 @@ export function FloatingOverlay({ onOpenDashboard }: FloatingOverlayProps) {
       : "Gemini (3.6 Flash)"
     : "Local Engine";
 
+  const orbState: OrbState = isRecording
+    ? "listening"
+    : isSpeaking
+    ? "composing"
+    : isSending || activity === "thinking"
+    ? "working"
+    : "breathing";
+
   // If minimized into floating orb
   if (isMinimized) {
     return (
       <div
         className="w-full h-full flex items-end justify-end p-4 bg-transparent select-none cursor-pointer"
         onClick={() => setIsMinimized(false)}
-        title="Click to expand Momo Companion"
+        title="Click to expand Hermoz Companion"
       >
         <div className="relative flex items-center justify-center group" data-tauri-drag-region onMouseDown={handleDrag}>
           <span
-            className="absolute w-12 h-12 rounded-full animate-ping opacity-20"
-            style={{ background: "var(--color-accent)" }}
+            className="absolute w-14 h-14 rounded-full animate-ping opacity-20"
+            style={{ background: "var(--gradient-antigravity)" }}
           />
+          <span className="absolute w-12 h-12 rounded-full hermoz-mini-orb-glow" />
           <div
-            className="w-11 h-11 rounded-full flex items-center justify-center transition-transform group-hover:scale-105"
+            className="w-11 h-11 rounded-full flex items-center justify-center transition-all duration-200 group-hover:scale-110"
             style={{
-              background: "var(--neutral-2)",
+              background: "var(--glass-bg-raised)",
+              backdropFilter: "blur(var(--glass-blur))",
               border: "1.5px solid var(--color-accent)",
-              boxShadow: "var(--shadow-md)",
+              boxShadow: "var(--glow-accent-sm)",
             }}
           >
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="var(--color-accent)">
-              <circle cx="12" cy="13" r="7" />
-              <circle cx="7" cy="7" r="3" />
-              <circle cx="17" cy="7" r="3" />
-              <circle cx="10" cy="12" fill="var(--neutral-1)" r="1.5" />
-              <circle cx="14" cy="12" fill="var(--neutral-1)" r="1.5" />
-              <ellipse cx="12" cy="15" fill="var(--neutral-1)" rx="1.5" ry="1" />
-            </svg>
+            <ThinkingOrb state={orbState} size={20} theme="dark" />
           </div>
-          <span
-            className="absolute -top-1 -right-1 w-4 h-4 rounded-full font-bold text-[9px] flex items-center justify-center font-mono"
-            style={{
-              background: "var(--color-accent)",
-              color: "#ffffff",
-              boxShadow: "var(--shadow-xs)",
-            }}
-          >
-            1
-          </span>
+          {bubbleText && (
+            <span
+              className="absolute -top-1 -right-1 w-4 h-4 rounded-full font-bold text-[9px] flex items-center justify-center font-mono hermoz-mini-badge"
+              style={{
+                background: "var(--gradient-antigravity)",
+                color: "var(--color-accent-text)",
+                boxShadow: "var(--shadow-xs)",
+              }}
+            >
+              1
+            </span>
+          )}
         </div>
       </div>
     );
@@ -227,9 +235,11 @@ export function FloatingOverlay({ onOpenDashboard }: FloatingOverlayProps) {
             placement === "bottom" ? "order-3" : "order-1"
           }`}
           style={{
-            background: "var(--neutral-2)",
-            border: "1px solid var(--color-border-strong)",
-            boxShadow: "var(--shadow-lg)",
+            background: "var(--glass-bg-raised)",
+            backdropFilter: "blur(var(--glass-blur))",
+            WebkitBackdropFilter: "blur(var(--glass-blur))",
+            border: "1px solid var(--glass-border)",
+            boxShadow: "var(--shadow-lg), var(--glow-accent-sm)",
             animation: "cardSlideUp var(--duration-fast) var(--ease-out)",
           }}
           data-purpose="quick-actions-popover"
@@ -485,9 +495,11 @@ export function FloatingOverlay({ onOpenDashboard }: FloatingOverlayProps) {
             placement === "bottom" ? "order-2" : "order-2"
           }`}
           style={{
-            background: "var(--neutral-2)",
-            border: "1px solid var(--color-border-strong)",
-            boxShadow: "var(--shadow-md)",
+            background: "var(--glass-bg-raised)",
+            backdropFilter: "blur(var(--glass-blur))",
+            WebkitBackdropFilter: "blur(var(--glass-blur))",
+            border: "1px solid var(--glass-border)",
+            boxShadow: "var(--shadow-md), var(--glow-accent-sm)",
             animation: "cardSlideUp var(--duration-fast) var(--ease-out)",
           }}
           onClick={(e) => {
@@ -495,7 +507,7 @@ export function FloatingOverlay({ onOpenDashboard }: FloatingOverlayProps) {
               setBubble(null);
             }
           }}
-          data-purpose="momo-speech-bubble"
+          data-purpose="hermoz-speech-bubble"
         >
           {/* Edge-aware tail */}
           <div
@@ -530,7 +542,7 @@ export function FloatingOverlay({ onOpenDashboard }: FloatingOverlayProps) {
                   border: "1px solid var(--color-accent)",
                 }}
               >
-                Momo
+                Hermoz
               </span>
               <span style={{ color: "var(--color-text-muted)", fontSize: "9.5px" }}>Insight</span>
             </div>
@@ -589,15 +601,17 @@ export function FloatingOverlay({ onOpenDashboard }: FloatingOverlayProps) {
 
       {/* 3. The Main Compact Floating Capsule HUD */}
       <div
-        className={`w-full rounded-xl p-2.5 flex flex-col gap-2 relative overflow-hidden shrink-0 transition-all duration-150 ${
+        className={`w-full rounded-xl p-2.5 flex flex-col gap-2 relative overflow-hidden shrink-0 transition-all duration-200 hermoz-capsule-in ${
           placement === "bottom" ? "order-1" : "order-3"
         }`}
         style={{
-          background: "var(--neutral-2)",
+          background: "var(--glass-bg-raised)",
+          backdropFilter: "blur(var(--glass-blur))",
+          WebkitBackdropFilter: "blur(var(--glass-blur))",
           border: isHovered
-            ? "1px solid var(--color-border-strong)"
-            : "1px solid var(--color-border)",
-          boxShadow: isHovered ? "var(--shadow-md)" : "var(--shadow-sm)",
+            ? "1px solid var(--color-accent)"
+            : "1px solid var(--glass-border)",
+          boxShadow: isHovered ? "var(--glow-accent-sm)" : "var(--shadow-sm)",
         }}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
@@ -640,7 +654,7 @@ export function FloatingOverlay({ onOpenDashboard }: FloatingOverlayProps) {
               data-tauri-drag-region
             >
               <span className="font-semibold" style={{ color: "var(--color-text)" }}>
-                Momo
+                Hermoz
               </span>
               <span style={{ color: "var(--color-text-muted)" }}>•</span>
               <span style={{ color: "var(--color-accent)", fontWeight: 500 }}>
@@ -705,7 +719,7 @@ export function FloatingOverlay({ onOpenDashboard }: FloatingOverlayProps) {
                 cursor: "default",
               }}
               onClick={onOpenDashboard}
-              title="Expand to Full Momo Window"
+              title="Expand to Full Hermoz Window"
             >
               <Maximize2 size={13} />
             </button>
@@ -736,22 +750,16 @@ export function FloatingOverlay({ onOpenDashboard }: FloatingOverlayProps) {
             title="Click for quick controls: Talk / Listen / Chat / Settings / Sleep"
           >
             <div
-              className="w-10 h-10 rounded-lg flex items-center justify-center transition-all"
+              className="w-10 h-10 rounded-lg flex items-center justify-center transition-all hermoz-avatar-ring"
               style={{
-                background: "var(--neutral-1)",
+                background: "var(--glass-bg-raised)",
                 border: showQuickControls
                   ? "1.5px solid var(--color-accent)"
                   : "1px solid var(--color-border)",
+                boxShadow: showQuickControls ? "var(--glow-accent-sm)" : "none",
               }}
             >
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="var(--color-text-secondary)">
-                <circle cx="12" cy="13" r="7" />
-                <circle cx="7" cy="7" r="3" />
-                <circle cx="17" cy="7" r="3" />
-                <circle cx="10" cy="12" fill="var(--neutral-1)" r="1.5" />
-                <circle cx="14" cy="12" fill="var(--neutral-1)" r="1.5" />
-                <ellipse cx="12" cy="15" fill="var(--neutral-1)" rx="1.5" ry="1" />
-              </svg>
+              <ThinkingOrb state={orbState} size={20} theme="dark" />
             </div>
             <span
               className="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full"
@@ -932,7 +940,7 @@ export function FloatingOverlay({ onOpenDashboard }: FloatingOverlayProps) {
         <div className="grid grid-cols-4 gap-1 pt-0.5" data-purpose="quick-actions-pill-dock">
           {/* Quick Action 1: Inspect */}
           <button
-            className="flex items-center justify-center gap-1 px-2 py-1 rounded text-xs font-mono font-medium transition-all"
+            className="flex items-center justify-center gap-1 px-2 py-1 rounded text-xs font-mono font-medium transition-all hermoz-btn-lift"
             style={{
               background: "var(--neutral-3)",
               border: "1px solid var(--color-border)",
@@ -948,7 +956,7 @@ export function FloatingOverlay({ onOpenDashboard }: FloatingOverlayProps) {
 
           {/* Quick Action 2: Voice */}
           <button
-            className="flex items-center justify-center gap-1 px-2 py-1 rounded text-xs font-mono font-medium transition-all"
+            className="flex items-center justify-center gap-1 px-2 py-1 rounded text-xs font-mono font-medium transition-all hermoz-btn-lift"
             style={{
               background: isRecording ? "rgba(239, 68, 68, 0.2)" : "var(--neutral-3)",
               border: `1px solid ${isRecording ? "var(--color-danger)" : "var(--color-border)"}`,
@@ -964,7 +972,7 @@ export function FloatingOverlay({ onOpenDashboard }: FloatingOverlayProps) {
 
           {/* Quick Action 3: Workspace */}
           <button
-            className="flex items-center justify-center gap-1 px-2 py-1 rounded text-xs font-mono font-medium transition-all"
+            className="flex items-center justify-center gap-1 px-2 py-1 rounded text-xs font-mono font-medium transition-all hermoz-btn-lift"
             style={{
               background: "var(--neutral-3)",
               border: "1px solid var(--color-border)",
@@ -982,14 +990,14 @@ export function FloatingOverlay({ onOpenDashboard }: FloatingOverlayProps) {
 
           {/* Quick Action 4: Full App */}
           <button
-            className="flex items-center justify-center gap-1 px-2 py-1 rounded text-xs font-mono font-medium transition-all"
+            className="flex items-center justify-center gap-1 px-2 py-1 rounded text-xs font-mono font-medium transition-all hermoz-btn-lift"
             style={{
               background: "var(--color-accent)",
               border: "1px solid var(--color-accent-hover)",
               color: "#ffffff",
             }}
             onClick={onOpenDashboard}
-            title="Expand to Full Momo Window"
+            title="Expand to Full Hermoz Window"
           >
             <Maximize2 size={12} />
             <span>Full</span>
@@ -1010,7 +1018,7 @@ export function FloatingOverlay({ onOpenDashboard }: FloatingOverlayProps) {
               outline: "none",
               fontFamily: "var(--font-mono)",
             }}
-            placeholder="Ask Momo anything or hold F1..."
+            placeholder="Ask Hermoz anything or hold F1..."
             type="text"
             value={miniPrompt}
             onChange={(e) => setMiniPrompt(e.target.value)}

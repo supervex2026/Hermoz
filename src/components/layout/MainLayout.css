@@ -1,8 +1,8 @@
 /* ==========================================================================
-   MOMO MAIN LAYOUT — NATIVE TWO-PANE COMPANION DESKTOP ARCHITECTURE
+   HERMOZ MAIN LAYOUT — NATIVE TWO-PANE COMPANION DESKTOP ARCHITECTURE
    ========================================================================== */
 
-.momo-main-wrapper {
+.hermoz-main-wrapper {
   display: flex;
   flex-direction: column;
   width: 100vw;
@@ -14,7 +14,7 @@
   box-sizing: border-box;
 }
 
-.momo-desktop-stage {
+.hermoz-desktop-stage {
   display: flex;
   width: 100%;
   flex: 1;
@@ -27,7 +27,7 @@
 /* --------------------------------------------------------------------------
    PRIMARY PANE (Conversation & Action Hub - 60% to 62%)
    -------------------------------------------------------------------------- */
-.momo-primary-pane {
+.hermoz-primary-pane {
   flex: 1.4;
   height: 100%;
   min-width: 0;
@@ -39,7 +39,7 @@
 /* --------------------------------------------------------------------------
    SECONDARY PANE (Alive Companion, Vision, Memory, Settings - 38% to 40%)
    -------------------------------------------------------------------------- */
-.momo-secondary-pane {
+.hermoz-secondary-pane {
   flex: 1;
   max-width: 420px;
   min-width: 320px;
@@ -55,7 +55,7 @@
 /* --------------------------------------------------------------------------
    Alive Panda Companion Card
    -------------------------------------------------------------------------- */
-.momo-companion-card {
+.hermoz-companion-card {
   display: flex;
   align-items: center;
   gap: var(--space-3);
@@ -65,7 +65,7 @@
   flex-shrink: 0;
 }
 
-.momo-companion-panda-wrapper {
+.hermoz-companion-panda-wrapper {
   width: 78px;
   height: 94px;
   display: flex;
@@ -76,16 +76,16 @@
   transition: transform var(--duration-fast) var(--ease-out);
 }
 
-.momo-companion-panda-wrapper:hover {
+.hermoz-companion-panda-wrapper:hover {
   transform: scale(1.05);
 }
 
-.momo-companion-panda-wrapper .momo-panda {
+.hermoz-companion-panda-wrapper .hermoz-panda {
   width: 100% !important;
   height: 100% !important;
 }
 
-.momo-companion-info {
+.hermoz-companion-info {
   flex: 1;
   min-width: 0;
   display: flex;
@@ -93,13 +93,13 @@
   gap: 4px;
 }
 
-.momo-companion-title-row {
+.hermoz-companion-title-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.momo-companion-name {
+.hermoz-companion-name {
   font-family: var(--font-sans);
   font-size: var(--text-md);
   font-weight: var(--weight-semibold);
@@ -107,18 +107,18 @@
   letter-spacing: 0.3px;
 }
 
-.momo-companion-mood {
+.hermoz-companion-mood {
   margin: 0;
   font-size: var(--text-xs);
   color: var(--color-text-muted);
 }
 
-.momo-companion-mood strong {
+.hermoz-companion-mood strong {
   color: var(--color-accent);
   text-transform: capitalize;
 }
 
-.momo-companion-bubble-glance {
+.hermoz-companion-bubble-glance {
   padding: 5px 9px;
   background: var(--neutral-1);
   border: 1px solid var(--color-border);
@@ -130,7 +130,7 @@
   word-break: break-word;
 }
 
-.momo-companion-hint {
+.hermoz-companion-hint {
   font-size: var(--text-2xs);
   color: var(--color-text-muted);
 }
@@ -138,7 +138,7 @@
 /* --------------------------------------------------------------------------
    Segmented Context Tabs
    -------------------------------------------------------------------------- */
-.momo-segmented-tabs {
+.hermoz-segmented-tabs {
   display: flex;
   padding: 6px 10px;
   background: var(--neutral-2);
@@ -147,7 +147,7 @@
   flex-shrink: 0;
 }
 
-.momo-tab-btn {
+.hermoz-tab-btn {
   flex: 1;
   display: inline-flex;
   align-items: center;
@@ -165,12 +165,12 @@
   transition: all var(--duration-fast) var(--ease-out);
 }
 
-.momo-tab-btn:hover {
+.hermoz-tab-btn:hover {
   background: var(--neutral-3);
   color: var(--color-text);
 }
 
-.momo-tab-btn.active {
+.hermoz-tab-btn.active {
   background: var(--color-accent-subtle);
   border: 1px solid var(--color-accent);
   color: var(--color-accent);
@@ -180,7 +180,7 @@
 /* --------------------------------------------------------------------------
    Secondary Content Container
    -------------------------------------------------------------------------- */
-.momo-secondary-content {
+.hermoz-secondary-content {
   flex: 1;
   overflow-y: auto;
   padding: var(--space-3);
@@ -188,7 +188,7 @@
   flex-direction: column;
 }
 
-.momo-embedded-panel {
+.hermoz-embedded-panel {
   flex: 1;
   height: 100%;
   display: flex;
@@ -198,13 +198,13 @@
 /* --------------------------------------------------------------------------
    Overview Flow & Glance Cards
    -------------------------------------------------------------------------- */
-.momo-overview-flow {
+.hermoz-overview-flow {
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
 }
 
-.momo-glance-card {
+.hermoz-glance-card {
   padding: var(--space-3);
   background: var(--neutral-1);
   border: 1px solid var(--color-border);
@@ -215,17 +215,17 @@
   transition: border-color var(--duration-fast) var(--ease-out);
 }
 
-.momo-glance-card:hover {
+.hermoz-glance-card:hover {
   border-color: var(--color-border-strong);
 }
 
-.momo-glance-header {
+.hermoz-glance-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.momo-glance-title {
+.hermoz-glance-title {
   display: flex;
   align-items: center;
   gap: var(--space-2);
@@ -235,7 +235,7 @@
   letter-spacing: 0.2px;
 }
 
-.momo-glance-action-link {
+.hermoz-glance-action-link {
   background: transparent;
   border: none;
   color: var(--color-accent);
@@ -245,28 +245,28 @@
   padding: 2px 4px;
 }
 
-.momo-glance-action-link:hover {
+.hermoz-glance-action-link:hover {
   text-decoration: underline;
 }
 
-.momo-glance-body {
+.hermoz-glance-body {
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
 }
 
-.momo-glance-text {
+.hermoz-glance-text {
   margin: 0;
   font-size: var(--text-xs);
   color: var(--color-text-secondary);
   line-height: var(--leading-ui);
 }
 
-.momo-glance-text strong {
+.hermoz-glance-text strong {
   color: var(--color-accent);
 }
 
-.momo-glance-btn {
+.hermoz-glance-btn {
   align-self: flex-start;
   padding: 4px 10px;
   font-size: var(--text-xs);
@@ -278,18 +278,18 @@
   transition: all var(--duration-fast) var(--ease-out);
 }
 
-.momo-glance-btn:hover {
+.hermoz-glance-btn:hover {
   background: var(--neutral-4);
   border-color: var(--color-border-strong);
 }
 
-.momo-glance-tags {
+.hermoz-glance-tags {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.momo-glance-tag {
+.hermoz-glance-tag {
   padding: 4px 8px;
   background: var(--neutral-2);
   border: 1px solid var(--color-border);
@@ -299,26 +299,26 @@
 }
 
 /* Routing Chain in Glance */
-.momo-routing-chain {
+.hermoz-routing-chain {
   display: flex;
   align-items: center;
   gap: 6px;
   flex-wrap: wrap;
 }
 
-.momo-routing-step {
+.hermoz-routing-step {
   display: flex;
   align-items: center;
   gap: 5px;
 }
 
-.momo-routing-index {
+.hermoz-routing-index {
   font-size: 10px;
   color: var(--color-text-muted);
   font-weight: 600;
 }
 
-.momo-routing-pill {
+.hermoz-routing-pill {
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -331,25 +331,25 @@
   color: var(--color-text-muted);
 }
 
-.momo-routing-pill.live {
+.hermoz-routing-pill.live {
   background: var(--color-accent-subtle);
   border-color: var(--color-accent);
   color: var(--color-accent);
 }
 
-.momo-routing-dot {
+.hermoz-routing-dot {
   width: 5px;
   height: 5px;
   border-radius: 50%;
   background: currentColor;
 }
 
-.momo-routing-arrow {
+.hermoz-routing-arrow {
   font-size: 10px;
   color: var(--color-text-muted);
 }
 
-.momo-detach-btn {
+.hermoz-detach-btn {
   margin-top: 8px;
   width: 100%;
   padding: 8px;
@@ -362,7 +362,7 @@
   transition: all var(--duration-fast) var(--ease-out);
 }
 
-.momo-detach-btn:hover {
+.hermoz-detach-btn:hover {
   background: var(--neutral-4);
   border-color: var(--color-border-strong);
 }

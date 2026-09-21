@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
-import { useMomoStore } from "@/store/useMomoStore";
+import { useHermozStore } from "@/store/useHermozStore";
 import { ActionApprovalModal } from "@/components/action-modal/ActionApprovalModal";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { FloatingOverlay } from "@/components/overlay/FloatingOverlay";
@@ -24,7 +24,7 @@ export default function App() {
     startPTT,
     stopPTT,
     stopSpeaking,
-  } = useMomoStore();
+  } = useHermozStore();
 
   const [showIntro, setShowIntro] = useState(true);
   const [showOnboarding, setShowOnboarding] = useState(false);
@@ -123,7 +123,7 @@ export default function App() {
   }
 
   return (
-    <div className="momo-app-container" data-theme="dark">
+    <div className="hermoz-app-container" data-theme="dark">
       {/* First-time API Key Onboarding Modal */}
       {showOnboarding && (
         <OnboardingModal

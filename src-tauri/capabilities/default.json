@@ -1,7 +1,7 @@
 {
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
-  "description": "Permissions granted to Momo's main window.",
+  "description": "Permissions granted to Hermoz's main window.",
   "windows": ["main"],
   "permissions": [
     "core:default",

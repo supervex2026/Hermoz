@@ -63,7 +63,7 @@ export const Badge: React.FC<BadgeProps> = ({
   };
 
   return (
-    <span style={getStyles()} className={`momo-badge momo-badge-${variant} ${className}`} {...props}>
+    <span style={getStyles()} className={`hermoz-badge hermoz-badge-${variant} ${className}`} {...props}>
       {children}
     </span>
   );

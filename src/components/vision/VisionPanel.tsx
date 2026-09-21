@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { screenAnalyzer, ScreenDebugInfo } from "@/core/vision/screenAnalyzer";
-import { useMomoStore } from "@/store/useMomoStore";
+import { useHermozStore } from "@/store/useHermozStore";
 import { CameraIcon, SparklesIcon, SendIcon } from "@/components/icons/Icons";
 import "./VisionPanel.css";
 
 export function VisionPanel() {
-  const { sendMessage, isSending, captureScreenWithCheck } = useMomoStore();
+  const { sendMessage, isSending, captureScreenWithCheck } = useHermozStore();
   const [snapshot, setSnapshot] = useState<string | null>(null);
   const [isCapturing, setIsCapturing] = useState(false);
   const [roastReply, setRoastReply] = useState("");
@@ -40,13 +40,13 @@ export function VisionPanel() {
   };
 
   return (
-    <div className="momo-vision-container">
-      <header className="momo-vision-header">
-        <div className="momo-vision-header-info">
+    <div className="hermoz-vision-container">
+      <header className="hermoz-vision-header">
+        <div className="hermoz-vision-header-info">
           <h2>Screen Awareness &amp; Vision Studio</h2>
-          <p>Let Momo inspect your active desktop to give real-time advice, check your work, or playfully roast your code.</p>
+          <p>Let Hermoz inspect your active desktop to give real-time advice, check your work, or playfully roast your code.</p>
         </div>
-        <div className="momo-vision-header-actions">
+        <div className="hermoz-vision-header-actions">
           <button
             className="liquid-glass-btn"
             onClick={() => {
@@ -70,9 +70,9 @@ export function VisionPanel() {
 
       {/* Developer Screen Diagnostics (Hidden from regular view by default) */}
       {showDebug && debugInfo && (
-        <div className="momo-vision-debug-box liquid-glass-card">
+        <div className="hermoz-vision-debug-box liquid-glass-card">
           <h4>Screen Debug Diagnostics</h4>
-          <div className="momo-vision-debug-grid">
+          <div className="hermoz-vision-debug-grid">
             <div><strong>Monitor:</strong> {debugInfo.monitor}</div>
             <div><strong>Active Window:</strong> {debugInfo.activeWindow}</div>
             <div><strong>Capture Size:</strong> {debugInfo.captureSize}</div>
@@ -84,34 +84,34 @@ export function VisionPanel() {
         </div>
       )}
 
-      <div className="momo-vision-content">
-        <div className="momo-vision-preview-card liquid-glass-card">
+      <div className="hermoz-vision-content">
+        <div className="hermoz-vision-preview-card liquid-glass-card">
           {snapshot ? (
-            <div className="momo-vision-preview-wrapper">
-              <img src={snapshot} alt="Captured Screen" className="momo-vision-img" />
-              <div className="momo-vision-badge">
+            <div className="hermoz-vision-preview-wrapper">
+              <img src={snapshot} alt="Captured Screen" className="hermoz-vision-img" />
+              <div className="hermoz-vision-badge">
                 <SparklesIcon size={14} /> Screen Inspected &amp; Analyzed
               </div>
             </div>
           ) : (
-            <div className="momo-vision-placeholder">
-              <CameraIcon size={48} className="momo-vision-icon-dim" />
+            <div className="hermoz-vision-placeholder">
+              <CameraIcon size={48} className="hermoz-vision-icon-dim" />
               <h3>No screen captured yet</h3>
-              <p>Click "Capture &amp; Analyze Screen" to share a snapshot of your workspace with Momo.</p>
+              <p>Click "Capture &amp; Analyze Screen" to share a snapshot of your workspace with Hermoz.</p>
             </div>
           )}
         </div>
 
-        <div className="momo-vision-roastback-card liquid-glass-card">
+        <div className="hermoz-vision-roastback-card liquid-glass-card">
           <h3>Banter &amp; Roast Back</h3>
-          <p className="momo-vision-hint">
-            Did Momo just tease your code or layout? Don't take it sitting down—fire back with a witty comeback.
+          <p className="hermoz-vision-hint">
+            Did Hermoz just tease your code or layout? Don't take it sitting down—fire back with a witty comeback.
           </p>
-          <div className="momo-vision-roast-row">
+          <div className="hermoz-vision-roast-row">
             <input
               type="text"
               className="liquid-glass-input"
-              placeholder="Roast Momo back or defend your work..."
+              placeholder="Roast Hermoz back or defend your work..."
               value={roastReply}
               onChange={(e) => setRoastReply(e.target.value)}
               onKeyDown={(e) => {

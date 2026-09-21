@@ -12,15 +12,16 @@ import type {
   ChatMessage,
   Expression,
   InteractionMode,
-  MomoAction,
-  MomoActivity,
-  MomoResponse,
+  HermozAction,
+  HermozActivity,
+  HermozResponse,
   ProviderId,
   ProviderStatus,
   RequestContextPayload,
   VoiceInfo,
 } from "@/types";
 import { agentLoopManager } from "@/core/agent/agentLoop";
+import { refreshSkillRegistry, getLoadedSkillInstructions } from "@/core/skills/skillLoader";
 import { DEFAULT_SETTINGS } from "@/types";
 
 /**
@@ -69,18 +70,20 @@ interface SendMessageOptions {
   requireAgentic?: boolean;
 }
 
-interface MomoStore {
+interface HermozStore {
   // --- visual / activity state ---
   expression: Expression;
-  activity: MomoActivity;
+  activity: HermozActivity;
   bubbleText: string | null;
   interactionMode: InteractionMode;
   setBubble: (text: string | null, expression?: Expression) => void;
   setInteractionMode: (mode: InteractionMode) => void;
 
   // --- panels ---
-  activeTab: "overview" | "vision" | "workspace" | "memory" | "settings";
-  setActiveTab: (tab: "overview" | "vision" | "workspace" | "memory" | "settings") => void;
+  activeTab: "overview" | "vision" | "workspace" | "canvas" | "memory" | "settings";
+  setActiveTab: (tab: "overview" | "vision" | "workspace" | "canvas" | "memory" | "settings") => void;
+  agentModeEnabled: boolean;
+  toggleAgentMode: () => void;
   chatOpen: boolean;
   settingsOpen: boolean;
   openChat: () => void;
@@ -97,7 +100,7 @@ interface MomoStore {
   speakMessage: (text: string) => Promise<void>;
 
   // --- Agent & Actions ---
-  pendingAction: MomoAction | null;
+  pendingAction: HermozAction | null;
   agentCheckpoint: AgentCheckpoint | null;
   approvePendingAction: () => Promise<void>;
   denyPendingAction: () => void;
@@ -146,7 +149,7 @@ function pickRandom<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-export const useMomoStore = create<MomoStore>((set, get) => {
+export const useHermozStore = create<HermozStore>((set, get) => {
   // Subscribe to TTSManager speaking state changes to keep visual animation in sync
   ttsManager.onSpeakingChange((speaking) => {
     set({ isSpeaking: speaking });
@@ -170,6 +173,8 @@ export const useMomoStore = create<MomoStore>((set, get) => {
 
     activeTab: "overview",
     setActiveTab: (tab) => set({ activeTab: tab }),
+    agentModeEnabled: false,
+    toggleAgentMode: () => set((s) => ({ agentModeEnabled: !s.agentModeEnabled })),
 
     chatOpen: false,
     settingsOpen: false,
@@ -270,28 +275,44 @@ export const useMomoStore = create<MomoStore>((set, get) => {
         },
       }).catch(() => {});
 
+      // Agent Mode: a full build/create-app request hands off to the Canvas
+      // orchestrator (Start -> Planner -> subagents -> End) instead of a
+      // normal chat reply.
+      if (
+        get().agentModeEnabled &&
+        /\b(build|create|make|design)\b.{0,40}\b(app|website|web ?app|full.?stack|desktop app)\b/i.test(trimmed)
+      ) {
+        set({ isSending: false, activity: "idle", activeTab: "canvas" });
+        const { useCanvasStore } = await import("@/store/useCanvasStore");
+        useCanvasStore
+          .getState()
+          .startBuild(trimmed, get().settings.workspaceFolder, get().settings.personality);
+        return;
+      }
+
       try {
         const history = get().messages.slice(-12).map((m) => ({
           role: m.role === "user" ? "user" : "assistant",
           content: m.content,
         }));
 
-        // 3. Build unified canonical Momo context
+        // 3. Build unified canonical Hermoz context
         const contextPayload: RequestContextPayload = {
           memories: memoryStore.getRelevantMemories(trimmed, 6),
           activeProject: memoryStore.getActiveProject() || undefined,
           currentTask: memoryStore.getCurrentTask() || undefined,
           interactionMode: get().interactionMode,
           screenContext: screenAnalyzer.getContextString() || undefined,
+          loadedSkills: await getLoadedSkillInstructions(get().settings.workspaceFolder, trimmed),
         };
 
         const hasActionIntent =
-          /open|launch|run|exec|build|compile|test|check|create|write|delete|rename|search|scrape|fetch|youtube|browser|brave|chrome|edge|github|git|npm|cargo|file/i.test(
+          /open|launch|run|exec|build|compile|test|check|create|write|delete|rename|search|scrape|fetch|youtube|browser|brave|chrome|edge|github|git|npm|cargo|file|app|website|webapp|web app|full.?stack|desktop app|\bui\b|redesign|skill|plugin|install/i.test(
             trimmed
           );
         const isAgenticNeeded =
           options?.requireAgentic || Boolean(get().agentCheckpoint) || hasActionIntent;
-        const response = await invoke<MomoResponse>("ai_generate", {
+        const response = await invoke<HermozResponse>("ai_generate", {
           request: {
             message: trimmed,
             history,
@@ -338,9 +359,9 @@ export const useMomoStore = create<MomoStore>((set, get) => {
           });
         }
 
-        const momoMsg: ChatMessage = {
+        const hermozMsg: ChatMessage = {
           id: crypto.randomUUID(),
-          role: "momo",
+          role: "hermoz",
           content: response.message, // 1. FULL RESPONSE: complete answer strictly to Chat Panel
           bubbleText: displayBubble, // 2. SPEECH DISPLAY TEXT: punchy 1-2 sentence version
           speechDisplay: displayBubble,
@@ -351,7 +372,7 @@ export const useMomoStore = create<MomoStore>((set, get) => {
         };
 
         set((s) => ({
-          messages: [...s.messages, momoMsg],
+          messages: [...s.messages, hermozMsg],
           isSending: false,
           activity: "speaking",
           expression: response.emotion,
@@ -363,18 +384,18 @@ export const useMomoStore = create<MomoStore>((set, get) => {
         // Persist assistant message to disk
         invoke("persist_message", {
           message: {
-            id: momoMsg.id,
-            role: momoMsg.role,
-            content: momoMsg.content,
-            bubbleText: momoMsg.bubbleText,
-            provider: momoMsg.provider,
-            timestamp: momoMsg.createdAt,
+            id: hermozMsg.id,
+            role: hermozMsg.role,
+            content: hermozMsg.content,
+            bubbleText: hermozMsg.bubbleText,
+            provider: hermozMsg.provider,
+            timestamp: hermozMsg.createdAt,
           },
         }).catch(() => {});
 
         const { settings } = get();
         const shouldSpeak =
-          !settings.muteMomo &&
+          !settings.muteHermoz &&
           settings.ttsEnabled &&
           (options?.forceTts || settings.speakChatResponses) &&
           response.speak;
@@ -416,20 +437,20 @@ export const useMomoStore = create<MomoStore>((set, get) => {
               ? err
               : "All AI providers are currently unavailable.";
 
-        const momoMsg: ChatMessage = {
+        const hermozMsg: ChatMessage = {
           id: crypto.randomUUID(),
-          role: "momo",
+          role: "hermoz",
           content: `Bro, my brain is having a network moment (${message}). Check Settings → Providers.`,
           bubbleText: "Network hiccup. Check Settings.",
           createdAt: Date.now(),
         };
 
         set((s) => ({
-          messages: [...s.messages, momoMsg],
+          messages: [...s.messages, hermozMsg],
           isSending: false,
           activity: "idle",
           expression: "concerned",
-          bubbleText: s.chatOpen ? null : momoMsg.bubbleText,
+          bubbleText: s.chatOpen ? null : hermozMsg.bubbleText,
         }));
         get().refreshProviderStatus();
       }
@@ -568,6 +589,7 @@ export const useMomoStore = create<MomoStore>((set, get) => {
         const folder = await invoke<string | null>("choose_workspace_folder");
         if (folder) {
           await get().updateSettings({ workspaceFolder: folder });
+          refreshSkillRegistry(folder).catch(() => {});
           return folder;
         }
       } catch (err) {
@@ -582,6 +604,9 @@ export const useMomoStore = create<MomoStore>((set, get) => {
       try {
         const settings = await invoke<AppSettings>("get_settings");
         set({ settings, settingsLoaded: true });
+        if (settings.workspaceFolder) {
+          refreshSkillRegistry(settings.workspaceFolder).catch(() => {});
+        }
       } catch {
         // Running outside Tauri (browser preview) - keep defaults.
         set({ settingsLoaded: true });
@@ -604,7 +629,7 @@ export const useMomoStore = create<MomoStore>((set, get) => {
         if (canonical && Array.isArray(canonical.messages) && canonical.messages.length > 0) {
           const loadedMsgs: ChatMessage[] = canonical.messages.map((m) => ({
             id: m.id,
-            role: m.role as "user" | "momo",
+            role: m.role as "user" | "hermoz",
             content: m.content,
             bubbleText: m.bubbleText,
             createdAt: m.timestamp,
@@ -697,12 +722,12 @@ export const useMomoStore = create<MomoStore>((set, get) => {
     },
     testVoice: async () => {
       const { settings } = get();
-      if (settings.muteMomo) {
-        set({ bubbleText: "Momo is muted in Settings.", expression: "annoyed" });
+      if (settings.muteHermoz) {
+        set({ bubbleText: "Hermoz is muted in Settings.", expression: "annoyed" });
         return;
       }
-      set({ expression: "happy", bubbleText: "Yo. This is Momo. Yeah, I can talk." });
-      await ttsManager.speak("Yo. This is Momo. Yeah, I can talk.", {
+      set({ expression: "happy", bubbleText: "Yo. This is Hermoz. Yeah, I can talk." });
+      await ttsManager.speak("Yo. This is Hermoz. Yeah, I can talk.", {
         voiceId: settings.selectedVoice,
         rate: settings.ttsSpeed,
         pitch: settings.ttsPitch,
@@ -836,7 +861,7 @@ export const useMomoStore = create<MomoStore>((set, get) => {
         return;
       }
       try {
-        const response = await invoke<MomoResponse>(
+        const response = await invoke<HermozResponse>(
           "ai_generate",
           {
             request: {
@@ -859,7 +884,7 @@ export const useMomoStore = create<MomoStore>((set, get) => {
           expression: response.emotion,
           interactionMode: response.interactionMode,
         });
-        if (!settings.muteMomo && settings.ttsEnabled && settings.speakProactiveMessages && response.speak) {
+        if (!settings.muteHermoz && settings.ttsEnabled && settings.speakProactiveMessages && response.speak) {
           ttsManager
             .speak(cleanTextForSpeech(response.message), {
               voiceId: settings.selectedVoice,

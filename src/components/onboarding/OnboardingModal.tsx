@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useMomoStore } from "@/store/useMomoStore";
+import { useHermozStore } from "@/store/useHermozStore";
 import { ExternalLink, Key, Sparkles } from "lucide-react";
 
 interface OnboardingModalProps {
@@ -8,7 +8,7 @@ interface OnboardingModalProps {
 }
 
 export function OnboardingModal({ onComplete, onSkip }: OnboardingModalProps) {
-  const { saveApiKey, loadSettings } = useMomoStore();
+  const { saveApiKey, loadSettings } = useHermozStore();
   const [groqKey, setGroqKey] = useState("");
   const [openRouterKey, setOpenRouterKey] = useState("");
   const [geminiKey, setGeminiKey] = useState("");
@@ -92,7 +92,7 @@ export function OnboardingModal({ onComplete, onSkip }: OnboardingModalProps) {
                 className="text-sm font-semibold"
                 style={{ color: "var(--color-text)" }}
               >
-                Welcome to Momo
+                Welcome to Hermoz
               </h2>
               <span
                 className="text-[10px] font-mono px-1.5 py-0.2 rounded"
@@ -113,7 +113,7 @@ export function OnboardingModal({ onComplete, onSkip }: OnboardingModalProps) {
 
         {/* Description */}
         <p className="text-xs leading-relaxed" style={{ color: "var(--color-text-secondary)" }}>
-          Provide at least one AI provider key to power Momo. Keys are encrypted via Windows
+          Provide at least one AI provider key to power Hermoz. Keys are encrypted via Windows
           Credential Manager.
         </p>
 
@@ -253,7 +253,7 @@ export function OnboardingModal({ onComplete, onSkip }: OnboardingModalProps) {
             onClick={handleSave}
             disabled={saving}
           >
-            {saving ? "Saving..." : "Save & Launch Momo"}
+            {saving ? "Saving..." : "Save & Launch Hermoz"}
           </button>
         </div>
       </div>

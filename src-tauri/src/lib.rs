@@ -57,7 +57,7 @@ pub fn run() {
                 .get_webview_window("main")
                 .expect("the 'main' window is declared in tauri.conf.json");
 
-            // Restore where the user last left Momo, and the window flags
+            // Restore where the user last left Hermoz, and the window flags
             // they had configured, before the window is ever shown.
             if let Some(pos) = settings.window_position {
                 let _ = window.set_position(Position::Logical(LogicalPosition::new(pos.x, pos.y)));
@@ -89,7 +89,7 @@ pub fn run() {
                         if res == 0 {
                             log::warn!("SetWindowDisplayAffinity({affinity}) returned 0 during setup.");
                         } else {
-                            log::info!("Momo window affinity set to {affinity} on startup.");
+                            log::info!("Hermoz window affinity set to {affinity} on startup.");
                         }
                     }
                 }
@@ -102,17 +102,17 @@ pub fn run() {
                 log::info!("Global F1 shortcut note (in-app F1 listener active): {e}");
             }
 
-            // Tray icon so Momo can be quit or brought back even when
+            // Tray icon so Hermoz can be quit or brought back even when
             // click-through/hidden - there are no window decorations to
             // click otherwise.
-            let show_hide = MenuItem::with_id(app, "toggle", "Show / Hide Momo", true, None::<&str>)?;
-            let quit = MenuItem::with_id(app, "quit", "Quit Momo", true, None::<&str>)?;
+            let show_hide = MenuItem::with_id(app, "toggle", "Show / Hide Hermoz", true, None::<&str>)?;
+            let quit = MenuItem::with_id(app, "quit", "Quit Hermoz", true, None::<&str>)?;
             let menu = Menu::with_items(app, &[&show_hide, &quit])?;
 
             TrayIconBuilder::new()
                 .icon(app.default_window_icon().cloned().unwrap())
                 .menu(&menu)
-                .tooltip("Momo")
+                .tooltip("Hermoz")
                 .on_menu_event(|app, event| match event.id().as_ref() {
                     "toggle" => toggle_main_window(app),
                     "quit" => app.exit(0),
@@ -154,5 +154,5 @@ pub fn run() {
             commands::launch::launch_app,
         ])
         .run(tauri::generate_context!())
-        .expect("error while running Momo");
+        .expect("error while running Hermoz");
 }

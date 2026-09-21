@@ -20,7 +20,7 @@ pub async fn call(
 
     // 1. Prior history turns
     for h in history {
-        let role = if h.role == "assistant" || h.role == "momo" {
+        let role = if h.role == "assistant" || h.role == "hermoz" {
             "model"
         } else {
             "user"

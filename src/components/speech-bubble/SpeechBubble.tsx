@@ -61,10 +61,10 @@ export function SpeechBubble({
   }, [cleanText, autoHideMs, typeSpeedMs, onDismiss]);
 
   return (
-    <div className={`momo-bubble-anchor momo-bubble-${placement} momo-bubble-${align}`}>
-      <div className="momo-bubble" onClick={onDismiss} title="Click to dismiss">
-        <p className="momo-bubble-text">{shown}</p>
-        <div className="momo-bubble-tail" />
+    <div className={`hermoz-bubble-anchor hermoz-bubble-${placement} hermoz-bubble-${align}`}>
+      <div className="hermoz-bubble" onClick={onDismiss} title="Click to dismiss">
+        <p className="hermoz-bubble-text">{shown}</p>
+        <div className="hermoz-bubble-tail" />
       </div>
     </div>
   );

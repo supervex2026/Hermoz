@@ -1,5 +1,5 @@
 /**
- * Speech preparation layer for Momo's TTS.
+ * Speech preparation layer for Hermoz's TTS.
  * Cleans AI-generated text for natural spoken delivery without altering the visible chat message.
  */
 

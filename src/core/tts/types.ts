@@ -1,5 +1,5 @@
 /**
- * Types and contracts for Momo's provider-independent TTS system.
+ * Types and contracts for Hermoz's provider-independent TTS system.
  * Designed to easily support Local Windows TTS (MVP) and future neural engines (Piper, Kokoro).
  */
 

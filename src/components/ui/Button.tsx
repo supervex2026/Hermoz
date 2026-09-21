@@ -109,7 +109,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         disabled={disabled || isLoading}
         style={getBaseStyles()}
-        className={`momo-btn momo-btn-${variant} ${className}`}
+        className={`hermoz-btn hermoz-btn-${variant} ${className}`}
         {...props}
       >
         {leftIcon && <span style={{ display: "inline-flex" }}>{leftIcon}</span>}

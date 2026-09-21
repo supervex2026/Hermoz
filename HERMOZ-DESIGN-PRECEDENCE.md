@@ -1,8 +1,8 @@
-Read this before any UI/design/redesign task on Momo.
+Read this before any UI/design/redesign task on Hermoz.
 
-# Momo UI/UX Design Precedence Hierarchy
+# Hermoz UI/UX Design Precedence Hierarchy
 
-This document defines the strict priority order and domain ownership for design skills when modifying Momo's desktop application interface.
+This document defines the strict priority order and domain ownership for design skills when modifying Hermoz's desktop application interface.
 
 ## Ranked Skills & Ownership Boundaries
 

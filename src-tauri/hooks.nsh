@@ -1,28 +1,28 @@
-; Momo NSIS Installer Hooks
+; Hermoz NSIS Installer Hooks
 ; Detects existing installations, handles clean in-place updates, closes running instances,
 ; verifies Microsoft VC++ Redistributable, and creates desktop shortcuts.
 
 !macro NSIS_HOOK_PREINSTALL
-    DetailPrint "Checking for previous Momo installations..."
+    DetailPrint "Checking for previous Hermoz installations..."
     
-    ; 1. Close any running Momo instances so files aren't locked during update
-    nsExec::Exec 'taskkill /F /IM Momo.exe /T'
-    nsExec::Exec 'taskkill /F /IM momo.exe /T'
+    ; 1. Close any running Hermoz instances so files aren't locked during update
+    nsExec::Exec 'taskkill /F /IM Hermoz.exe /T'
+    nsExec::Exec 'taskkill /F /IM hermoz.exe /T'
     Sleep 500
 
-    ; 2. Check registry for existing Momo installation
+    ; 2. Check registry for existing Hermoz installation
     StrCpy $1 ""
-    ReadRegStr $1 HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Momo" "DisplayVersion"
+    ReadRegStr $1 HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Hermoz" "DisplayVersion"
     ${If} $1 == ""
-        ReadRegStr $1 HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Momo" "DisplayVersion"
+        ReadRegStr $1 HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Hermoz" "DisplayVersion"
     ${EndIf}
     ${If} $1 == ""
-        ReadRegStr $1 HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\momo" "DisplayVersion"
+        ReadRegStr $1 HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\hermoz" "DisplayVersion"
     ${EndIf}
 
     ${If} $1 != ""
-        DetailPrint "Found existing Momo installation (v$1). Performing seamless update..."
-        MessageBox MB_ICONINFORMATION|MB_OK "Previous version of Momo (v$1) was detected.$\r$\n$\r$\nMomo will now update your installation while keeping your settings and API keys safe."
+        DetailPrint "Found existing Hermoz installation (v$1). Performing seamless update..."
+        MessageBox MB_ICONINFORMATION|MB_OK "Previous version of Hermoz (v$1) was detected.$\r$\n$\r$\nHermoz will now update your installation while keeping your settings and API keys safe."
     ${Else}
         DetailPrint "No previous installation detected. Performing fresh installation..."
     ${EndIf}
@@ -43,10 +43,10 @@
 !macroend
 
 !macro NSIS_HOOK_POSTINSTALL
-    DetailPrint "Creating / updating Momo Desktop Shortcut..."
-    CreateShortCut "$DESKTOP\Momo.lnk" "$INSTDIR\Momo.exe" "" "$INSTDIR\Momo.exe" 0
+    DetailPrint "Creating / updating Hermoz Desktop Shortcut..."
+    CreateShortCut "$DESKTOP\Hermoz.lnk" "$INSTDIR\Hermoz.exe" "" "$INSTDIR\Hermoz.exe" 0
 !macroend
 
 !macro NSIS_HOOK_POSTUNINSTALL
-    Delete "$DESKTOP\Momo.lnk"
+    Delete "$DESKTOP\Hermoz.lnk"
 !macroend
