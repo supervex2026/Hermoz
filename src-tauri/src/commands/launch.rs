@@ -63,7 +63,7 @@ fn open_in_default_browser(url: &str) -> Result<(), String> {
 }
 
 /// Validates target and executes the app launch logic.
-pub fn launch_app_sync(target: &str, arg: Option<&str>) -> Result<(), String> {
+pub fn launch_app_sync(target: &str, arg: Option<&str>, browser: Option<&str>) -> Result<(), String> {
     let t_lower = target.trim().to_lowercase();
 
     if !ALLOWED_TARGETS.contains(&t_lower.as_str()) {
@@ -88,7 +88,10 @@ pub fn launch_app_sync(target: &str, arg: Option<&str>) -> Result<(), String> {
                 }
                 None => "https://www.youtube.com".to_string(),
             };
-            open_in_default_browser(&url)
+            match browser {
+                Some(b) => crate::commands::workspace::open_url_in_browser(url, Some(b.to_string())),
+                None => open_in_default_browser(&url),
+            }
         }
 
         "google" => {
@@ -105,7 +108,10 @@ pub fn launch_app_sync(target: &str, arg: Option<&str>) -> Result<(), String> {
                 }
                 None => "https://www.google.com".to_string(),
             };
-            open_in_default_browser(&url)
+            match browser {
+                Some(b) => crate::commands::workspace::open_url_in_browser(url, Some(b.to_string())),
+                None => open_in_default_browser(&url),
+            }
         }
 
         "github" => {
@@ -122,7 +128,10 @@ pub fn launch_app_sync(target: &str, arg: Option<&str>) -> Result<(), String> {
                 }
                 None => "https://github.com".to_string(),
             };
-            open_in_default_browser(&url)
+            match browser {
+                Some(b) => crate::commands::workspace::open_url_in_browser(url, Some(b.to_string())),
+                None => open_in_default_browser(&url),
+            }
         }
 
         "browser" => {
@@ -130,7 +139,10 @@ pub fn launch_app_sync(target: &str, arg: Option<&str>) -> Result<(), String> {
                 Some(raw) => validate_browser_url(raw)?,
                 None => "https://google.com".to_string(),
             };
-            open_in_default_browser(&url)
+            match browser {
+                Some(b) => crate::commands::workspace::open_url_in_browser(url, Some(b.to_string())),
+                None => open_in_default_browser(&url),
+            }
         }
 
         "brave" => {
@@ -283,8 +295,8 @@ pub fn launch_app_sync(target: &str, arg: Option<&str>) -> Result<(), String> {
 
 /// Tauri command invokable from frontend.
 #[tauri::command]
-pub async fn launch_app(target: String, arg: Option<String>) -> Result<(), String> {
-    launch_app_sync(&target, arg.as_deref())
+pub async fn launch_app(target: String, arg: Option<String>, browser: Option<String>) -> Result<(), String> {
+    launch_app_sync(&target, arg.as_deref(), browser.as_deref())
 }
 
 #[cfg(test)]
@@ -293,11 +305,11 @@ mod tests {
 
     #[test]
     fn test_disallowed_targets_rejected() {
-        assert!(launch_app_sync("calc.exe", None).is_err());
-        assert!(launch_app_sync("cmd.exe", None).is_err());
-        assert!(launch_app_sync("powershell", None).is_err());
-        assert!(launch_app_sync("malicious_app", None).is_err());
-        let err = launch_app_sync("calc.exe", None).unwrap_err();
+        assert!(launch_app_sync("calc.exe", None, None).is_err());
+        assert!(launch_app_sync("cmd.exe", None, None).is_err());
+        assert!(launch_app_sync("powershell", None, None).is_err());
+        assert!(launch_app_sync("malicious_app", None, None).is_err());
+        let err = launch_app_sync("calc.exe", None, None).unwrap_err();
         assert!(err.contains("Allowed targets"));
     }
 
@@ -361,7 +373,7 @@ mod tests {
         println!("[TEST 6/7 VERIFIED] powershell -c whoami REJECTED: {err_ps}");
 
         // 7. Unknown target "calc.exe" -> REJECTED
-        let res_calc = launch_app_sync("calc.exe", None);
+        let res_calc = launch_app_sync("calc.exe", None, None);
         assert!(res_calc.is_err(), "calc.exe must be rejected");
         let err_calc = res_calc.unwrap_err();
         assert!(err_calc.contains("not permitted") && err_calc.contains("Allowed targets"));

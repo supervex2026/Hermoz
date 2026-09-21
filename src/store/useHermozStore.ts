@@ -102,6 +102,7 @@ interface HermozStore {
   // --- Agent & Actions ---
   pendingAction: HermozAction | null;
   agentCheckpoint: AgentCheckpoint | null;
+  isExecutingAction: boolean;
   approvePendingAction: () => Promise<void>;
   denyPendingAction: () => void;
   stopAgentLoop: () => void;
@@ -187,6 +188,7 @@ export const useHermozStore = create<HermozStore>((set, get) => {
 
     pendingAction: null,
     agentCheckpoint: null,
+    isExecutingAction: false,
 
     capturePromptOpen: false,
     promptCaptureConfirmation: (cb) => {
@@ -490,72 +492,99 @@ export const useHermozStore = create<HermozStore>((set, get) => {
       if (!pendingAction) return;
 
       const action = pendingAction;
-      set({ pendingAction: null });
+      // Immediately unblock the UI and set executing state
+      set({ pendingAction: null, isExecutingAction: true });
 
       if (agentCheckpoint) {
         agentLoopManager.updateCheckpoint({ status: "executing" });
         set({ agentCheckpoint: agentLoopManager.getCheckpoint() });
       }
 
-      try {
-        const execRes = await agentLoopManager.executeApprovedAction(
-          action,
-          settings.workspaceFolder,
-        );
+      // Add a non-intrusive status message into conversation
+      const targetDesc = action.command
+        ? `\`${action.command}\``
+        : action.target
+        ? `**${action.target}**${action.arg ? ` (${action.arg})` : ""}`
+        : action.path
+        ? `\`${action.path}\``
+        : action.type;
+      const runningMsg: ChatMessage = {
+        id: crypto.randomUUID(),
+        role: "hermoz",
+        content: `⏳ Running ${action.type}: ${targetDesc} in the background. You can keep chatting while it runs.`,
+        bubbleText: `Running ${action.type}...`,
+        createdAt: Date.now(),
+      };
+      set((s) => ({ messages: [...s.messages, runningMsg] }));
 
-        const stepNumber = (agentCheckpoint?.completedSteps.length || 0) + 1;
-        const record: AgentStepRecord = {
-          stepNumber,
-          action,
-          fullOutput: execRes.fullOutput,
-          truncatedOutput: execRes.truncatedOutput,
-          exitCode: execRes.exitCode,
-          status: execRes.isSuccess ? "success" : "failed",
-        };
+      // Run execution in the background so UI and chat stay responsive
+      (async () => {
+        try {
+          const execRes = await agentLoopManager.executeApprovedAction(
+            action,
+            settings.workspaceFolder,
+          );
 
-        const updatedSteps = [...(agentCheckpoint?.completedSteps || []), record];
-        agentLoopManager.updateCheckpoint({
-          completedSteps: updatedSteps,
-          lastOutput: execRes.truncatedOutput,
-          pendingAction: null,
-          stepCount: stepNumber,
-        });
-        set({ agentCheckpoint: agentLoopManager.getCheckpoint() });
+          const stepNumber = (agentCheckpoint?.completedSteps.length || 0) + 1;
+          const record: AgentStepRecord = {
+            stepNumber,
+            action,
+            fullOutput: execRes.fullOutput,
+            truncatedOutput: execRes.truncatedOutput,
+            exitCode: execRes.exitCode,
+            status: execRes.isSuccess ? "success" : "failed",
+          };
 
-        // Check if maximum steps reached
-        const maxSteps = agentCheckpoint?.maxSteps || settings.maxAgentSteps || 25;
-        if (stepNumber >= maxSteps) {
-          agentLoopManager.updateCheckpoint({ status: "completed" });
-          set({ agentCheckpoint: agentLoopManager.getCheckpoint() });
+          const updatedSteps = [...(agentCheckpoint?.completedSteps || []), record];
+          agentLoopManager.updateCheckpoint({
+            completedSteps: updatedSteps,
+            lastOutput: execRes.truncatedOutput,
+            pendingAction: null,
+            stepCount: stepNumber,
+          });
+          set({
+            agentCheckpoint: agentLoopManager.getCheckpoint(),
+            isExecutingAction: false,
+          });
+
+          // Check if maximum steps reached
+          const maxSteps = agentCheckpoint?.maxSteps || settings.maxAgentSteps || 25;
+          if (stepNumber >= maxSteps) {
+            agentLoopManager.updateCheckpoint({ status: "completed" });
+            set({ agentCheckpoint: agentLoopManager.getCheckpoint() });
+            await get().sendMessage(
+              `[AGENT LOOP LIMIT: Reached maximum of ${maxSteps} steps. Summarize what has been achieved so far and report to the user.]`,
+              { requireAgentic: true }
+            );
+            return;
+          }
+
+          // Build deterministic next turn prompt for the loop
+          const nextTurnPrompt = agentLoopManager.buildNextTurnPrompt(
+            stepNumber,
+            action,
+            execRes.truncatedOutput,
+            execRes.isSuccess,
+            execRes.exitCode,
+          );
+
+          // Continue agent loop
+          await get().sendMessage(nextTurnPrompt, { requireAgentic: true });
+        } catch (err) {
+          console.error("Action execution failed:", err);
+          const errMsg = err instanceof Error ? err.message : String(err);
+          agentLoopManager.updateCheckpoint({ status: "failed" });
+          set({
+            agentCheckpoint: agentLoopManager.getCheckpoint(),
+            isExecutingAction: false,
+          });
+
           await get().sendMessage(
-            `[AGENT LOOP LIMIT: Reached maximum of ${maxSteps} steps. Summarize what has been achieved so far and report to the user.]`,
+            `[AGENT LOOP ERROR: Action execution threw an exception: ${errMsg}. Inform the user and suggest a recovery step.]`,
             { requireAgentic: true }
           );
-          return;
         }
-
-        // Build deterministic next turn prompt for the loop
-        const nextTurnPrompt = agentLoopManager.buildNextTurnPrompt(
-          stepNumber,
-          action,
-          execRes.truncatedOutput,
-          execRes.isSuccess,
-          execRes.exitCode,
-        );
-
-        // Continue agent loop without user re-prompting!
-        await get().sendMessage(nextTurnPrompt, { requireAgentic: true });
-      } catch (err) {
-        console.error("Action execution failed:", err);
-        const errMsg = err instanceof Error ? err.message : String(err);
-        agentLoopManager.updateCheckpoint({ status: "failed" });
-        set({ agentCheckpoint: agentLoopManager.getCheckpoint() });
-
-        await get().sendMessage(
-          `[AGENT LOOP ERROR: Action execution threw an exception: ${errMsg}. Inform the user and suggest a recovery step.]`,
-          { requireAgentic: true }
-        );
-      }
+      })();
     },
 
     denyPendingAction: () => {
@@ -567,10 +596,11 @@ export const useHermozStore = create<HermozStore>((set, get) => {
         });
         set({
           pendingAction: null,
+          isExecutingAction: false,
           agentCheckpoint: agentLoopManager.getCheckpoint(),
         });
       } else {
-        set({ pendingAction: null });
+        set({ pendingAction: null, isExecutingAction: false });
       }
       get().setBubble("Action cancelled.");
     },
@@ -579,6 +609,7 @@ export const useHermozStore = create<HermozStore>((set, get) => {
       agentLoopManager.stopTask();
       set({
         pendingAction: null,
+        isExecutingAction: false,
         agentCheckpoint: agentLoopManager.getCheckpoint(),
       });
       get().setBubble("Agent stopped.");

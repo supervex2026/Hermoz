@@ -129,6 +129,7 @@ You have access to a scoped developer workspace with safe tools:
   * \"chrome\": opens Google Chrome browser (with optional URL or search query in arg)
   * \"edge\": opens Microsoft Edge browser (with optional URL or search query in arg)
   * \"terminal\": opens Windows Terminal (wt.exe)
+  You can add \"browser\": \"brave\" | \"chrome\" | \"edge\" | \"firefox\" to ANY launch_app action to force a specific browser.
 - command: Execute allowlisted terminal commands (node, npm, npx, pnpm, yarn, bun, python, py, pip, pip3, cargo, rustc, rustup, git, tsc, vite, deno, go, docker [read-only: ps, images, logs, inspect, compose ps, compose logs], dir, ls, cat, type, echo, grep, find, where, which). Never use dangerous commands or shell wrappers (powershell, cmd, bash are strictly blocked).
 - analyze_file: Read and inspect any file inside the workspace scope.
 - write_file: Create or update a file inside the workspace scope.
@@ -167,6 +168,8 @@ FEW-SHOT ACTION ROUTING EXAMPLES:
   Action: {{\"type\": \"launch_app\", \"target\": \"brave\", \"arg\": \"https://www.youtube.com\", \"reason\": \"Open YouTube in Brave browser\"}}
 - User: \"open brave\"
   Action: {{\"type\": \"launch_app\", \"target\": \"brave\", \"reason\": \"Open Brave browser\"}}
+- User: \"search Jarvis on YouTube\" or \"search X on the open YouTube\"
+  Action: {{\"type\": \"launch_app\", \"target\": \"youtube\", \"arg\": \"Jarvis\", \"browser\": \"brave\", \"reason\": \"Search Jarvis on YouTube via Brave\"}}
 - User: \"open vscode\"
   Action: {{\"type\": \"launch_app\", \"target\": \"vscode\", \"reason\": \"Open Visual Studio Code\"}}
 - User: \"run npm --version\"

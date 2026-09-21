@@ -224,8 +224,9 @@ export class AgentLoopManager {
       case "launch_app": {
         const target = action.target || "";
         const arg = action.arg || null;
-        await invoke("launch_app", { target, arg });
-        const summary = `Successfully launched app '${target}'${arg ? ` with argument '${arg}'` : ""}.`;
+        const browser = action.browser || null;
+        await invoke("launch_app", { target, arg, browser });
+        const summary = `Successfully launched app '${target}'${arg ? ` with argument '${arg}'` : ""}${browser ? ` in ${browser}` : ""}.`;
         return {
           fullOutput: summary,
           truncatedOutput: summary,
@@ -237,69 +238,27 @@ export class AgentLoopManager {
       case "generate_ui": {
         const prompt = action.content || "";
         const path = action.path || "frontend/index.html";
-        const argsPath = ".hermoz/.tmp-stitch-args.json";
-        const bridgePath = ".hermoz/stitch-bridge.mjs";
 
         if (!ws) {
           const msg = "No workspace folder is set — pick one in Settings first so Hermoz has somewhere to run Stitch and write the generated UI.";
           return { fullOutput: msg, truncatedOutput: msg, isSuccess: false, exitCode: 1 };
         }
 
-        const { ensureStitchBridgeReady } = await import("@/core/integrations/stitchBridge");
-        const ready = await ensureStitchBridgeReady(ws);
-        if (!ready.ok) {
-          return { fullOutput: ready.log, truncatedOutput: truncateOutputForModel(ready.log), isSuccess: false, exitCode: 1 };
-        }
+        // Use MCP-based Stitch bridge
+        const { generateUI } = await import("@/core/integrations/stitchBridge");
+        const stitchResult = await generateUI(ws, prompt, path);
 
-        // Args go through a workspace file rather than an inline CLI string
-        // so arbitrarily long/quoted prompts never hit shell-escaping limits.
-        await invoke("write_workspace_file", {
-          workspace: ws,
-          path: argsPath,
-          content: JSON.stringify({ prompt, targetPath: path }),
-        });
-
-        const result = await invoke<CommandExecResult>("execute_workspace_command", {
-          command: `node "${bridgePath}" "${argsPath}"`,
-          cwd: null,
-          workspace: ws,
-        });
-
-        if (result.exitCode !== 0) {
-          const errOutput = result.stderr.trim() || result.stdout.trim() || "Stitch bridge failed with no output.";
+        if (!stitchResult.ok || !stitchResult.html) {
+          const errMsg = stitchResult.error || "Stitch did not return any HTML.";
           return {
-            fullOutput: errOutput,
-            truncatedOutput: truncateOutputForModel(errOutput),
-            isSuccess: false,
-            exitCode: result.exitCode,
-          };
-        }
-
-        let bridgeResult: { html?: string; error?: string } = {};
-        try {
-          bridgeResult = JSON.parse(result.stdout.trim());
-        } catch {
-          return {
-            fullOutput: `Stitch bridge returned non-JSON output:\n${result.stdout}`,
-            truncatedOutput: truncateOutputForModel(result.stdout),
+            fullOutput: errMsg,
+            truncatedOutput: truncateOutputForModel(errMsg),
             isSuccess: false,
             exitCode: 1,
           };
         }
 
-        if (!bridgeResult.html) {
-          const errMsg = bridgeResult.error || "Stitch did not return any HTML.";
-          return { fullOutput: errMsg, truncatedOutput: errMsg, isSuccess: false, exitCode: 1 };
-        }
-
-        // Write Stitch's output exactly as returned — no hand-editing.
-        await invoke("write_workspace_file", {
-          workspace: ws,
-          path,
-          content: bridgeResult.html,
-        });
-
-        const summary = `Stitch generated the UI and it was written to '${path}' exactly as returned (${bridgeResult.html.length} characters).`;
+        const summary = `Stitch generated the UI via MCP and it was written to '${path}' exactly as returned (${stitchResult.html.length} characters).`;
         return { fullOutput: summary, truncatedOutput: summary, isSuccess: true, exitCode: 0 };
       }
 

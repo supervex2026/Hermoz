@@ -98,18 +98,43 @@ export function MainLayout({ onSwitchToOverlay }: MainLayoutProps) {
         {/* Obsidian Titlebar */}
         <TitleBar />
 
-        {/* Two Column Layout: Conversation (Left ~65%) and Companion HUD (Right ~35%) */}
+        {/* Two Column Layout OR Full-Width Canvas */}
         <main className="flex-1 flex overflow-hidden">
-          {/* Left Conversation Column */}
-          <section className="w-full lg:w-[65%] flex flex-col h-full overflow-hidden">
-            <ChatPanel onClose={onSwitchToOverlay} />
-          </section>
+          {activeTab === "canvas" ? (
+            /* Full-screen Canvas Mode */
+            <div className="w-full h-full relative">
+              <Suspense
+                fallback={
+                  <div className="p-4 text-xs text-gray-500 font-mono animate-pulse">
+                    Loading Canvas...
+                  </div>
+                }
+              >
+                <CanvasView />
+              </Suspense>
+              {/* Floating back button to exit canvas */}
+              <button
+                className="absolute top-4 left-4 z-30 flex items-center gap-2 px-3 py-2 rounded-lg bg-[var(--glass-bg)] backdrop-blur-md border border-[var(--glass-border)] text-[var(--color-text-secondary)] text-xs font-medium hover:text-[var(--color-text)] hover:border-[var(--color-accent)] transition-all"
+                onClick={() => setActiveTab("overview")}
+                title="Back to Dashboard"
+              >
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 19l-7-7m0 0l7-7m-7 7h18" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></path></svg>
+                <span>Dashboard</span>
+              </button>
+            </div>
+          ) : (
+            /* Normal Two-Column Layout */
+            <>
+              {/* Left Conversation Column */}
+              <section className="w-full lg:w-[65%] flex flex-col h-full overflow-hidden">
+                <ChatPanel onClose={onSwitchToOverlay} />
+              </section>
 
-          {/* Right Companion HUD Column */}
-          <aside
-            className="hidden lg:flex w-[35%] flex-col bg-[var(--neutral-1)] p-4 space-y-4 overflow-y-auto border-l border-[var(--color-border)]"
-            data-purpose="companion-diagnostics-hud"
-          >
+              {/* Right Companion HUD Column */}
+              <aside
+                className="hidden lg:flex w-[35%] flex-col bg-[var(--neutral-1)] p-4 space-y-4 overflow-y-auto border-l border-[var(--color-border)]"
+                data-purpose="companion-diagnostics-hud"
+              >
             {/* TOP WIDGET: Hermoz Avatar & Mood Hub */}
             <div
               className="bg-[var(--neutral-2)] border border-[var(--color-border)] rounded-2xl p-4 relative shadow-card-ambient overflow-hidden"
@@ -328,11 +353,7 @@ export function MainLayout({ onSwitchToOverlay }: MainLayoutProps) {
               </button>
 
               <button
-                className={`py-1.5 px-1.5 text-center rounded-lg font-medium flex items-center justify-center space-x-1 transition-all ${
-                  activeTab === "canvas"
-                    ? "bg-[var(--color-accent-subtle)] text-[var(--color-accent)] border border-[var(--color-accent)] shadow-sm"
-                    : "text-gray-400 hover:text-gray-200 hover:bg-[var(--neutral-4)]"
-                }`}
+                className="py-1.5 px-1.5 text-center rounded-lg font-medium flex items-center justify-center space-x-1 transition-all text-gray-400 hover:text-gray-200 hover:bg-[var(--neutral-4)]"
                 onClick={() => setActiveTab("canvas")}
               >
                 <svg
@@ -609,21 +630,6 @@ export function MainLayout({ onSwitchToOverlay }: MainLayoutProps) {
               </div>
             )}
 
-            {/* TAB CONTENT: Build Canvas */}
-            {activeTab === "canvas" && (
-              <div className="flex-1 overflow-hidden">
-                <Suspense
-                  fallback={
-                    <div className="p-4 text-xs text-gray-500 font-mono animate-pulse">
-                      Loading Canvas...
-                    </div>
-                  }
-                >
-                  <CanvasView />
-                </Suspense>
-              </div>
-            )}
-
             {/* Spacer */}
             <div className="flex-1"></div>
 
@@ -651,6 +657,8 @@ export function MainLayout({ onSwitchToOverlay }: MainLayoutProps) {
               </button>
             </div>
           </aside>
+            </>
+          )}
         </main>
       </div>
 

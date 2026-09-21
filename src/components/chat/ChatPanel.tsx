@@ -27,6 +27,7 @@ export function ChatPanel({ onClose }: { onClose: () => void }) {
   const {
     messages,
     isSending,
+    isExecutingAction,
     sendMessage,
     clearChat,
     speakMessage,
@@ -42,6 +43,7 @@ export function ChatPanel({ onClose }: { onClose: () => void }) {
     captureScreenWithCheck,
     agentModeEnabled,
     toggleAgentMode,
+    stopAgentLoop,
   } = useHermozStore();
 
   const [draft, setDraft] = useState("");
@@ -517,6 +519,33 @@ export function ChatPanel({ onClose }: { onClose: () => void }) {
         }}
         data-purpose="chat-input-dock"
       >
+        {isExecutingAction && (
+          <div
+            className="flex items-center justify-between mb-2 px-3 py-1.5 rounded-lg text-xs transition-all"
+            style={{
+              background: "var(--color-accent-subtle)",
+              border: "1px solid var(--color-accent)",
+              color: "var(--color-accent)",
+            }}
+          >
+            <div className="flex items-center space-x-2">
+              <span
+                className="w-2 h-2 rounded-full animate-ping"
+                style={{ background: "var(--color-accent)" }}
+              />
+              <span className="font-medium">Action running in background — you can continue chatting</span>
+            </div>
+            <button
+              onClick={stopAgentLoop}
+              className="text-[10px] font-mono hover:underline cursor-pointer bg-transparent border-0 p-0 ml-2"
+              style={{ color: "var(--color-danger)" }}
+              title="Stop running background command"
+            >
+              Stop
+            </button>
+          </div>
+        )}
+
         <div
           className="relative flex items-center rounded-lg p-1 transition-all"
           style={{

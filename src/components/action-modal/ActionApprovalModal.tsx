@@ -26,8 +26,10 @@ export function ActionApprovalModal({ isOverlayMode }: ActionApprovalModalProps)
 
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const isExecuting = agentCheckpoint?.status === "executing";
-  const isVisible = Boolean(pendingAction) || isExecuting;
+  // Modal ONLY displays when an explicit user approval decision is needed.
+  // During command execution, action runs in the background without blocking the screen.
+  const isExecuting = false;
+  const isVisible = Boolean(pendingAction);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -98,7 +100,7 @@ export function ActionApprovalModal({ isOverlayMode }: ActionApprovalModalProps)
     );
   }
 
-  if (!isVisible && !isExecuting) return null;
+  if (!isVisible || !pendingAction) return null;
 
   const handleApprove = async () => {
     if (isProcessing) return;
