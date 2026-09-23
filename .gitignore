@@ -24,3 +24,12 @@ Thumbs.db
 # Local database (Phase 4)
 database/*.sqlite
 database/*.db
+
+# Release binaries — ship via GitHub Releases, not git
+releases/
+*.exe
+
+# Duplicate media assets at repo root (canonical copies live in public/)
+momo logo.png
+Intro_animation__*.mp4
+intro animation.zip
