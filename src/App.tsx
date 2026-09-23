@@ -21,6 +21,7 @@ export default function App() {
     loadSettings,
     settingsLoaded,
     greet,
+    sendMessage,
     startPTT,
     stopPTT,
     stopSpeaking,
@@ -48,8 +49,12 @@ export default function App() {
       setShowOnboarding(true);
     }
 
-    // Start proactive engine
-    proactiveEngine.start();
+    // Proactive messages travel through the same response pipeline as chat,
+    // so provider, speech, and memory behavior remain consistent.
+    proactiveEngine.setCooldownSeconds(settings.proactiveCooldownSeconds);
+    proactiveEngine.init((event) => {
+      void sendMessage(`[proactive check-in: ${event.message}]`, { forceTts: true });
+    });
 
     // Initial greeting after brief pause
     const t = setTimeout(() => greet(), 800);
@@ -57,7 +62,7 @@ export default function App() {
       clearTimeout(t);
       proactiveEngine.stop();
     };
-  }, [settingsLoaded, settings.hasGroqKey, settings.hasOpenRouterKey, settings.hasGeminiKey, greet]);
+  }, [settingsLoaded, settings.hasGroqKey, settings.hasOpenRouterKey, settings.hasGeminiKey, settings.proactiveCooldownSeconds, greet, sendMessage]);
 
   // 3. Dynamic window resizing when toggling between Overlay and Dashboard
   useEffect(() => {

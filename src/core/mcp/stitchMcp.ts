@@ -41,9 +41,13 @@ export async function checkStitchReady(workspace: string): Promise<{
   ready: boolean;
   reason?: string;
 }> {
-  // Check if STITCH_API_KEY is set by trying to read it from env
-  // We can't directly access env vars from the frontend, so we
-  // check via a quick command
+  // 1. Check if key is saved in secure app storage (Windows Credential Manager)
+  try {
+    const hasKey = await invoke<boolean>("has_stitch_api_key");
+    if (hasKey) return { ready: true };
+  } catch {}
+
+  // 2. Check if STITCH_API_KEY is set in environment
   try {
     const result = await invoke<{ stdout: string; stderr: string; exitCode: number }>(
       "execute_workspace_command",
@@ -57,25 +61,18 @@ export async function checkStitchReady(workspace: string): Promise<{
       },
     );
     const val = result.stdout.trim();
-    if (!val || val === "%STITCH_API_KEY%" || val === "$STITCH_API_KEY" || val === "undefined") {
-      return {
-        ready: false,
-        reason:
-          "STITCH_API_KEY is not set. To connect Stitch:\n" +
-          "1. Get an API key from design.google/stitch\n" +
-          "2. Set it as an environment variable:\n" +
-          "   - Windows: setx STITCH_API_KEY \"your-key-here\"\n" +
-          "   - Mac/Linux: export STITCH_API_KEY=\"your-key-here\"\n" +
-          "3. Restart Hermoz after setting the key.",
-      };
+    if (val && val !== "%STITCH_API_KEY%" && val !== "$STITCH_API_KEY" && val !== "undefined") {
+      return { ready: true };
     }
-    return { ready: true };
-  } catch {
-    return {
-      ready: false,
-      reason: "Could not check STITCH_API_KEY. Make sure a workspace folder is set in Settings.",
-    };
-  }
+  } catch {}
+
+  return {
+    ready: false,
+    reason:
+      "STITCH_API_KEY is not set. To connect Stitch:\n" +
+      "1. Go to Settings (gear icon) -> Google Stitch, paste your key, and click Save.\n" +
+      "2. Or set it as an environment variable (setx STITCH_API_KEY \"your-key\") and restart Hermoz.",
+  };
 }
 
 /**
@@ -94,6 +91,17 @@ export async function generateWithStitch(
 ): Promise<StitchGenerateResult & { error?: string }> {
   const config = getStitchConfig();
 
+  // Inject Stitch API key from secure app storage if not provided in overrides
+  const effectiveEnv: Record<string, string> = { ...(envOverrides || {}) };
+  if (!effectiveEnv.STITCH_API_KEY) {
+    try {
+      const savedKey = await invoke<string | null>("get_stitch_api_key");
+      if (savedKey) {
+        effectiveEnv.STITCH_API_KEY = savedKey;
+      }
+    } catch {}
+  }
+
   // Call the generate_screen tool via MCP
   const result = await callMcpTool(
     workspace,
@@ -103,7 +111,7 @@ export async function generateWithStitch(
       prompt,
       projectId,
     },
-    envOverrides,
+    effectiveEnv,
   );
 
   if (!result.success) {
@@ -174,6 +182,17 @@ export async function editWithStitch(
 ): Promise<StitchGenerateResult & { error?: string }> {
   const config = getStitchConfig();
 
+  // Inject Stitch API key from secure app storage if not provided in overrides
+  const effectiveEnv: Record<string, string> = { ...(envOverrides || {}) };
+  if (!effectiveEnv.STITCH_API_KEY) {
+    try {
+      const savedKey = await invoke<string | null>("get_stitch_api_key");
+      if (savedKey) {
+        effectiveEnv.STITCH_API_KEY = savedKey;
+      }
+    } catch {}
+  }
+
   const result = await callMcpTool(
     workspace,
     config,
@@ -183,7 +202,7 @@ export async function editWithStitch(
       screenId,
       projectId,
     },
-    envOverrides,
+    effectiveEnv,
   );
 
   if (!result.success) {

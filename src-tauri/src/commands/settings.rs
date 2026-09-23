@@ -80,3 +80,30 @@ pub fn clear_api_key(
     state.health.lock().unwrap().set_configured(id, false);
     Ok(())
 }
+
+#[tauri::command]
+pub fn save_stitch_api_key(key: String, app: tauri::AppHandle, state: State<'_, AppState>) -> Result<(), String> {
+    if key.trim().is_empty() { return Err("key cannot be empty".into()); }
+    keys::save_stitch_api_key(key.trim())?;
+    let mut settings = state.settings.lock().unwrap();
+    settings.has_stitch_key = true;
+    settings::save(&app, &settings)
+}
+
+#[tauri::command]
+pub fn clear_stitch_api_key(app: tauri::AppHandle, state: State<'_, AppState>) -> Result<(), String> {
+    keys::clear_stitch_api_key()?;
+    let mut settings = state.settings.lock().unwrap();
+    settings.has_stitch_key = false;
+    settings::save(&app, &settings)
+}
+
+#[tauri::command]
+pub fn has_stitch_api_key() -> bool {
+    keys::has_stitch_api_key()
+}
+
+#[tauri::command]
+pub fn get_stitch_api_key() -> Option<String> {
+    keys::get_stitch_api_key()
+}

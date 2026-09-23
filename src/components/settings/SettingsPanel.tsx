@@ -39,6 +39,7 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
   const [editingProvider, setEditingProvider] = useState<ProviderId | null>(null);
   const [keyInput, setKeyInput] = useState("");
   const [keyFeedback, setKeyFeedback] = useState<string | null>(null);
+  const [stitchKeyInput, setStitchKeyInput] = useState("");
   const [memories, setMemories] = useState(() => memoryStore.getMemories());
 
   useEffect(() => {
@@ -57,6 +58,19 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
       setTimeout(() => setKeyFeedback(null), 3000);
     } catch (err) {
       setKeyFeedback("Error: " + (err instanceof Error ? err.message : String(err)));
+    }
+  };
+
+  const saveStitchKey = async () => {
+    if (!stitchKeyInput.trim()) return;
+    try {
+      const { invoke } = await import("@tauri-apps/api/core");
+      await invoke("save_stitch_api_key", { key: stitchKeyInput.trim() });
+      await updateSettings({ hasStitchKey: true });
+      setStitchKeyInput("");
+      setKeyFeedback("Stitch API key saved securely in your operating system credential store.");
+    } catch (error) {
+      setKeyFeedback(`Error: ${error instanceof Error ? error.message : String(error)}`);
     }
   };
 
@@ -545,6 +559,26 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                     </div>
                   );
                 })}
+                <div className="rounded-xl p-4 bg-[var(--neutral-3)]/80 border border-[var(--color-border)]">
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+                    <div>
+                      <h3 className="text-sm font-semibold text-white font-mono">Google Stitch <span className="text-xs font-normal text-slate-400">(UI generation)</span></h3>
+                      <p className="text-[11px] text-slate-400 font-mono mt-1">Generates web and mobile UI screens through Google’s official Stitch MCP endpoint. This key is not used for chat routing.</p>
+                    </div>
+                    {settings.hasStitchKey ? (
+                      <button className="px-3 py-1.5 text-xs font-mono bg-danger-soft/80 hover:bg-red-900/60 text-red-300 border border-danger-border rounded-lg transition" onClick={async () => {
+                        const { invoke } = await import("@tauri-apps/api/core");
+                        await invoke("clear_stitch_api_key");
+                        await updateSettings({ hasStitchKey: false });
+                      }}>Remove</button>
+                    ) : (
+                      <div className="flex gap-2 w-full md:w-auto">
+                        <input className="min-w-0 md:w-56 px-3 py-1.5 bg-[var(--neutral-2)] border border-[var(--color-border)] rounded-lg text-xs font-mono" type="password" placeholder="Paste Stitch API key" value={stitchKeyInput} onChange={(event) => setStitchKeyInput(event.target.value)} />
+                        <button className="px-3 py-1.5 text-xs font-mono bg-[var(--color-accent)] text-obsidian-950 rounded-lg" onClick={saveStitchKey}>Save</button>
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
             </section>
           )}

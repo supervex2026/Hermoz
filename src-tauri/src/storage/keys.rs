@@ -8,127 +8,114 @@ use crate::ai::types::ProviderId;
 
 const SERVICE: &str = "hermoz-desktop-companion";
 
-// In-memory cache so keys are always immediately accessible once set
-static MEMORY_KEYS: Mutex<Option<HashMap<String, String>>> = Mutex::new(None);
+use std::sync::OnceLock;
 
-fn get_fallback_file_path() -> Option<PathBuf> {
-    let base = if let Ok(appdata) = std::env::var("APPDATA") {
-        PathBuf::from(appdata)
-    } else if let Ok(local) = std::env::var("LOCALAPPDATA") {
-        PathBuf::from(local)
-    } else if let Ok(user) = std::env::var("USERPROFILE") {
-        PathBuf::from(user).join(".hermoz")
-    } else {
-        return None;
-    };
-    let dir = base.join("hermoz");
-    let _ = fs::create_dir_all(&dir);
-    Some(dir.join(".keys"))
+// Keys only live in RAM after being read from the operating system's secure
+// credential store. There is intentionally no disk fallback.
+static MEMORY_KEYS: OnceLock<Mutex<HashMap<String, String>>> = OnceLock::new();
+
+fn memory_keys() -> &'static Mutex<HashMap<String, String>> {
+    MEMORY_KEYS.get_or_init(|| Mutex::new(HashMap::new()))
 }
 
-fn read_fallback_file() -> HashMap<String, String> {
-    if let Some(path) = get_fallback_file_path() {
-        if let Ok(data) = fs::read_to_string(path) {
-            return serde_json::from_str(&data).unwrap_or_default();
-        }
-    }
-    HashMap::new()
-}
-
-fn write_fallback_file(keys: &HashMap<String, String>) {
-    if let Some(path) = get_fallback_file_path() {
-        if let Ok(json) = serde_json::to_string(keys) {
-            let _ = fs::write(path, json);
-        }
-    }
+fn legacy_keys_path() -> Option<PathBuf> {
+    let base = std::env::var("APPDATA").ok().map(PathBuf::from)
+        .or_else(|| std::env::var("LOCALAPPDATA").ok().map(PathBuf::from))
+        .or_else(|| std::env::var("USERPROFILE").ok().map(|value| PathBuf::from(value).join(".hermoz")))?;
+    Some(base.join("hermoz").join(".keys"))
 }
 
 fn entry_for(provider: ProviderId) -> Result<Entry, String> {
     Entry::new(SERVICE, &format!("{}_api_key", provider.storage_key()))
-        .map_err(|e| format!("could not access secure storage: {e}"))
+        .map_err(|e| format!("could not access the operating system credential store: {e}"))
+}
+
+fn stitch_entry() -> Result<Entry, String> {
+    Entry::new(SERVICE, "stitch_api_key")
+        .map_err(|e| format!("could not access the operating system credential store: {e}"))
+}
+
+fn securely_remove_legacy_file(path: &PathBuf) -> Result<(), String> {
+    let size = fs::metadata(path).map_err(|e| format!("could not inspect legacy key file: {e}"))?.len() as usize;
+    let mut random = vec![0_u8; size];
+    getrandom::fill(&mut random).map_err(|e| format!("could not securely erase legacy key file: {e}"))?;
+    fs::write(path, random).map_err(|e| format!("could not overwrite legacy key file: {e}"))?;
+    fs::remove_file(path).map_err(|e| format!("could not remove legacy key file: {e}"))
+}
+
+/// One-way migration for keys written by releases before secure storage was
+/// mandatory. The plaintext file is removed only after every key is saved.
+fn migrate_legacy_keys() -> Result<(), String> {
+    let Some(path) = legacy_keys_path() else { return Ok(()); };
+    if !path.exists() { return Ok(()); }
+    let data = fs::read_to_string(&path).map_err(|e| format!("could not read legacy key file for migration: {e}"))?;
+    let keys: HashMap<String, String> = serde_json::from_str(&data)
+        .map_err(|e| format!("legacy key file is invalid and was not removed: {e}"))?;
+
+    for (provider, key) in &keys {
+        let id: ProviderId = provider.parse()?;
+        entry_for(id)?.set_password(key)
+            .map_err(|e| format!("could not migrate {provider} key to secure storage: {e}"))?;
+    }
+    securely_remove_legacy_file(&path)
 }
 
 pub fn save_api_key(provider: ProviderId, key: &str) -> Result<(), String> {
-    let p_key = provider.storage_key().to_string();
-
-    // 1. Save in memory cache
-    {
-        let mut lock = MEMORY_KEYS.lock().unwrap();
-        let map = lock.get_or_insert_with(read_fallback_file);
-        map.insert(p_key.clone(), key.to_string());
-        write_fallback_file(map);
-    }
-
-    // 2. Also try saving in OS keyring
-    if let Ok(entry) = entry_for(provider) {
-        if let Err(e) = entry.set_password(key) {
-            log::warn!("Could not save key to Windows Credential Manager: {e}; using secure app storage fallback");
-        }
-    }
-
+    migrate_legacy_keys()?;
+    entry_for(provider)?.set_password(key)
+        .map_err(|e| format!("could not save API key in the operating system credential store: {e}"))?;
+    memory_keys().lock().unwrap().insert(provider.storage_key().to_string(), key.to_string());
     Ok(())
 }
 
 pub fn get_api_key(provider: ProviderId) -> Option<String> {
-    let p_key = provider.storage_key();
-
-    // 1. Check in-memory cache
-    {
-        let mut lock = MEMORY_KEYS.lock().unwrap();
-        if let Some(map) = lock.as_ref() {
-            if let Some(val) = map.get(p_key) {
-                if !val.trim().is_empty() {
-                    return Some(val.clone());
-                }
-            }
-        } else {
-            // First time accessing: load from fallback file
-            let map = read_fallback_file();
-            if let Some(val) = map.get(p_key) {
-                if !val.trim().is_empty() {
-                    let res = val.clone();
-                    *lock = Some(map);
-                    return Some(res);
-                }
-            }
-            *lock = Some(map);
-        }
+    if let Err(error) = migrate_legacy_keys() {
+        log::warn!("API key migration failed: {error}");
+        return None;
     }
-
-    // 2. Check OS keyring
-    if let Ok(entry) = entry_for(provider) {
-        if let Ok(password) = entry.get_password() {
-            if !password.trim().is_empty() {
-                // Populate cache
-                let mut lock = MEMORY_KEYS.lock().unwrap();
-                if let Some(map) = lock.as_mut() {
-                    map.insert(p_key.to_string(), password.clone());
-                }
-                return Some(password);
-            }
-        }
+    if let Some(key) = memory_keys().lock().unwrap().get(provider.storage_key()).cloned() {
+        return Some(key);
     }
-
-    None
+    match entry_for(provider).and_then(|entry| entry.get_password().map_err(|e| e.to_string())) {
+        Ok(key) if !key.trim().is_empty() => {
+            memory_keys().lock().unwrap().insert(provider.storage_key().to_string(), key.clone());
+            Some(key)
+        }
+        _ => None,
+    }
 }
 
 pub fn clear_api_key(provider: ProviderId) -> Result<(), String> {
-    let p_key = provider.storage_key().to_string();
-
-    // 1. Clear from memory cache and disk fallback
-    {
-        let mut lock = MEMORY_KEYS.lock().unwrap();
-        let map = lock.get_or_insert_with(read_fallback_file);
-        map.remove(&p_key);
-        write_fallback_file(map);
+    migrate_legacy_keys()?;
+    memory_keys().lock().unwrap().remove(provider.storage_key());
+    match entry_for(provider)?.delete_credential() {
+        Ok(()) | Err(keyring::Error::NoEntry) => Ok(()),
+        Err(e) => Err(format!("could not remove API key from secure storage: {e}")),
     }
+}
 
-    // 2. Clear from OS keyring
-    if let Ok(entry) = entry_for(provider) {
-        let _ = entry.delete_credential();
+pub fn save_stitch_api_key(key: &str) -> Result<(), String> {
+    migrate_legacy_keys()?;
+    stitch_entry()?.set_password(key)
+        .map_err(|e| format!("could not save Stitch API key in the operating system credential store: {e}"))
+}
+
+pub fn has_stitch_api_key() -> bool {
+    stitch_entry().and_then(|entry| entry.get_password().map_err(|e| e.to_string()))
+        .is_ok_and(|key| !key.trim().is_empty())
+}
+
+pub fn get_stitch_api_key() -> Option<String> {
+    stitch_entry().and_then(|entry| entry.get_password().map_err(|e| e.to_string())).ok()
+        .filter(|key| !key.trim().is_empty())
+}
+
+pub fn clear_stitch_api_key() -> Result<(), String> {
+    migrate_legacy_keys()?;
+    match stitch_entry()?.delete_credential() {
+        Ok(()) | Err(keyring::Error::NoEntry) => Ok(()),
+        Err(e) => Err(format!("could not remove Stitch API key from secure storage: {e}")),
     }
-
-    Ok(())
 }
 
 #[allow(dead_code)]

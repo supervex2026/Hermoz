@@ -197,6 +197,7 @@ export interface AppSettings {
   hasGroqKey: boolean;
   hasOpenRouterKey: boolean;
   hasGeminiKey: boolean;
+  hasStitchKey: boolean;
   providerPriority: ProviderId[];
   overlayMode?: boolean;
   workspaceFolder?: string;
@@ -227,6 +228,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   hasGroqKey: false,
   hasOpenRouterKey: false,
   hasGeminiKey: false,
+  hasStitchKey: false,
   providerPriority: ["groq", "openrouter", "gemini"],
   overlayMode: true,
   workspaceFolder: undefined,

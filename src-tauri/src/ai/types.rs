@@ -79,7 +79,8 @@ impl ProviderId {
                 streaming: true,
                 structured_output: true,
                 agentic: true,
-                vision_agentic: false,
+                // inclusionai/ling-3.0-flash-vl:free supports image input and tool calling via OpenRouter.
+                vision_agentic: true,
             },
             ProviderId::Gemini => ProviderCapabilities {
                 text: true,

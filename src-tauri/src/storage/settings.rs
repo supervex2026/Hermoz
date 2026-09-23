@@ -35,6 +35,8 @@ pub struct AppSettings {
     pub has_open_router_key: bool,
     #[serde(default)]
     pub has_gemini_key: bool,
+    #[serde(default)]
+    pub has_stitch_key: bool,
     #[serde(default = "default_provider_priority")]
     pub provider_priority: Vec<String>,
     #[serde(default)]
@@ -86,6 +88,7 @@ impl Default for AppSettings {
             has_groq_key: false,
             has_open_router_key: false,
             has_gemini_key: false,
+            has_stitch_key: false,
             provider_priority: default_provider_priority(),
             workspace_folder: None,
             max_agent_steps: 25,

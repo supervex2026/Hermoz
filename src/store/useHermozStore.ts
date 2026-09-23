@@ -275,6 +275,8 @@ export const useHermozStore = create<HermozStore>((set, get) => {
     sendMessage: async (text: string, options?: SendMessageOptions) => {
       const trimmed = text.trim();
       if (!trimmed) return;
+      const { proactiveEngine } = await import("@/core/initiative/proactiveEngine");
+      proactiveEngine.recordActivity();
 
       // 1. Immediately cut off any ongoing speech
       ttsManager.stop();

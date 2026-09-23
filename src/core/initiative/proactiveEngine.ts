@@ -28,7 +28,8 @@ export class ProactiveEngine {
   private intervalTimer: ReturnType<typeof setInterval> | null = null;
   private callback: ProactiveCallback | null = null;
   private enabled: boolean = true;
-  private intervalMinutes: number = 4;
+  private intervalMinutes: number = 1;
+  private cooldownMilliseconds: number = 120_000;
   private lastTriggerTime: number = Date.now();
 
   public static getInstance(): ProactiveEngine {
@@ -57,6 +58,10 @@ export class ProactiveEngine {
     this.start();
   }
 
+  public setCooldownSeconds(seconds: number): void {
+    this.cooldownMilliseconds = Math.max(30, Math.min(30 * 60, seconds)) * 1000;
+  }
+
   public start(): void {
     this.stop();
     if (!this.enabled) return;
@@ -79,6 +84,8 @@ export class ProactiveEngine {
 
   private checkAndTrigger(): void {
     if (!this.enabled || !this.callback) return;
+
+    if (Date.now() - this.lastTriggerTime < this.cooldownMilliseconds) return;
 
     // Pick random proactive check-in
     const pick = PROACTIVE_CHECKINS[Math.floor(Math.random() * PROACTIVE_CHECKINS.length)];

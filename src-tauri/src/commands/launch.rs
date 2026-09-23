@@ -1,4 +1,5 @@
 use std::process::Command;
+use url::Url;
 
 #[cfg(target_os = "windows")]
 use std::os::windows::process::CommandExt;
@@ -21,8 +22,6 @@ pub const ALLOWED_BROWSER_DOMAINS: &[&str] = &[
     "crates.io",
     "rust-lang.org",
     "developer.mozilla.org",
-    "localhost",
-    "127.0.0.1",
     "docs.rs",
 ];
 
@@ -39,12 +38,14 @@ pub fn validate_browser_url(raw_url: &str) -> Result<String, String> {
         trimmed.to_string()
     };
 
-    let lower = url_with_scheme.to_lowercase();
+    let parsed = Url::parse(&url_with_scheme)
+        .map_err(|_| format!("URL '{raw_url}' is invalid."))?;
+    if !matches!(parsed.scheme(), "http" | "https") {
+        return Err("Only http and https browser URLs are permitted.".to_string());
+    }
+    let host = parsed.host_str().ok_or_else(|| "Browser URL must include a hostname.".to_string())?.to_ascii_lowercase();
     let is_allowed = ALLOWED_BROWSER_DOMAINS.iter().any(|&domain| {
-        lower.starts_with(&format!("https://{domain}"))
-            || lower.starts_with(&format!("http://{domain}"))
-            || lower.starts_with(&format!("https://www.{domain}"))
-            || lower.starts_with(&format!("http://www.{domain}"))
+        host == domain || host.strip_suffix(domain).is_some_and(|prefix| prefix.ends_with('.'))
     });
 
     if !is_allowed {
@@ -314,6 +315,13 @@ mod tests {
     }
 
     #[test]
+    fn test_browser_host_boundary_is_enforced() {
+        assert!(validate_browser_url("https://github.com/repo").is_ok());
+        assert!(validate_browser_url("https://github.com.evil.example").is_err());
+        assert!(validate_browser_url("http://127.0.0.1:3000").is_err());
+    }
+
+    #[test]
     fn test_allowed_targets_recognized() {
         // Target names must match allowed list
         for t in ALLOWED_TARGETS {
@@ -328,7 +336,7 @@ mod tests {
         assert!(validate_browser_url("https://google.com").is_ok());
         assert!(validate_browser_url("https://stackoverflow.com/questions").is_ok());
         assert!(validate_browser_url("https://crates.io").is_ok());
-        assert!(validate_browser_url("http://localhost:3000").is_ok());
+        assert!(validate_browser_url("http://localhost:3000").is_err());
 
         // Disallowed domains must fail
         assert!(validate_browser_url("https://malicious-site.com").is_err());
